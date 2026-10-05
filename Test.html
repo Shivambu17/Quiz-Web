@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHIVAMBU EXTRA CLASS — VB.NET Assessment</title>
+<style>
+:root{
+  --bg1:#0b1120; --bg2:#1e1b4b; --bg3:#0f766e; --bg4:#4c1d95;
+  --card: rgba(255,255,255,.09);
+  --stroke: rgba(255,255,255,.20);
+  --text:#f1f5f9; --muted:#cbd5e1;
+  --ok:#22c55e; --bad:#ef4444; --warn:#f59e0b;
+  --accent:#38bdf8; --accent2:#a78bfa;
+  --shadow: 0 24px 60px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0;
+  font-family:'Segoe UI',system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  color:var(--text);
+  background:linear-gradient(-45deg,var(--bg1),var(--bg2),var(--bg3),var(--bg4));
+  background-size:400% 400%;
+  animation:bgShift 22s ease infinite;
+  overflow-x:hidden;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+}
+@keyframes bgShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* floating orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.4;pointer-events:none;z-index:0;animation:float 18s ease-in-out infinite}
+.orb.o1{width:340px;height:340px;background:#38bdf8;top:-100px;left:-90px}
+.orb.o2{width:300px;height:300px;background:#a78bfa;bottom:-90px;right:-70px;animation-delay:-5s}
+.orb.o3{width:250px;height:250px;background:#f472b6;top:42%;right:10%;animation-delay:-9s}
+@keyframes float{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(40px,-30px) scale(1.12)}
+  66%{transform:translate(-30px,25px) scale(.94)}
+}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:9990}
+
+/* ---------- PROCTOR CHROME ---------- */
+#proctorBar{
+  position:fixed;top:0;left:0;right:0;z-index:9995;
+  display:none;align-items:center;justify-content:space-between;gap:10px;
+  padding:7px 14px;font-size:.72rem;font-weight:800;letter-spacing:.6px;
+  background:linear-gradient(90deg,rgba(127,29,29,.95),rgba(15,23,42,.95),rgba(127,29,29,.95));
+  border-bottom:1px solid rgba(248,113,113,.5);
+  box-shadow:0 6px 24px rgba(0,0,0,.5);
+  text-transform:uppercase;flex-wrap:wrap;
+}
+.rec-dot{
+  display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;
+  margin-right:6px;animation:blink 1.1s infinite;box-shadow:0 0 12px #ef4444;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.proctor-item{display:flex;align-items:center;gap:6px;color:#fecaca;white-space:nowrap}
+.proctor-item.green{color:#bbf7d0}
+#proctorBar .sep{opacity:.35}
+
+/* webcam panel */
+#camPanel{
+  position:fixed;left:14px;bottom:14px;z-index:9996;width:170px;
+  border-radius:14px;overflow:hidden;border:1px solid rgba(248,113,113,.6);
+  background:#0b1120;box-shadow:0 18px 40px rgba(0,0,0,.6);display:none;
+}
+#camPanel .camHead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 8px;font-size:.6rem;font-weight:800;letter-spacing:.7px;
+  background:rgba(127,29,29,.85);color:#fecaca;
+}
+#camPanel video{width:100%;height:118px;object-fit:cover;display:block;background:#111}
+#camFallback{
+  width:100%;height:118px;display:none;place-items:center;background:#111;
+  color:#f87171;font-size:.65rem;text-align:center;padding:8px;line-height:1.4;
+}
+#camPanel .camFoot{
+  padding:4px 8px;font-size:.58rem;letter-spacing:.5px;text-align:center;
+  background:rgba(15,23,42,.95);color:#fca5a5;
+}
+
+/* ---------- LAYOUT ---------- */
+.wrap{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:22px 16px 100px}
+body.exam .wrap{padding-top:56px}
+
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{font-size:34px;animation:bounceY 2.4s ease-in-out infinite;filter:drop-shadow(0 6px 12px rgba(0,0,0,.4))}
+@keyframes bounceY{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(6deg)}}
+.brand h1{
+  font-size:1.1rem;margin:0;letter-spacing:.5px;
+  background:linear-gradient(90deg,#38bdf8,#a78bfa,#f472b6,#38bdf8);
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 6s linear infinite;
+}
+@keyframes shine{to{background-position:300% 0}}
+.brand small{display:block;color:var(--muted);font-size:.7rem;letter-spacing:.8px;text-transform:uppercase}
+
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tool{
+  border:1px solid var(--stroke);background:var(--card);color:var(--text);
+  padding:9px 13px;border-radius:12px;cursor:pointer;font-size:.78rem;font-weight:700;
+  backdrop-filter:blur(10px);transition:transform .18s,box-shadow .18s;
+}
+.tool:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 22px rgba(0,0,0,.35)}
+
+.card{
+  background:var(--card);border:1px solid var(--stroke);border-radius:24px;
+  padding:26px 24px 22px;backdrop-filter:blur(16px);box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.10) 45%,transparent 60%);
+  background-size:250% 100%;animation:sweep 6s linear infinite;
+}
+@keyframes sweep{0%{background-position:200% 0}100%{background-position:-60% 0}}
+
+.anim-right{animation:slideInRight .45s cubic-bezier(.2,.9,.3,1.2) both}
+.anim-left{animation:slideInLeft .45s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes slideInRight{from{opacity:0;transform:translateX(70px) rotateY(-10deg) scale(.96)}to{opacity:1;transform:none}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-70px) rotateY(10deg) scale(.96)}to{opacity:1;transform:none}}
+
+/* ---------- FORM ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.field input,.field select{
+  padding:13px 15px;border-radius:13px;font-size:.95rem;font-family:inherit;
+  border:1px solid var(--stroke);background:rgba(255,255,255,.08);color:var(--text);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  -webkit-user-select:text;user-select:text;
+}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(56,189,248,.22)}
+.field select option{background:#0f172a;color:#f1f5f9}
+
+.rules{
+  margin:18px 0;padding:16px 18px;border-radius:16px;font-size:.82rem;line-height:1.65;
+  background:rgba(239,68,68,.12);border:1px solid rgba(248,113,113,.45);color:#fecaca;
+}
+.rules h4{margin:0 0 8px;font-size:.8rem;letter-spacing:1.2px;text-transform:uppercase;color:#fca5a5}
+.rules ul{margin:0;padding-left:20px}
+.rules li{margin-bottom:4px}
+
+.btn{
+  border:none;cursor:pointer;font-family:inherit;font-weight:800;
+  padding:14px 24px;border-radius:14px;font-size:.92rem;
+  transition:transform .18s,box-shadow .18s,filter .18s;
+}
+.btn:hover:not(:disabled){transform:translateY(-3px) scale(1.03);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:linear-gradient(135deg,#38bdf8,#a78bfa);color:#07121e}
+.btn.ghost{background:transparent;border:1px solid var(--stroke);color:var(--text)}
+.btn.green{background:linear-gradient(135deg,#4ade80,#16a34a);color:#04140a}
+.btn.pink{background:linear-gradient(135deg,#f472b6,#a78bfa);color:#1a0512}
+.btn.red{background:linear-gradient(135deg,#f87171,#dc2626);color:#fff}
+.btn.big{font-size:1.05rem;padding:17px 40px}
+
+/* ---------- EXAM HEADER ---------- */
+.examBar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.timerBox{
+  display:flex;align-items:center;gap:12px;padding:11px 20px;border-radius:16px;
+  background:var(--card);border:1px solid var(--stroke);backdrop-filter:blur(10px);
+}
+.timerBox .tlabel{font-size:.62rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+#timer{font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:1px;color:#4ade80}
+#timer.warn{color:#fbbf24;animation:pulseT 1s infinite}
+#timer.danger{color:#f87171;animation:pulseT .55s infinite}
+@keyframes pulseT{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(1.06)}}
+
+.studentChip{
+  display:flex;align-items:center;gap:10px;padding:9px 16px;border-radius:16px;
+  background:var(--card);border:1px solid var(--stroke);backdrop-filter:blur(10px);
+  font-size:.78rem;line-height:1.35;
+}
+.studentChip .av{
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#07121e;font-size:.9rem;
+}
+.studentChip b{display:block;font-size:.85rem}
+.studentChip span{color:var(--muted);font-size:.68rem}
+
+/* ---------- PROGRESS / PALETTE ---------- */
+.progress{height:10px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:0 0 14px;border:1px solid var(--stroke)}
+.progress .fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c55e,#38bdf8,#a78bfa,#f472b6);background-size:300% 100%;transition:width .5s cubic-bezier(.3,1.3,.4,1);animation:shine 3s linear infinite}
+
+.palette{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.pal{
+  width:38px;height:38px;border-radius:11px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.07);color:var(--text);font-weight:800;font-size:.78rem;
+  cursor:pointer;transition:transform .15s,background .15s;
+}
+.pal:hover{transform:scale(1.12)}
+.pal.done{background:linear-gradient(135deg,#38bdf8,#a78bfa);color:#07121e;border-color:transparent}
+.pal.current{outline:3px solid #fbbf24;outline-offset:1px}
+.pal.flagged{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#231400;border-color:transparent}
+
+/* ---------- QUESTION ---------- */
+.qhead{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.pill{
+  font-size:.68rem;letter-spacing:.8px;text-transform:uppercase;font-weight:800;
+  padding:6px 12px;border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121f;
+}
+.pill.ghost{background:transparent;color:var(--muted);border:1px dashed var(--stroke);font-weight:700}
+.qtext{font-size:1.2rem;line-height:1.55;margin:6px 0 18px}
+.qtext code{background:rgba(0,0,0,.3);padding:2px 6px;border-radius:6px;font-size:.94em}
+
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;cursor:pointer;
+  color:var(--text);background:rgba(255,255,255,.06);border:1px solid var(--stroke);
+  padding:13px 15px;border-radius:15px;font-size:.96rem;font-family:inherit;
+  transition:transform .16s,box-shadow .16s,background .16s,border-color .16s;
+}
+.opt:hover{transform:translateX(6px);border-color:var(--accent);box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.opt.picked{background:linear-gradient(90deg,rgba(56,189,248,.35),rgba(167,139,250,.18));border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.22)}
+.badge{
+  flex:0 0 30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font-weight:900;font-size:.82rem;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#06121f;
+}
+.opt.picked .badge{background:linear-gradient(135deg,#4ade80,#16a34a);color:#04140a}
+.opt-body{flex:1;padding-top:3px;min-width:0}
+.opt-body pre{
+  margin:0;white-space:pre-wrap;word-break:break-word;
+  font-family:Consolas,"Courier New",monospace;font-size:.83rem;line-height:1.45;
+  background:rgba(0,0,0,.3);padding:9px 11px;border-radius:10px;
+}
+
+.textrow{display:flex;gap:10px;flex-wrap:wrap}
+.textrow input{
+  flex:1;min-width:190px;padding:14px 16px;border-radius:14px;font-size:1rem;
+  border:1px solid var(--stroke);background:rgba(255,255,255,.08);color:var(--text);
+  font-family:inherit;outline:none;-webkit-user-select:text;user-select:text;
+}
+.textrow input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(56,189,248,.22)}
+
+.savedNote{margin-top:14px;font-size:.82rem;color:#7dd3fc;font-weight:700;min-height:20px;display:flex;gap:8px;align-items:center}
+
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
+
+/* ---------- RESULT ---------- */
+.center{text-align:center}
+.big-emoji{font-size:62px;animation:bounceY 2s ease-in-out infinite;display:inline-block}
+.start-title{font-size:1.6rem;margin:8px 0 6px}
+.start-sub{color:var(--muted);margin-bottom:18px}
+.ring{
+  width:170px;height:170px;border-radius:50%;margin:12px auto 8px;display:grid;place-items:center;
+  position:relative;background:conic-gradient(#22c55e 0deg,rgba(255,255,255,.14) 0deg);
+  transition:background 1s ease;
+}
+.ring::after{content:"";position:absolute;inset:14px;border-radius:50%;background:rgba(10,14,30,.78);backdrop-filter:blur(6px)}
+.ring .val{position:relative;z-index:2;font-size:2.1rem;font-weight:900}
+.ring .lbl{position:relative;z-index:2;font-size:.66rem;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
+
+.review{margin-top:18px;display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto;padding-right:6px;text-align:left}
+.rev{
+  display:flex;gap:10px;align-items:flex-start;font-size:.83rem;
+  padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--stroke);
+  border-left-width:5px;
+}
+.rev.ok{border-left-color:var(--ok)}
+.rev.no{border-left-color:var(--bad)}
+.rev .m{font-weight:900;font-size:1rem}
+.rev.ok .m{color:#4ade80}
+.rev.no .m{color:#f87171}
+.rev small{color:var(--muted);display:block;margin-top:4px;line-height:1.5}
+.rev small b{color:#7dd3fc}
+
+/* ---------- MODAL ---------- */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(2,6,23,.75);backdrop-filter:blur(6px);
+  display:grid;place-items:center;z-index:99999;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.modal-bg.show{opacity:1;pointer-events:auto}
+.modal{
+  max-width:470px;width:100%;text-align:center;padding:28px 24px;border-radius:24px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(160deg,rgba(56,189,248,.18),rgba(167,139,250,.18)),rgba(15,23,42,.95);
+  box-shadow:0 30px 70px rgba(0,0,0,.6);color:#f1f5f9;
+  transform:scale(.75) rotate(-3deg);transition:transform .4s cubic-bezier(.2,1.5,.4,1);
+}
+.modal-bg.show .modal{transform:scale(1) rotate(0)}
+.modal.danger{
+  background:linear-gradient(160deg,rgba(239,68,68,.30),rgba(127,29,29,.35)),rgba(15,23,42,.96);
+  border-color:rgba(248,113,113,.65);
+}
+.modal.danger h3{color:#fca5a5}
+.modal .m-emoji{font-size:54px;animation:bounceY 1.6s ease-in-out infinite;display:inline-block}
+.modal h3{margin:8px 0 8px;font-size:1.28rem}
+.modal p{margin:0 0 18px;color:#cbd5e1;font-size:.9rem;line-height:1.6;white-space:pre-line}
+.modal .mBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ---------- TOAST ---------- */
+#toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:99998;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{
+  padding:11px 20px;border-radius:999px;font-size:.84rem;font-weight:800;
+  background:rgba(15,23,42,.95);color:#f8fafc;border:1px solid var(--stroke);
+  box-shadow:0 14px 30px rgba(0,0,0,.5);animation:toastIn .4s cubic-bezier(.2,1.5,.4,1) both;
+  max-width:92vw;text-align:center;
+}
+.toast.bad{background:rgba(127,29,29,.96);border-color:rgba(248,113,113,.6);color:#fecaca}
+.toast.out{animation:toastOut .35s forwards}
+@keyframes toastIn{from{opacity:0;transform:translateY(26px) scale(.85)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(20px) scale(.9)}}
+
+@media print{
+  body{background:#fff !important;color:#000 !important;animation:none !important}
+  .orb,#confetti,.wrap,#toasts,.modal-bg,#proctorBar,#camPanel{display:none !important}
+  #printArea{display:block !important}
+}
+#printArea{display:none}
+@media(max-width:640px){
+  .qtext{font-size:1.06rem}
+  .card{padding:20px 15px 16px;border-radius:20px}
+  #camPanel{width:120px}
+  #camPanel video,#camFallback{height:88px}
+}
+</style>
+</head>
+<body>
+
+<!-- ======= PROCTOR BAR ======= -->
+<div id="proctorBar">
+  <span class="proctor-item"><span class="rec-dot"></span>REC — SCREEN RECORDING</span>
+  <span class="sep">|</span>
+  <span class="proctor-item"><span class="rec-dot"></span>WEBCAM PROCTORING ACTIVE</span>
+  <span class="sep">|</span>
+  <span class="proctor-item green">👁️ MONITORED SESSION</span>
+  <span class="sep">|</span>
+  <span class="proctor-item" id="violationBadge">⚠️ VIOLATIONS: 0 / 3</span>
+</div>
+
+<!-- ======= WEBCAM PANEL ======= -->
+<div id="camPanel">
+  <div class="camHead"><span>● LIVE</span><span id="camStatus">CONNECTING…</span></div>
+  <video id="camVideo" autoplay muted playsinline></video>
+  <div id="camFallback">
+    📷<br>CAMERA FEED<br>UNDER REVIEW
+  </div>
+  <div class="camFoot" id="camFoot">PROCTOR SEES THIS FEED</div>
+</div>
+
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">🎓</div>
+      <div>
+        <h1>SHIVAMBU EXTRA CLASS</h1>
+        <small>VB.NET Assessment · Classes, Objects, Properties, Arrays &amp; Strings</small>
+      </div>
+    </div>
+    <div class="tools">
+      <button class="tool" id="pdfBtn" type="button">🖨️ Print / PDF</button>
+      <button class="tool" id="rulesBtn" type="button">📋 Exam Rules</button>
+    </div>
+  </header>
+
+  <!-- ================= START / REGISTRATION ================= -->
+  <section class="card" id="startScreen">
+    <div class="center">
+      <div class="big-emoji">📝</div>
+      <h2 class="start-title">Student Registration</h2>
+      <p class="start-sub">Complete your details before the exam begins</p>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label for="fName">Full Name</label>
+        <input id="fName" type="text" placeholder="e.g. Thabo Mokoena" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fNumber">Student Number</label>
+        <input id="fNumber" type="text" placeholder="e.g. 219045678" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fCourse">Course</label>
+        <input id="fCourse" type="text" placeholder="e.g. Diploma in IT" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fYear">Year of Study</label>
+        <select id="fYear">
+          <option value="">-- Select Year --</option>
+          <option>1st Year</option>
+          <option>2nd Year</option>
+          <option>3rd Year</option>
+          <option>4th Year</option>
+          <option>Postgraduate</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="rules">
+      <h4>⚠️ Strict Assessment Conditions</h4>
+      <ul>
+        <li><b>Time limit:</b> 20 minutes only. The paper auto-submits at 00:00.</li>
+        <li><b>This session is recorded.</b> Your screen activity is being logged.</li>
+        <li><b>Your webcam is active.</b> Leaving the exam window is detected and flagged.</li>
+        <li><b>Copying is disabled.</b> Right-click, Ctrl+C, Ctrl+U, Ctrl+S and F12 are blocked.</li>
+        <li><b>Three (3) violations = automatic submission</b> and a cheating report on your answer sheet.</li>
+        <li>Answers are <b>hidden until you submit.</b> No feedback is given during the exam.</li>
+      </ul>
+    </div>
+
+    <div class="center">
+      <button class="btn primary big" id="startBtn" type="button">🔒 I Agree — Begin Exam</button>
+      <p style="margin-top:14px;color:var(--muted);font-size:.75rem">
+        By starting, you consent to screen &amp; webcam proctoring for this assessment.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= EXAM ================= -->
+  <section id="examScreen" style="display:none">
+    <div class="examBar">
+      <div class="timerBox">
+        <div>
+          <div class="tlabel">Time Remaining</div>
+          <div id="timer">20:00</div>
+        </div>
+      </div>
+      <div class="studentChip">
+        <div class="av" id="chipAvatar">?</div>
+        <div>
+          <b id="chipName">Student</b>
+          <span id="chipMeta">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress"><div class="fill" id="progressFill"></div></div>
+    <div class="palette" id="palette"></div>
+
+    <div class="card" id="card"></div>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section class="card center" id="resultScreen" style="display:none">
+    <div class="big-emoji" id="resEmoji">🏁</div>
+    <h2 class="start-title" id="resTitle">Exam Submitted</h2>
+    <p class="start-sub" id="resSub">Your paper has been recorded</p>
+
+    <div class="ring" id="ring">
+      <div>
+        <div class="val" id="resScore">0/20</div>
+        <div class="lbl">Correct</div>
+      </div>
+    </div>
+    <p id="resMsg" style="font-weight:800;font-size:1.05rem;margin:10px 0 4px"></p>
+    <p style="color:var(--muted);font-size:.84rem" id="resMeta"></p>
+
+    <div style="margin:20px 0 6px;font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)">
+      Answer Review (now unlocked)
+    </div>
+    <div class="review" id="reviewList"></div>
+
+    <div class="nav" style="justify-content:center;margin-top:24px">
+      <button class="btn green" id="downloadBtn" type="button">⬇️ Download Answer Sheet</button>
+      <button class="btn primary" id="pdfBtn2" type="button">🖨️ Print / Save as PDF</button>
+      <button class="btn ghost" id="restartBtn" type="button">🔁 New Student</button>
+    </div>
+  </section>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalBox">
+    <div class="m-emoji" id="mEmoji">🎉</div>
+    <h3 id="mTitle">Title</h3>
+    <p id="mText">Text</p>
+    <div class="mBtns" id="mBtns"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<div id="printArea"></div>
+
+<script>
+/* =====================================================================
+   CONFIG
+   ===================================================================== */
+const EXAM_MINUTES = 20;
+const EXAM_SECONDS = EXAM_MINUTES * 60;
+const MAX_VIOLATIONS = 3;
+
+/* =====================================================================
+   QUESTION BANK  (answers stay secret until submission)
+   ===================================================================== */
+const QUESTIONS = [
+  { type:"mc",
+    q:"In VB.NET, a class file usually ends with which filename extension?",
+    opts:[".xls",".vb",".cls","None of the Answers",".cla"], correct:1 },
+
+  { type:"mc",
+    q:"What is used by the code  MessageBox.Show(objPerson.Name)  to display the name?",
+    opts:["The Show sub of the Name property","The Set sub of the Name property",
+          "The Get sub of the Name object","The Get sub of the Name property",
+          "The Set sub of the Name object"], correct:3 },
+
+  { type:"mc",
+    q:'If strAmount contains the string "$147.65$", what does strAmount.Trim return?',
+    opts:['"$147.65$"','"$147.65"','"147.65$"','"147.65"','"1$47.65"'], correct:0 },
+
+  { type:"mc",
+    q:"Which statement declares AND initializes a four-element one-dimensional array?",
+    opts:['Dim strName() As String = {"John", "Mpho", "James", "Igwe"}',
+          'Dim strName(4) = {"John", "Mpho", "James", "Igwe"}',
+          "Dim strName(4) As String",
+          'Dim strName(4) As String = {"John", "Mpho", "James", "Igwe"}',
+          "Dim strName(3) As String"], correct:0 },
+
+  { type:"tf",
+    q:"An object is not an instance of a class.",
+    opts:["True","False"], correct:1 },
+
+  { type:"tf",
+    q:"A Private variable in a class can be accessed directly by a Public method in the same class.",
+    opts:["True","False"], correct:0 },
+
+  { type:"mc",
+    q:'A class has an auto-implemented property named Stdname. Which correctly assigns "Steyn" to the hidden backing field associated with the property in the default constructor?',
+    opts:["None of the Answers",'Stdname = "Steyn"','_Stdname = "Steyn"',
+          '_strStdname = "Steyn"','iStdname = "Steyn"'], correct:2 },
+
+  { type:"tf",
+    q:"The Contains method returns ______ when a string does NOT contain the specified substring.",
+    opts:["True","False"], correct:1 },
+
+  { type:"mc",
+    q:"A Number class has private _num1 and _num2 and public properties Num1 and Num2. Select the BEST CalcSum function to return the sum of the stored numbers.",
+    opts:[
+`Public Function CalcSum(ByVal Num1 As Integer, ByVal Num2 As Integer)
+    Return Num1 + Num2
+End Function`,
+`Public Function CalcSum() As Integer
+    Return Num1 + Num2
+End Function`,
+`Public Function CalcSum(ByVal Num1 As Integer, ByVal Num2 As Integer) As Integer
+    Return Num1 + Num2
+End Function`,
+`Public Function CalcSum() As Integer
+    Dim Num1, Num2 As Integer
+    Return Num1 + Num2
+End Function`,
+`Public Function CalcSum() As Integer
+    Return num1 + num2
+End Function`], correct:1 },
+
+  { type:"mc",
+    q:"Two or more methods that have the same name but different parameter lists are referred to as ______.",
+    opts:["Autograph","Loaded","Overloaded","Parallel","Signature"], correct:2 },
+
+  { type:"text",
+    q:"A constructor is a class method that is always named ______.",
+    answer:"new", display:"New" },
+
+  { type:"mc",
+    q:"You need to validate that the parameter received by the Set property is exactly 3 characters long before assigning it. Select the correct code.",
+    opts:[
+`Private _cpu As String
+Public Property CPU As String
+    Set(value As String)
+        If value.Length = 3 Then
+            value = _cpu
+        End If
+    End Set
+    Get
+        Return _cpu
+    End Get
+End Property`,
+`Private _cpu As String
+Public Property CPU As String
+    Set(value As String)
+        If value.Length = 3 Then
+            _cpu = value
+        End If
+        _cpu = value
+    End Set
+    Get
+        Return _cpu
+    End Get
+End Property`,
+`Private _cpu As String
+Public Property CPU As String
+    Set(value As String)
+        If value.Length = 3 Then
+            _cpu = value
+        End If
+    End Set
+    Get
+        Return _cpu
+    End Get
+End Property`,
+`Private _cpu As String
+Public Property CPU As String
+    Set(value As String)
+        If value.Length <> 3 Then
+            _cpu = value
+        End If
+    End Set
+    Get
+        Return _cpu
+    End Get
+End Property`,
+`Private _cpu As String
+Public Property CPU As String
+    Set(value As String)
+        value = _cpu
+    End Set
+    Get
+        Return _cpu
+    End Get
+End Property`], correct:2 },
+
+  { type:"mc",
+    q:"Which statement is TRUE about the code:  Public Property Score As Integer",
+    opts:["Creates a Public property named Score, a Private variable named _ Score, and hidden Get and Set blocks.",
+          "Creates a Public property named Score, a hidden Private variable named _Score, and hidden Get and Set blocks.",
+          "None of the Answers.",
+          "Creates a hidden Public property named Score, a hidden Private variable named _ Score, and hidden Get and Set blocks.",
+          "Creates a Public property named Score, a hidden Private variable named _ Score, and a Get and Set blocks."],
+    correct:1 },
+
+  { type:"tf",
+    q:"A quick way to code the default property of a class in Visual Basic is to press the TAB button once.",
+    opts:["True","False"], correct:1 },
+
+  { type:"mc",
+    q:"Which keyword is used to declare a class in VB.NET?",
+    opts:["Class","Structure","Module","Object","New"], correct:0 },
+
+  { type:"mc",
+    q:"What does the Length property of a String return?",
+    opts:["The number of characters in the string","The last character","The first character",
+          "The number of words","The index of the last character"], correct:0 },
+
+  { type:"mc",
+    q:"Which access modifier allows a class member to be used only inside the class where it is declared?",
+    opts:["Public","Private","Protected","Friend","Shared"], correct:1 },
+
+  { type:"mc",
+    q:"Which statement creates an object of the class Student?",
+    opts:["Dim s As Student","Dim s As New Student()","New Student = s",
+          "Student s = New Student","Create Student As s"], correct:1 },
+
+  { type:"mc",
+    q:"Which keyword allows a class to inherit from another class in VB.NET?",
+    opts:["Inherits","Implements","Extends","Overrides","Shadows"], correct:0 },
+
+  { type:"mc",
+    q:"Which String method returns a copy of the string converted to uppercase?",
+    opts:["ToUpper()","Upper()","ToUpperCase()","UCase","Trim()"], correct:0 }
+];
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+const S = {
+  student: { name:"", number:"", course:"", year:"" },
+  idx: 0,
+  answers: new Array(QUESTIONS.length).fill(null),
+  flags: new Array(QUESTIONS.length).fill(false),
+  score: 0,
+  flagged: new Set(),
+  remaining: EXAM_SECONDS,
+  timerId: null,
+  startedAt: null,
+  endedAt: null,
+  violations: 0,
+  violationLog: [],
+  finished: false,
+  camStream: null
+};
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const letter = i => "ABCDE"[i] || "?";
+const fmt = sec => {
+  sec = Math.max(0, Math.floor(sec));
+  return String(Math.floor(sec/60)).padStart(2,"0") + ":" + String(sec%60).padStart(2,"0");
+};
+
+function toast(msg, ms=2600, bad=false){
+  const el = document.createElement("div");
+  el.className = "toast" + (bad ? " bad" : "");
+  el.textContent = msg;
+  $("toasts").appendChild(el);
+  setTimeout(()=>{ el.classList.add("out"); setTimeout(()=>el.remove(),360); }, ms);
+}
+
+function modal({emoji="ℹ️", title="Notice", text="", buttons=[], danger=false}){
+  const box = $("modalBox");
+  box.className = "modal" + (danger ? " danger" : "");
+  $("mEmoji").textContent = emoji;
+  $("mTitle").textContent = title;
+  $("mText").textContent = text;
+  const wrap = $("mBtns");
+  wrap.innerHTML = "";
+  buttons.forEach(b=>{
+    const btn = document.createElement("button");
+    btn.className = "btn " + (b.cls || "primary");
+    btn.type = "button";
+    btn.textContent = b.label;
+    btn.addEventListener("click", ()=>{ closeModal(); if(b.action) b.action(); });
+    wrap.appendChild(btn);
+  });
+  $("modalBg").classList.add("show");
+}
+function closeModal(){ $("modalBg").classList.remove("show"); }
+$("modalBg").addEventListener("click", e=>{ if(e.target === $("modalBg")) closeModal(); });
+
+/* =====================================================================
+   CONFETTI
+   ===================================================================== */
+const cvs = $("confetti"), ctx = cvs.getContext("2d");
+let parts = [];
+const COLORS = ["#f87171","#fbbf24","#34d399","#60a5fa","#a78bfa","#f472b6","#22d3ee"];
+function sizeCanvas(){ cvs.width = innerWidth; cvs.height = innerHeight; }
+addEventListener("resize", sizeCanvas); sizeCanvas();
+
+function rainConfetti(){
+  for(let k=0;k<6;k++){
+    setTimeout(()=>{
+      for(let i=0;i<40;i++){
+        parts.push({
+          x: Math.random()*cvs.width, y: -20 - Math.random()*220,
+          vx: (Math.random()-.5)*3, vy: 2 + Math.random()*4,
+          size: 6 + Math.random()*10, color: COLORS[(Math.random()*COLORS.length)|0],
+          rot: Math.random()*Math.PI, vr: (Math.random()-.5)*.3, life: 1
+        });
+      }
+    }, k*150);
+  }
+}
+(function loop(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  for(let i=parts.length-1;i>=0;i--){
+    const p = parts[i];
+    p.vy += .17; p.vx *= .993; p.x += p.vx; p.y += p.vy;
+    p.rot += p.vr; p.life -= .0075;
+    if(p.life <= 0 || p.y > cvs.height + 60){ parts.splice(i,1); continue; }
+    ctx.save();
+    ctx.globalAlpha = Math.max(p.life,0);
+    ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*.6);
+    ctx.restore();
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* =====================================================================
+   ANTI-CHEAT / PROCTORING
+   ===================================================================== */
+let examActive = false;
+
+/* --- 1. Block context menu --- */
+document.addEventListener("contextmenu", e=>{
+  e.preventDefault();
+  if(examActive) toast("🚫 Right-click is disabled during the exam.", 1800, true);
+  return false;
+});
+
+/* --- 2. Block copy / cut / paste / selection --- */
+["copy","cut","paste"].forEach(evt=>{
+  document.addEventListener(evt, e=>{
+    if(!examActive) return;
+    e.preventDefault();
+    toast("🚫 Copying is disabled. This attempt has been logged.", 2400, true);
+    logViolation("Copy attempt ("+evt+")");
+    return false;
+  });
+});
+document.addEventListener("selectstart", e=>{
+  if(!examActive) return;
+  const t = e.target;
+  if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+  e.preventDefault();
+});
+document.addEventListener("dragstart", e=>{ if(examActive) e.preventDefault(); });
+
+/* --- 3. Block keyboard shortcuts --- */
+document.addEventListener("keydown", e=>{
+  const k = e.key.toLowerCase();
+  const blockedCombo =
+    (e.ctrlKey || e.metaKey) && ["c","x","v","a","u","s","p","f"].includes(k);
+  const blockedDev =
+    e.key === "F12" ||
+    ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i","j","c"].includes(k));
+
+  if(examActive && (blockedCombo || blockedDev)){
+    e.preventDefault();
+    toast("🚫 Shortcut blocked: " + (e.ctrlKey ? "Ctrl+" : "") + e.key.toUpperCase(), 2000, true);
+    logViolation("Blocked shortcut");
+    return false;
+  }
+
+  /* exam navigation shortcuts */
+  if(!examActive) return;
+  if(document.activeElement && document.activeElement.tagName === "INPUT") return;
+
+  const q = QUESTIONS[S.idx];
+  if(q.type !== "text" && /^[1-5]$/.test(e.key)){
+    const i = parseInt(e.key,10)-1;
+    const btns = document.querySelectorAll("#card .opt");
+    if(btns[i]) btns[i].click();
+  }
+  if(e.key === "ArrowRight"){ const b=document.querySelectorAll("#card .nav .btn"); const n=b[b.length-1]; if(n&&!n.disabled)n.click(); }
+  if(e.key === "ArrowLeft"){ const b=document.querySelectorAll("#card .nav .btn"); if(b[0]&&!b[0].disabled)b[0].click(); }
+});
+
+/* --- 4. Tab / focus switching detection --- */
+document.addEventListener("visibilitychange", ()=>{
+  if(!examActive) return;
+  if(document.hidden) registerViolation("Switched away from the exam tab/window");
+});
+window.addEventListener("blur", ()=>{
+  if(!examActive) return;
+  registerViolation("Exam window lost focus");
+});
+
+/* --- 5. Fullscreen exit detection --- */
+document.addEventListener("fullscreenchange", ()=>{
+  if(!examActive) return;
+  if(!document.fullscreenElement) registerViolation("Exited fullscreen mode");
+});
+
+/* --- 6. Violation engine --- */
+function logViolation(reason){
+  S.violationLog.push({ t: new Date().toLocaleTimeString(), reason });
+}
+
+function registerViolation(reason){
+  if(!examActive) return;
+  S.violations++;
+  logViolation(reason);
+  updateViolationBadge();
+
+  if(S.violations >= MAX_VIOLATIONS){
+    modal({
+      emoji:"🛑",
+      title:"EXAM TERMINATED",
+      text:"You have reached " + MAX_VIOLATIONS + " violations.\n\n" +
+           "Reason: " + reason + "\n\n" +
+           "Your paper is being submitted immediately and a cheating report " +
+           "has been attached to your answer sheet.",
+      danger:true,
+      buttons:[{ label:"Submit Now", cls:"red", action:()=>forceFinish("Violation limit reached") }]
+    });
+  } else {
+    modal({
+      emoji:"⚠️",
+      title:"WARNING " + S.violations + " of " + MAX_VIOLATIONS,
+      text:"Activity detected: " + reason + ".\n\n" +
+           "This session is being recorded and your webcam feed is monitored. " +
+           "One more violation will be reported to your lecturer.",
+      danger:true,
+      buttons:[{ label:"I Understand — Continue", cls:"red" }]
+    });
+    toast("⚠️ Violation logged (" + S.violations + "/" + MAX_VIOLATIONS + ")", 3000, true);
+  }
+}
+
+function updateViolationBadge(){
+  const b = $("violationBadge");
+  if(!b) return;
+  b.textContent = "⚠️ VIOLATIONS: " + S.violations + " / " + MAX_VIOLATIONS;
+  b.style.color = S.violations === 0 ? "#bbf7d0" : "#fca5a5";
+}
+
+/* =====================================================================
+   WEBCAM
+   ===================================================================== */
+async function startWebcam(){
+  $("camPanel").style.display = "block";
+  const video = $("camVideo");
+  const fallback = $("camFallback");
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ video:true, audio:false });
+    S.camStream = stream;
+    video.srcObject = stream;
+    video.style.display = "block";
+    fallback.style.display = "none";
+    $("camStatus").textContent = "ACTIVE";
+    $("camFoot").textContent = "PROCTOR SEES THIS FEED";
+  }catch(err){
+    video.style.display = "none";
+    fallback.style.display = "grid";
+    $("camStatus").textContent = "REVIEW";
+    $("camFoot").textContent = "CAMERA ACCESS DENIED — FLAGGED";
+    logViolation("Webcam unavailable / denied");
+  }
+}
+function stopWebcam(){
+  if(S.camStream){
+    S.camStream.getTracks().forEach(t=>t.stop());
+    S.camStream = null;
+  }
+}
+
+/* =====================================================================
+   TIMER
+   ===================================================================== */
+function startTimer(){
+  S.remaining = EXAM_SECONDS;
+  renderTimer();
+  clearInterval(S.timerId);
+  S.timerId = setInterval(()=>{
+    S.remaining--;
+    renderTimer();
+    if(S.remaining === 300) toast("⏳ 5 minutes remaining!", 4000);
+    if(S.remaining === 120) toast("⏳ 2 minutes remaining!", 4000, true);
+    if(S.remaining === 60)  toast("🚨 1 minute remaining!", 4000, true);
+    if(S.remaining <= 0){
+      clearInterval(S.timerId);
+      forceFinish("Time expired");
+    }
+  }, 1000);
+}
+
+function renderTimer(){
+  const el = $("timer");
+  el.textContent = fmt(S.remaining);
+  el.classList.remove("warn","danger");
+  if(S.remaining <= 60) el.classList.add("danger");
+  else if(S.remaining <= 300) el.classList.add("warn");
+}
+
+/* =====================================================================
+   RENDER EXAM
+   ===================================================================== */
+function renderPalette(){
+  const p = $("palette");
+  p.innerHTML = "";
+  QUESTIONS.forEach((_, i)=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "pal";
+    b.textContent = i+1;
+    if(S.answers[i] !== null) b.classList.add("done");
+    if(S.flagged.has(i)) b.classList.add("flagged");
+    if(i === S.idx) b.classList.add("current");
+    b.addEventListener("click", ()=>{ S.idx = i; renderQuestion("next"); });
+    p.appendChild(b);
+  });
+}
+
+function renderQuestion(dir){
+  const q = QUESTIONS[S.idx];
+  const card = $("card");
+  card.className = "card " + (dir === "back" ? "anim-left" : "anim-right");
+  card.innerHTML = "";
+
+  /* header */
+  const head = document.createElement("div");
+  head.className = "qhead";
+  const p1 = document.createElement("span");
+  p1.className = "pill";
+  p1.textContent = "Question " + (S.idx+1) + " / " + QUESTIONS.length;
+  const p2 = document.createElement("span");
+  p2.className = "pill ghost";
+  p2.textContent = q.type === "tf" ? "True / False"
+                : q.type === "text" ? "Fill in the Blank"
+                : q.opts.some(o=>o.includes("\n")) ? "Code"
+                : "Multiple Choice";
+  head.append(p1, p2);
+  card.appendChild(head);
+
+  /* question */
+  const h = document.createElement("h2");
+  h.className = "qtext";
+  h.textContent = q.q;
+  card.appendChild(h);
+
+  /* answers */
+  if(q.type === "text"){
+    const row = document.createElement("div");
+    row.className = "textrow";
+    const inp = document.createElement("input");
+    inp.type = "text";
+    inp.id = "textAnswer";
+    inp.placeholder = "Type your answer here…";
+    inp.autocomplete = "off";
+    inp.value = S.answers[S.idx] || "";
+    inp.addEventListener("input", ()=>{
+      S.answers[S.idx] = inp.value;
+      updateSavedNote();
+      renderPalette();
+      updateProgress();
+    });
+    row.appendChild(inp);
+    card.appendChild(row);
+  } else {
+    const wrap = document.createElement("div");
+    wrap.className = "opts";
+    q.opts.forEach((text, i)=>{
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "opt";
+      if(S.answers[S.idx] === i) btn.classList.add("picked");
+
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = letter(i);
+
+      const body = document.createElement("span");
+      body.className = "opt-body";
+      if(text.includes("\n")){
+        const pre = document.createElement("pre");
+        pre.textContent = text;
+        body.appendChild(pre);
+      } else {
+        body.textContent = text;
+      }
+      btn.append(badge, body);
+      btn.addEventListener("click", ()=>{
+        S.answers[S.idx] = i;
+        wrap.querySelectorAll(".opt").forEach(o=>o.classList.remove("picked"));
+        btn.classList.add("picked");
+        renderPalette();
+        updateProgress();
+        updateSavedNote();
+      });
+      wrap.appendChild(btn);
+    });
+    card.appendChild(wrap);
+  }
+
+  /* saved note */
+  const note = document.createElement("div");
+  note.className = "savedNote";
+  note.id = "savedNote";
+  card.appendChild(note);
+  updateSavedNote();
+
+  /* navigation */
+  const nav = document.createElement("div");
+  nav.className = "nav";
+
+  const prev = document.createElement("button");
+  prev.className = "btn ghost";
+  prev.type = "button";
+  prev.textContent = "← Previous";
+  prev.disabled = S.idx === 0;
+  prev.addEventListener("click", ()=>{ if(S.idx>0){ S.idx--; renderQuestion("back"); } });
+
+  const flag = document.createElement("button");
+  flag.className = "btn ghost";
+  flag.type = "button";
+  flag.textContent = S.flagged.has(S.idx) ? "🚩 Unflag" : "🚩 Flag for review";
+  flag.addEventListener("click", ()=>{
+    if(S.flagged.has(S.idx)) S.flagged.delete(S.idx);
+    else S.flagged.add(S.idx);
+    renderQuestion("next");
+  });
+
+  const next = document.createElement("button");
+  next.className = "btn primary";
+  next.type = "button";
+  const isLast = S.idx === QUESTIONS.length - 1;
+  next.textContent = isLast ? "✅ Review & Submit" : "Next →";
+  next.addEventListener("click", ()=>{
+    if(isLast) confirmSubmit();
+    else { S.idx++; renderQuestion("next"); }
+  });
+
+  const mid = document.createElement("div");
+  mid.style.display = "flex";
+  mid.style.gap = "10px";
+  mid.append(flag);
+
+  nav.append(prev, mid, next);
+  card.appendChild(nav);
+
+  renderPalette();
+  updateProgress();
+}
+
+function updateSavedNote(){
+  const n = $("savedNote");
+  if(!n) return;
+  if(S.answers[S.idx] !== null && S.answers[S.idx] !== ""){
+    n.textContent = "✔ Answer saved. Correct answers are hidden until submission.";
+  } else {
+    n.textContent = "";
+  }
+}
+
+function updateProgress(){
+  const done = S.answers.filter(a => a !== null && a !== "").length;
+  $("progressFill").style.width = (done / QUESTIONS.length * 100) + "%";
+}
+
+/* =====================================================================
+   SUBMIT
+   ===================================================================== */
+function confirmSubmit(){
+  const done = S.answers.filter(a => a !== null && a !== "").length;
+  const left = QUESTIONS.length - done;
+  modal({
+    emoji: left ? "⚠️" : "📤",
+    title: "Submit your paper?",
+    text: left
+      ? "You still have " + left + " unanswered question(s).\nOnce submitted, you cannot change your answers."
+      : "All 20 questions answered.\nOnce submitted, you cannot change your answers.",
+    buttons:[
+      { label:"Keep Working", cls:"ghost" },
+      { label:"Submit Now", cls:"green", action:()=>forceFinish("Student submitted") }
+    ]
+  });
+}
+
+function forceFinish(reason){
+  if(S.finished) return;
+  S.finished = true;
+  examActive = false;
+  clearInterval(S.timerId);
+  S.endedAt = Date.now();
+
+  /* exit fullscreen quietly */
+  if(document.fullscreenElement && document.exitFullscreen){
+    document.exitFullscreen().catch(()=>{});
+  }
+
+  /* score */
+  S.score = 0;
+  QUESTIONS.forEach((q,i)=>{
+    const a = S.answers[i];
+    let ok = false;
+    if(a === null || a === "") ok = false;
+    else if(q.type === "text") ok = String(a).toLowerCase().replace(/\s+/g,"") === q.answer;
+    else ok = (a === q.correct);
+    S.flags[i] = ok;
+    if(ok) S.score++;
+  });
+
+  stopWebcam();
+  $("camPanel").style.display = "none";
+  $("proctorBar").style.display = "none";
+
+  showResults(reason);
+}
+
+function showResults(reason){
+  $("examScreen").style.display = "none";
+  $("resultScreen").style.display = "block";
+  $("pdfBtn").style.display = "inline-block";
+
+  const total = QUESTIONS.length;
+  const pct = Math.round(S.score / total * 100);
+
+  $("resScore").textContent = S.score + "/" + total;
+  const deg = pct/100*360;
+  const color = pct >= 80 ? "#22c55e" : pct >= 50 ? "#fbbf24" : "#ef4444";
+  $("ring").style.background =
+    `conic-gradient(${color} ${deg}deg, rgba(255,255,255,.14) ${deg}deg)`;
+
+  let emoji="🏁", title="Paper Submitted", msg="";
+  if(pct === 100){ emoji="👑"; title="PERFECT SCORE!"; msg="Flawless. Outstanding work."; }
+  else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your classes from your objects."; }
+  else if(pct >= 60){ emoji="👍"; title="Good effort!"; msg="A quick review and you're unstoppable."; }
+  else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the review list below carefully."; }
+  else { emoji="🦆"; title="More revision needed"; msg="Even the rubber duck believes in you. Try again."; }
+
+  $("resEmoji").textContent = emoji;
+  $("resTitle").textContent = title;
+  $("resMsg").textContent = msg;
+
+  const used = S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0;
+  $("resMeta").innerHTML =
+    "📄 Reason: <b>" + esc(reason) + "</b> &nbsp;•&nbsp; " +
+    "⏱ Used: <b>" + fmt(used) + "</b> &nbsp;•&nbsp; " +
+    "⚠️ Violations: <b style='color:" + (S.violations ? "#f87171" : "#4ade80") + "'>" +
+    S.violations + "</b>";
+
+  /* review */
+  const list = $("reviewList");
+  list.innerHTML = "";
+  QUESTIONS.forEach((q,i)=>{
+    const ok = S.flags[i];
+    const given = S.answers[i];
+    let givenTxt;
+    if(given === null || given === "") givenTxt = "— no answer given —";
+    else if(q.type === "text") givenTxt = given;
+    else givenTxt = letter(given) + ". " + q.opts[given];
+
+    const correctTxt = q.type === "text"
+      ? q.display
+      : letter(q.correct) + ". " + q.opts[q.correct];
+
+    const row = document.createElement("div");
+    row.className = "rev " + (ok ? "ok" : "no");
+
+    const mark = document.createElement("span");
+    mark.className = "m";
+    mark.textContent = ok ? "✓" : "✗";
+
+    const body = document.createElement("span");
+    const shortQ = q.q.length > 85 ? q.q.slice(0,85) + "…" : q.q;
+    body.innerHTML =
+      "<b>Q" + (i+1) + ".</b> " + esc(shortQ) +
+      "<small>Your answer: <b style='color:" + (ok ? "#4ade80" : "#f87171") + "'>" +
+        esc(givenTxt) + "</b></small>" +
+      (ok ? "" : "<small>Correct answer: <b>" + esc(correctTxt) + "</b></small>");
+
+    row.append(mark, body);
+    list.appendChild(row);
+  });
+
+  if(pct >= 80){ rainConfetti(); }
+
+  modal({
+    emoji, title,
+    text: msg + "\n\nYour answer sheet is ready to download.",
+    buttons:[
+      { label:"⬇️ Download Answer Sheet", cls:"green", action: downloadAnswerSheet },
+      { label:"Close", cls:"ghost" }
+    ]
+  });
+
+  scrollTo({ top:0, behavior:"smooth" });
+}
+
+/* =====================================================================
+   ANSWER SHEET BUILDER + DOWNLOAD
+   ===================================================================== */
+function buildSheetHTML(){
+  const used = S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0;
+  const pct = Math.round(S.score / QUESTIONS.length * 100);
+  const d = new Date();
+
+  let rows = "";
+  QUESTIONS.forEach((q,i)=>{
+    const ok = S.flags[i];
+    const given = S.answers[i];
+    let givenTxt;
+    if(given === null || given === "") givenTxt = "No answer given";
+    else if(q.type === "text") givenTxt = given;
+    else givenTxt = letter(given) + ". " + q.opts[given];
+
+    const correctTxt = q.type === "text"
+      ? q.display
+      : letter(q.correct) + ". " + q.opts[q.correct];
+
+    rows += `
+      <tr class="${ok ? "ok" : "no"}">
+        <td class="num">${i+1}</td>
+        <td>
+          <div class="qq">${esc(q.q)}</div>
+          <div class="aa"><b>Student answer:</b> ${esc(givenTxt)}</div>
+          ${ok ? "" : `<div class="aa"><b>Correct answer:</b> ${esc(correctTxt)}</div>`}
+        </td>
+        <td class="mk">${ok ? "✓" : "✗"}</td>
+      </tr>`;
+  });
+
+  const viol = S.violationLog.length
+    ? `<ul>${S.violationLog.map(v=>`<li>${esc(v.t)} — ${esc(v.reason)}</li>`).join("")}</ul>`
+    : "<p style='color:#16a34a'><b>No violations recorded.</b></p>";
+
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Answer Sheet — ${esc(S.student.number)}</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#0f172a;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.5}
+  .hdr{border-bottom:3px solid #0f172a;padding-bottom:10px;margin-bottom:16px}
+  .hdr h1{margin:0;font-size:22px;letter-spacing:1px}
+  .hdr p{margin:4px 0 0;font-size:12px;color:#475569;letter-spacing:.5px;text-transform:uppercase}
+  .info{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:13px}
+  .info td{border:1px solid #cbd5e1;padding:8px 10px}
+  .info td.k{background:#f1f5f9;font-weight:bold;width:170px}
+  .score{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+  .box{flex:1;min-width:130px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;text-align:center}
+  .box b{display:block;font-size:22px}
+  .box span{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+  table.q{width:100%;border-collapse:collapse;font-size:13px}
+  table.q th{background:#0f172a;color:#fff;padding:8px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+  table.q td{border:1px solid #cbd5e1;padding:9px;vertical-align:top}
+  table.q tr.ok td.mk{color:#16a34a;font-weight:bold;font-size:18px;text-align:center}
+  table.q tr.no td.mk{color:#dc2626;font-weight:bold;font-size:18px;text-align:center}
+  .num{width:34px;text-align:center;font-weight:bold;background:#f8fafc}
+  .mk{width:40px}
+  .qq{font-weight:600;margin-bottom:5px}
+  .aa{font-size:12px;color:#475569;margin-top:3px}
+  .aa b{color:#0f172a}
+  .viol{border:1px solid #fca5a5;background:#fef2f2;border-radius:8px;padding:10px 14px;margin:18px 0;font-size:12px}
+  .viol h3{margin:0 0 6px;color:#b91c1c;font-size:13px;letter-spacing:1px;text-transform:uppercase}
+  .viol ul{margin:0;padding-left:18px}
+  .sign{margin-top:34px;display:flex;gap:40px;flex-wrap:wrap;font-size:12px}
+  .sign div{flex:1;min-width:200px;border-top:1px solid #0f172a;padding-top:6px}
+  .foot{margin-top:24px;font-size:10px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:10px}
+  @media print{body{margin:0}}
+</style></head><body>
+
+<div class="hdr">
+  <h1>SHIVAMBU EXTRA CLASS — ANSWER SHEET</h1>
+  <p>VB.NET Assessment · Classes, Objects, Properties, Arrays &amp; Strings</p>
+</div>
+
+<table class="info">
+  <tr><td class="k">Student Name</td><td>${esc(S.student.name)}</td>
+      <td class="k">Student Number</td><td>${esc(S.student.number)}</td></tr>
+  <tr><td class="k">Course</td><td>${esc(S.student.course)}</td>
+      <td class="k">Year of Study</td><td>${esc(S.student.year)}</td></tr>
+  <tr><td class="k">Date &amp; Time</td><td>${esc(d.toLocaleString())}</td>
+      <td class="k">Time Used</td><td>${fmt(used)} of ${EXAM_MINUTES}:00</td></tr>
+</table>
+
+<div class="score">
+  <div class="box"><b>${S.score} / ${QUESTIONS.length}</b><span>Score</span></div>
+  <div class="box"><b>${pct}%</b><span>Percentage</span></div>
+  <div class="box"><b>${S.violations}</b><span>Violations</span></div>
+  <div class="box"><b>${fmt(used)}</b><span>Time Used</span></div>
+</div>
+
+<div class="viol">
+  <h3>Proctoring Report</h3>
+  <p style="margin:0 0 6px">Session monitored via screen-activity logging and webcam proctoring.</p>
+  ${viol}
+</div>
+
+<table class="q">
+  <thead><tr><th>#</th><th>Question &amp; Response</th><th>Mark</th></tr></thead>
+  <tbody>${rows}</tbody>
+</table>
+
+<div class="sign">
+  <div>Student Signature</div>
+  <div>Lecturer Signature</div>
+  <div>Date</div>
+</div>
+
+<div class="foot">
+  Generated automatically by the Shivambu Extra Class Assessment System · 
+  ${esc(S.student.number)} · ${esc(d.toLocaleString())}
+</div>
+
+</body></html>`;
+}
+
+function downloadAnswerSheet(){
+  const html = buildSheetHTML();
+  const blob = new Blob([html], { type:"text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const safe = (S.student.number || "student").replace(/[^a-z0-9_-]/gi,"");
+  a.href = url;
+  a.download = "ShivambuExtraClass_AnswerSheet_" + safe + ".html";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  toast("⬇️ Answer sheet downloaded!", 2600);
+}
+
+/* =====================================================================
+   PRINT / PDF
+   ===================================================================== */
+function buildPrintArea(){
+  $("printArea").innerHTML = buildSheetHTML();
+}
+function doPrint(){
+  if(!S.finished){
+    toast("🖨️ Printing is locked until you submit.", 2600, true);
+    return;
+  }
+  buildPrintArea();
+  setTimeout(()=>window.print(), 150);
+}
+$("pdfBtn").addEventListener("click", doPrint);
+$("pdfBtn2").addEventListener("click", doPrint);
+
+/* =====================================================================
+   START EXAM
+   ===================================================================== */
+$("startBtn").addEventListener("click", async ()=>{
+  const name   = $("fName").value.trim();
+  const number = $("fNumber").value.trim();
+  const course = $("fCourse").value.trim();
+  const year   = $("fYear").value;
+
+  if(!name || !number || !course || !year){
+    modal({
+      emoji:"⚠️", title:"Incomplete Details",
+      text:"Please fill in your Full Name, Student Number, Course and Year of Study before starting.",
+      buttons:[{ label:"OK", cls:"red" }]
+    });
+    return;
+  }
+
+  S.student = { name, number, course, year };
+  $("chipAvatar").textContent = name.charAt(0).toUpperCase();
+  $("chipName").textContent = name;
+  $("chipMeta").textContent = number + " · " + course + " · " + year;
+
+  /* reset */
+  S.idx = 0;
+  S.answers = new Array(QUESTIONS.length).fill(null);
+  S.flags = new Array(QUESTIONS.length).fill(false);
+  S.score = 0;
+  S.flagged = new Set();
+  S.violations = 0;
+  S.violationLog = [];
+  S.finished = false;
+  S.startedAt = Date.now();
+  updateViolationBadge();
+
+  /* switch screens */
+  $("startScreen").style.display = "none";
+  $("resultScreen").style.display = "none";
+  $("examScreen").style.display = "block";
+  $("proctorBar").style.display = "flex";
+  document.body.classList.add("exam");
+  $("pdfBtn").style.display = "none";
+
+  /* go fullscreen (best effort) */
+  try{
+    if(document.documentElement.requestFullscreen){
+      await document.documentElement.requestFullscreen();
+    }
+  }catch(e){ /* ignore */ }
+
+  /* webcam */
+  await startWebcam();
+
+  /* activate proctoring + timer */
+  examActive = true;
+  startTimer();
+  renderQuestion("next");
+
+  modal({
+    emoji:"🔒",
+    title:"Exam Started",
+    text:"You have " + EXAM_MINUTES + " minutes.\n\n" +
+         "• Your screen and webcam are being monitored.\n" +
+         "• Copying is disabled.\n" +
+         "• Correct answers are hidden until you submit.\n" +
+         "• " + MAX_VIOLATIONS + " violations will end your exam.",
+    buttons:[{ label:"Begin ✍️", cls:"green" }]
+  });
+});
+
+/* =====================================================================
+   OTHER BUTTONS
+   ===================================================================== */
+$("rulesBtn").addEventListener("click", ()=>{
+  modal({
+    emoji:"📋", title:"Exam Rules",
+    text:
+      "1. Duration: " + EXAM_MINUTES + " minutes (auto-submit at 00:00).\n" +
+      "2. This session is recorded — screen activity is logged.\n" +
+      "3. Your webcam feed is monitored by the proctor.\n" +
+      "4. Right-click, copy, cut, paste and developer shortcuts are blocked.\n" +
+      "5. Switching tabs/windows is detected and logged as a violation.\n" +
+      "6. " + MAX_VIOLATIONS + " violations = immediate submission + cheating report.\n" +
+      "7. Answers are hidden until you submit your paper.\n" +
+      "8. You may flag questions and move freely between them before submitting.",
+    buttons:[{ label:"Got it", cls:"primary" }]
+  });
+});
+
+$("restartBtn").addEventListener("click", ()=>{
+  stopWebcam();
+  examActive = false;
+  clearInterval(S.timerId);
+  document.body.classList.remove("exam");
+  $("resultScreen").style.display = "none";
+  $("examScreen").style.display = "none";
+  $("proctorBar").style.display = "none";
+  $("camPanel").style.display = "none";
+  $("startScreen").style.display = "block";
+  $("pdfBtn").style.display = "inline-block";
+  $("fName").value = ""; $("fNumber").value = ""; $("fCourse").value = ""; $("fYear").value = "";
+  scrollTo({ top:0, behavior:"smooth" });
+});
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+updateViolationBadge();
+setTimeout(()=>toast("Welcome to Shivambu Extra Class 🎓 Fill in your details to begin.", 3400), 700);
+</script>
+</body>
+</html>
