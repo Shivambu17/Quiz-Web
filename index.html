@@ -264,7 +264,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
 .ring .val{position:relative;z-index:2;font-size:2.1rem;font-weight:900}
 .ring .lbl{position:relative;z-index:2;font-size:.66rem;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
 
-.review{margin-top:18px;display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto;padding-right:6px;text-align:left}
+.review{margin-top:18px;display:flex;flex-direction:column;gap:8px;max-height:460px;overflow:auto;padding-right:6px;text-align:left}
 .rev{
   display:flex;gap:10px;align-items:flex-start;font-size:.83rem;
   padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--stroke);
@@ -277,6 +277,8 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
 .rev.no .m{color:#f87171}
 .rev small{color:var(--muted);display:block;margin-top:4px;line-height:1.5}
 .rev small b{color:#7dd3fc}
+.rev .memo{margin-top:6px;padding:7px 9px;border-radius:9px;background:rgba(56,189,248,.10);border:1px solid rgba(56,189,248,.28);color:#bae6fd;font-size:.78rem;line-height:1.5}
+.rev .memo b{color:#fbbf24}
 
 /* ---------- MODAL ---------- */
 .modal-bg{
@@ -459,7 +461,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
 
     <div class="ring" id="ring">
       <div>
-        <div class="val" id="resScore">0/20</div>
+        <div class="val" id="resScore">0/15</div>
         <div class="lbl">Correct</div>
       </div>
     </div>
@@ -467,7 +469,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
     <p style="color:var(--muted);font-size:.84rem" id="resMeta"></p>
 
     <div style="margin:20px 0 6px;font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)">
-      Answer Review (now unlocked)
+      Memo &amp; Answer Review (now unlocked)
     </div>
     <div class="review" id="reviewList"></div>
 
@@ -500,172 +502,244 @@ const EXAM_SECONDS = EXAM_MINUTES * 60;
 const MAX_VIOLATIONS = 3;
 
 /* =====================================================================
-   QUESTION BANK  (answers stay secret until submission)
+   QUESTION BANK — Quiz 2: Opportunity 2 (15 questions)
+   Memo (correct answers) & explanations are hidden until submission.
    ===================================================================== */
 const QUESTIONS = [
+  /* 1 */
   { type:"mc",
-    q:"In VB.NET, a class file usually ends with which filename extension?",
-    opts:[".xls",".vb",".cls","None of the Answers",".cla"], correct:1 },
-
-  { type:"mc",
-    q:"What is used by the code  MessageBox.Show(objPerson.Name)  to display the name?",
-    opts:["The Show sub of the Name property","The Set sub of the Name property",
-          "The Get sub of the Name object","The Get sub of the Name property",
-          "The Set sub of the Name object"], correct:3 },
-
-  { type:"mc",
-    q:'If strAmount contains the string "$147.65$", what does strAmount.Trim return?',
-    opts:['"$147.65$"','"$147.65"','"147.65$"','"147.65"','"1$47.65"'], correct:0 },
-
-  { type:"mc",
-    q:"Which statement declares AND initializes a four-element one-dimensional array?",
-    opts:['Dim strName() As String = {"John", "Mpho", "James", "Igwe"}',
-          'Dim strName(4) = {"John", "Mpho", "James", "Igwe"}',
-          "Dim strName(4) As String",
-          'Dim strName(4) As String = {"John", "Mpho", "James", "Igwe"}',
-          "Dim strName(3) As String"], correct:0 },
-
-  { type:"tf",
-    q:"An object is not an instance of a class.",
-    opts:["True","False"], correct:1 },
-
-  { type:"tf",
-    q:"A Private variable in a class can be accessed directly by a Public method in the same class.",
-    opts:["True","False"], correct:0 },
-
-  { type:"mc",
-    q:'A class has an auto-implemented property named Stdname. Which correctly assigns "Steyn" to the hidden backing field associated with the property in the default constructor?',
-    opts:["None of the Answers",'Stdname = "Steyn"','_Stdname = "Steyn"',
-          '_strStdname = "Steyn"','iStdname = "Steyn"'], correct:2 },
-
-  { type:"tf",
-    q:"The Contains method returns ______ when a string does NOT contain the specified substring.",
-    opts:["True","False"], correct:1 },
-
-  { type:"mc",
-    q:"A Number class has private _num1 and _num2 and public properties Num1 and Num2. Select the BEST CalcSum function to return the sum of the stored numbers.",
+    q:`A class contains an auto-implemented property named Lastname. Which of the following is the correct way for the default constructor to assign the string "Peter" to the variable associated with the property?`,
     opts:[
-`Public Function CalcSum(ByVal Num1 As Integer, ByVal Num2 As Integer)
-    Return Num1 + Num2
-End Function`,
-`Public Function CalcSum() As Integer
-    Return Num1 + Num2
-End Function`,
-`Public Function CalcSum(ByVal Num1 As Integer, ByVal Num2 As Integer) As Integer
-    Return Num1 + Num2
-End Function`,
-`Public Function CalcSum() As Integer
-    Dim Num1, Num2 As Integer
-    Return Num1 + Num2
-End Function`,
-`Public Function CalcSum() As Integer
-    Return num1 + num2
-End Function`], correct:1 },
+      "None of the Answers",
+      `_Lastname = "Peter"`,
+      `Lastname.New() = "Peter"`,
+      `Lastname = "Peter"`,
+      `_Lastname.strLastname = "Peter"`
+    ],
+    correct:3,
+    why:`An auto-implemented property hides its backing field, so the constructor must assign through the property itself: <b>Lastname = "Peter"</b>. The Set block then stores the value for you.` },
 
-  { type:"mc",
-    q:"Two or more methods that have the same name but different parameter lists are referred to as ______.",
-    opts:["Autograph","Loaded","Overloaded","Parallel","Signature"], correct:2 },
-
+  /* 2 */
   { type:"text",
-    q:"A constructor is a class method that is always named ______.",
-    answer:"new", display:"New" },
+    q:"What does the IndexOf method return when the string does not contain the substring?",
+    answer:"-1", display:"-1",
+    why:`IndexOf returns <b>-1</b> when the substring is not found (a valid search returns its zero-based position).` },
 
+  /* 3 */
   { type:"mc",
-    q:"You need to validate that the parameter received by the Set property is exactly 3 characters long before assigning it. Select the correct code.",
+    q:"Which of the following statements uses the Public properties to initialise the Private variables?",
     opts:[
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length = 3 Then
-            value = _cpu
-        End If
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`,
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length = 3 Then
-            _cpu = value
-        End If
-        _cpu = value
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`,
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length = 3 Then
-            _cpu = value
-        End If
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`,
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length <> 3 Then
-            _cpu = value
-        End If
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`,
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        value = _cpu
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`], correct:2 },
+`Public Sub New(ByVal strOrdernum As String, ByVal strOrdername As String)
+    _Ordernumber = " "
+    _OrderName = " "
+End Sub`,
+      "None of the Answers",
+`Public Sub New()
+    Ordernumber = _strOrdernum
+    OrderName = _strOrdername
+End Sub`,
+`Public Sub New(ByVal strOrdernum As String, ByVal strOrdername As String)
+    Ordernumber = strOrdernum
+    OrderName = strOrdername
+End Sub`,
+`Public Sub New()
+    _Ordernumber = " "
+    _OrderName = " "
+End Sub`
+    ],
+    correct:3,
+    why:`Option D passes the parameters into the <b>Public properties</b> (Ordernumber, OrderName). The properties then update the Private variables _Ordernumber and _OrderName. Options A and E write straight to the Private variables, which is not using the properties.` },
 
+  /* 4 */
   { type:"mc",
-    q:"Which statement is TRUE about the code:  Public Property Score As Integer",
-    opts:["Creates a Public property named Score, a Private variable named _ Score, and hidden Get and Set blocks.",
-          "Creates a Public property named Score, a hidden Private variable named _Score, and hidden Get and Set blocks.",
-          "None of the Answers.",
-          "Creates a hidden Public property named Score, a hidden Private variable named _ Score, and hidden Get and Set blocks.",
-          "Creates a Public property named Score, a hidden Private variable named _ Score, and a Get and Set blocks."],
-    correct:1 },
+    q:"Select the constructor code to assign the data. Validations are performed in the properties.",
+    opts:[
+`Public Sub New(ByVal Marque As String)
+    Marque = Marque
+End Sub`,
+`Public Sub New(ByVal theMarque As String)
+    theMarque = _marque
+End Sub`,
+`Public Sub New(ByVal theMarque As String)
+    _marque = theMarque
+End Sub`,
+`Public Sub New(ByVal theMarque As String)
+    Marque = theMarque
+End Sub`,
+`Public Sub New(ByVal theMarque As String)
+    theMarque = Marque
+End Sub`
+    ],
+    correct:3,
+    why:`Because the validation lives inside the property, the constructor must assign to the <b>property</b> (Marque = theMarque) so the Set block runs. Options A, B and E assign in the wrong direction (parameter = something); option C skips validation by writing directly to _marque.` },
 
+  /* 5 */
+  { type:"mc",
+    q:"Assume there is a Number class with Private member variables _num1, _num2 of type Double; Public properties Num1, Num2; a default constructor and an overloaded constructor. Business Rule: the numbers must be between 1 and 25 (both values inclusive) when the data is assigned. Select the BEST code for the Num1 property.",
+    opts:[
+`Public Property Num1 As Double
+    Set(value As Double)
+        If (value >= 1 AndAlso value <= 25) Then
+            _num1 = value
+        End If
+    End Set
+    Get
+        Return _num1
+    End Get
+End Property`,
+`Public Property Num1 As Double
+    Set(value As Double)
+        If (value > 1 AndAlso value < 25) Then
+            _num1 = value
+        End If
+    End Set
+    Get
+        Return _num1
+    End Get
+End Property`,
+`Public Property Num1 As Double
+    Set(value As Double)
+        If (value >= 1 OrElse value <= 25) Then
+            _num1 = value
+        End If
+    End Set
+    Get
+        Return _num1
+    End Get
+End Property`,
+`Public Property Num1 As Double
+    Set(value As Double)
+        If (value < 1 OrElse value > 25) Then
+            _num1 = value
+        End If
+    End Set
+    Get
+        Return _num1
+    End Get
+End Property`,
+`Public Property Num1 As Double
+    Set(value As Double)
+        If (value < 1 AndAlso value > 25) Then
+            _num1 = value
+        End If
+    End Set
+    Get
+        Return _num1
+    End Get
+End Property`
+    ],
+    correct:0,
+    why:`"Between 1 and 25, both inclusive" = <b>value >= 1 AndAlso value <= 25</b>. Option B excludes 1 and 25; option C uses OrElse so it is always true; options D and E test for values outside the range (and E is impossible).` },
+
+  /* 6 */
+  { type:"mc",
+    q:`A class contains an auto-implemented property named Address. Which of the following is the correct way for the default constructor to assign the string "Benoni" to the variable associated with the property?`,
+    opts:[
+      `Address = "Benoni"`,
+      `Address = Benoni`,
+      `_strAddress = "Benoni"`,
+      "None of the Answers",
+      `_Address = "Benoni"`
+    ],
+    correct:0,
+    why:`Same rule as Q1 — the auto-implemented property hides its backing field, so the constructor assigns through the property: <b>Address = "Benoni"</b>. Note "Benoni" needs quotation marks (option B has none).` },
+
+  /* 7 */
   { type:"tf",
-    q:"A quick way to code the default property of a class in Visual Basic is to press the TAB button once.",
-    opts:["True","False"], correct:1 },
+    q:"You must always use the Public Property and not the Private Property variable in a constructor of a class.",
+    opts:["True","False"],
+    correct:0,
+    why:`<b>True.</b> A constructor should assign through the Public properties so that any validation written in the Set block is applied and the Private variables are only ever changed by their own class property (encapsulation). This is exactly the point tested in Q3 and Q4.` },
 
+  /* 8 */
   { type:"mc",
-    q:"Which keyword is used to declare a class in VB.NET?",
-    opts:["Class","Structure","Module","Object","New"], correct:0 },
+    q:"Which of the following statements is TRUE about the code below?<br><br><code>Public Property Order As Integer</code>",
+    opts:[
+      "Creates a Public property named Order, a hidden Private variable named _Order, a Get and Set blocks",
+      "Creates a Public property named Order, a Private variable named _Order, a hidden Get and Set blocks",
+      "None of the Answers",
+      "Creates a hidden Public property named Order, a hidden Private variable named _Order, a hidden Get and Set blocks",
+      "Creates a Public property named Order, a hidden Private variable named _Order, a hidden Get and Set blocks"
+    ],
+    correct:4,
+    why:`This is an <b>auto-implemented property</b>. VB.NET creates the Public property Order, a <b>hidden</b> Private backing variable named _Order, and <b>hidden</b> Get and Set blocks — you don't write them yourself.` },
 
-  { type:"mc",
-    q:"What does the Length property of a String return?",
-    opts:["The number of characters in the string","The last character","The first character",
-          "The number of words","The index of the last character"], correct:0 },
+  /* 9 */
+  { type:"text",
+    q:"Write a statement that assigns 405 to the seventh element in the intInventory array?",
+    answer:"intinventory(6)=405", display:"intInventory(6) = 405",
+    why:`Arrays are <b>zero-based</b>, so the 7th element is index 6: <b>intInventory(6) = 405</b>.` },
 
+  /* 10 */
   { type:"mc",
-    q:"Which access modifier allows a class member to be used only inside the class where it is declared?",
-    opts:["Public","Private","Protected","Friend","Shared"], correct:1 },
+    q:"All constructors are ------------ that are named New and must have a unique parameter list within the class.",
+    opts:["Functions","Function or Sub procedures","None of the Answers","Properties","Sub procedures"],
+    correct:4,
+    why:`Constructors are <b>Sub procedures</b> named New; they do not return a value, and each overload must have a unique parameter list.` },
 
+  /* 11 */
   { type:"mc",
-    q:"Which statement creates an object of the class Student?",
-    opts:["Dim s As Student","Dim s As New Student()","New Student = s",
-          "Student s = New Student","Create Student As s"], correct:1 },
+    q:"Assume the attribute is defined as follows:<br><br><code>Private _marque As String</code><br><br>Select the best property heading for the attribute.",
+    opts:[
+      "Public Property Marque As String",
+      "Public Marque As String",
+      "Public Property Marque As Decimal",
+      "None of the Answers",
+      "Public Property _marque As String"
+    ],
+    correct:0,
+    why:`The property name drops the underscore and the data type must match the field: <b>Public Property Marque As String</b>. Option C uses the wrong type and option E keeps the underscore.` },
 
+  /* 12 */
   { type:"mc",
-    q:"Which keyword allows a class to inherit from another class in VB.NET?",
-    opts:["Inherits","Implements","Extends","Overrides","Shadows"], correct:0 },
+    q:`The strName variable contains the string "Buddy". Which of the following statements uses the Substring method to assign the string "Bud" to the strLastname variable?`,
+    opts:[
+      "strName = strLastname.Substring(0,3)",
+      "strName = strLastname.Substring(1,2)",
+      "None of the Answers",
+      "strLastname = strName.Substring(1,2)",
+      "strLastname = strName.Substring(0,3)"
+    ],
+    correct:4,
+    why:`Substring(startIndex, length). Starting at index 0 and taking 3 characters from "Buddy" gives <b>"Bud"</b>, and the result must be assigned to strLastname: <b>strLastname = strName.Substring(0,3)</b>.` },
 
+  /* 13 */
+  { type:"tf",
+    q:"A class can also be referred to as an object.",
+    opts:["True","False"],
+    correct:1,
+    why:`<b>False.</b> A class is the blueprint/template that describes an object. An object is an <i>instance</i> of a class that is created at run time with the New keyword.` },
+
+  /* 14 */
   { type:"mc",
-    q:"Which String method returns a copy of the string converted to uppercase?",
-    opts:["ToUpper()","Upper()","ToUpperCase()","UCase","Trim()"], correct:0 }
+    q:"Assume there is a Number class with Private member variables _num1, _num2 of type Double; Public properties Num1, Num2; and both a default and an overloaded constructor. Select the BEST code for an IncreaseNum1 sub procedure in the class to increase number 1 by the percentage parameter.",
+    opts:[
+`Public Sub IncreaseNum1()
+    Dim percent As Double = 5
+    Num1 = Num1 + Num1 * percent
+End Sub`,
+`Public Sub IncreaseNum1(ByVal percent As Double)
+    Num1 = Num1 + percent
+End Sub`,
+`Public Sub IncreaseNum1(ByRef percent As Double)
+    Num1 = Num1 + Num1 * percent
+End Sub`,
+`Public Sub IncreaseNum1(ByVal percent As Double)
+    Num1 = Num1 + Num1 * percent
+End Sub`,
+`Public Sub IncreaseNum1(ByVal percent As Double)
+    Num1 += percent
+End Sub`
+    ],
+    correct:3,
+    why:`"Increase by a percentage" means add the percentage <i>of the current value</i>: <b>Num1 = Num1 + Num1 * percent</b>. The parameter must be received <b>ByVal</b> because the procedure only reads it. Option B/E just add the raw number, and A/C use the wrong parameter handling.` },
+
+  /* 15 */
+  { type:"mc",
+    q:"In which block in a Property procedure do you need to enter the validation code if you need to validate a value before assigning it to a Private variable?",
+    opts:["Constructor","Validation","Get","Set","Public"],
+    correct:3,
+    why:`Validation belongs in the <b>Set</b> block — it runs every time a value is assigned to the property, so invalid data never reaches the Private variable.` }
 ];
 
 /* =====================================================================
@@ -698,6 +772,11 @@ const fmt = sec => {
   sec = Math.max(0, Math.floor(sec));
   return String(Math.floor(sec/60)).padStart(2,"0") + ":" + String(sec%60).padStart(2,"0");
 };
+const norm = s => String(s).toLowerCase()
+  .replace(/[\u2018\u2019]/g,"'")
+  .replace(/[\u201C\u201D]/g,'"')
+  .replace(/\s+/g,"")
+  .replace(/\.$/,"");
 
 function toast(msg, ms=2600, bad=false){
   const el = document.createElement("div");
@@ -773,14 +852,12 @@ function rainConfetti(){
    ===================================================================== */
 let examActive = false;
 
-/* --- 1. Block context menu --- */
 document.addEventListener("contextmenu", e=>{
   e.preventDefault();
   if(examActive) toast("🚫 Right-click is disabled during the exam.", 1800, true);
   return false;
 });
 
-/* --- 2. Block copy / cut / paste / selection --- */
 ["copy","cut","paste"].forEach(evt=>{
   document.addEventListener(evt, e=>{
     if(!examActive) return;
@@ -798,7 +875,6 @@ document.addEventListener("selectstart", e=>{
 });
 document.addEventListener("dragstart", e=>{ if(examActive) e.preventDefault(); });
 
-/* --- 3. Block keyboard shortcuts --- */
 document.addEventListener("keydown", e=>{
   const k = e.key.toLowerCase();
   const blockedCombo =
@@ -814,7 +890,6 @@ document.addEventListener("keydown", e=>{
     return false;
   }
 
-  /* exam navigation shortcuts */
   if(!examActive) return;
   if(document.activeElement && document.activeElement.tagName === "INPUT") return;
 
@@ -828,7 +903,6 @@ document.addEventListener("keydown", e=>{
   if(e.key === "ArrowLeft"){ const b=document.querySelectorAll("#card .nav .btn"); if(b[0]&&!b[0].disabled)b[0].click(); }
 });
 
-/* --- 4. Tab / focus switching detection --- */
 document.addEventListener("visibilitychange", ()=>{
   if(!examActive) return;
   if(document.hidden) registerViolation("Switched away from the exam tab/window");
@@ -838,13 +912,11 @@ window.addEventListener("blur", ()=>{
   registerViolation("Exam window lost focus");
 });
 
-/* --- 5. Fullscreen exit detection --- */
 document.addEventListener("fullscreenchange", ()=>{
   if(!examActive) return;
   if(!document.fullscreenElement) registerViolation("Exited fullscreen mode");
 });
 
-/* --- 6. Violation engine --- */
 function logViolation(reason){
   S.violationLog.push({ t: new Date().toLocaleTimeString(), reason });
 }
@@ -956,7 +1028,7 @@ function renderPalette(){
     b.type = "button";
     b.className = "pal";
     b.textContent = i+1;
-    if(S.answers[i] !== null) b.classList.add("done");
+    if(S.answers[i] !== null && S.answers[i] !== "") b.classList.add("done");
     if(S.flagged.has(i)) b.classList.add("flagged");
     if(i === S.idx) b.classList.add("current");
     b.addEventListener("click", ()=>{ S.idx = i; renderQuestion("next"); });
@@ -970,7 +1042,6 @@ function renderQuestion(dir){
   card.className = "card " + (dir === "back" ? "anim-left" : "anim-right");
   card.innerHTML = "";
 
-  /* header */
   const head = document.createElement("div");
   head.className = "qhead";
   const p1 = document.createElement("span");
@@ -985,13 +1056,11 @@ function renderQuestion(dir){
   head.append(p1, p2);
   card.appendChild(head);
 
-  /* question */
   const h = document.createElement("h2");
   h.className = "qtext";
-  h.textContent = q.q;
+  h.innerHTML = q.q;
   card.appendChild(h);
 
-  /* answers */
   if(q.type === "text"){
     const row = document.createElement("div");
     row.className = "textrow";
@@ -1045,14 +1114,12 @@ function renderQuestion(dir){
     card.appendChild(wrap);
   }
 
-  /* saved note */
   const note = document.createElement("div");
   note.className = "savedNote";
   note.id = "savedNote";
   card.appendChild(note);
   updateSavedNote();
 
-  /* navigation */
   const nav = document.createElement("div");
   nav.className = "nav";
 
@@ -1099,7 +1166,7 @@ function updateSavedNote(){
   const n = $("savedNote");
   if(!n) return;
   if(S.answers[S.idx] !== null && S.answers[S.idx] !== ""){
-    n.textContent = "✔ Answer saved. Correct answers are hidden until submission.";
+    n.textContent = "✔ Answer saved. Correct answers (memo) are hidden until submission.";
   } else {
     n.textContent = "";
   }
@@ -1121,12 +1188,18 @@ function confirmSubmit(){
     title: "Submit your paper?",
     text: left
       ? "You still have " + left + " unanswered question(s).\nOnce submitted, you cannot change your answers."
-      : "All 20 questions answered.\nOnce submitted, you cannot change your answers.",
+      : "All " + QUESTIONS.length + " questions answered.\nOnce submitted, you cannot change your answers.",
     buttons:[
       { label:"Keep Working", cls:"ghost" },
       { label:"Submit Now", cls:"green", action:()=>forceFinish("Student submitted") }
     ]
   });
+}
+
+function isCorrect(q, a){
+  if(a === null || a === undefined || a === "") return false;
+  if(q.type === "text") return norm(a) === q.answer;
+  return a === q.correct;
 }
 
 function forceFinish(reason){
@@ -1136,19 +1209,13 @@ function forceFinish(reason){
   clearInterval(S.timerId);
   S.endedAt = Date.now();
 
-  /* exit fullscreen quietly */
   if(document.fullscreenElement && document.exitFullscreen){
     document.exitFullscreen().catch(()=>{});
   }
 
-  /* score */
   S.score = 0;
   QUESTIONS.forEach((q,i)=>{
-    const a = S.answers[i];
-    let ok = false;
-    if(a === null || a === "") ok = false;
-    else if(q.type === "text") ok = String(a).toLowerCase().replace(/\s+/g,"") === q.answer;
-    else ok = (a === q.correct);
+    const ok = isCorrect(q, S.answers[i]);
     S.flags[i] = ok;
     if(ok) S.score++;
   });
@@ -1177,8 +1244,8 @@ function showResults(reason){
   let emoji="🏁", title="Paper Submitted", msg="";
   if(pct === 100){ emoji="👑"; title="PERFECT SCORE!"; msg="Flawless. Outstanding work."; }
   else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your classes from your objects."; }
-  else if(pct >= 60){ emoji="👍"; title="Good effort!"; msg="A quick review and you're unstoppable."; }
-  else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the review list below carefully."; }
+  else if(pct >= 60){ emoji="👍"; title="Good effort!"; msg="A quick review of the memo and you're unstoppable."; }
+  else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the memo below carefully."; }
   else { emoji="🦆"; title="More revision needed"; msg="Even the rubber duck believes in you. Try again."; }
 
   $("resEmoji").textContent = emoji;
@@ -1192,7 +1259,7 @@ function showResults(reason){
     "⚠️ Violations: <b style='color:" + (S.violations ? "#f87171" : "#4ade80") + "'>" +
     S.violations + "</b>";
 
-  /* review */
+  /* ===== MEMO / REVIEW ===== */
   const list = $("reviewList");
   list.innerHTML = "";
   QUESTIONS.forEach((q,i)=>{
@@ -1215,12 +1282,15 @@ function showResults(reason){
     mark.textContent = ok ? "✓" : "✗";
 
     const body = document.createElement("span");
-    const shortQ = q.q.length > 85 ? q.q.slice(0,85) + "…" : q.q;
+    const shortQ = q.q.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
+    const trimmed = shortQ.length > 95 ? shortQ.slice(0,95) + "…" : shortQ;
+
     body.innerHTML =
-      "<b>Q" + (i+1) + ".</b> " + esc(shortQ) +
+      "<b>Q" + (i+1) + ".</b> " + esc(trimmed) +
       "<small>Your answer: <b style='color:" + (ok ? "#4ade80" : "#f87171") + "'>" +
         esc(givenTxt) + "</b></small>" +
-      (ok ? "" : "<small>Correct answer: <b>" + esc(correctTxt) + "</b></small>");
+      "<small>Memo (correct answer): <b>" + esc(correctTxt) + "</b></small>" +
+      (q.why ? "<div class='memo'>💡 " + q.why + "</div>" : "");
 
     row.append(mark, body);
     list.appendChild(row);
@@ -1230,7 +1300,7 @@ function showResults(reason){
 
   modal({
     emoji, title,
-    text: msg + "\n\nYour answer sheet is ready to download.",
+    text: msg + "\n\nThe memo (correct answers) is now unlocked below.\nYour answer sheet is ready to download.",
     buttons:[
       { label:"⬇️ Download Answer Sheet", cls:"green", action: downloadAnswerSheet },
       { label:"Close", cls:"ghost" }
@@ -1265,9 +1335,10 @@ function buildSheetHTML(){
       <tr class="${ok ? "ok" : "no"}">
         <td class="num">${i+1}</td>
         <td>
-          <div class="qq">${esc(q.q)}</div>
+          <div class="qq">${esc(q.q.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim())}</div>
           <div class="aa"><b>Student answer:</b> ${esc(givenTxt)}</div>
-          ${ok ? "" : `<div class="aa"><b>Correct answer:</b> ${esc(correctTxt)}</div>`}
+          <div class="aa"><b>Memo (correct answer):</b> ${esc(correctTxt)}</div>
+          ${q.why ? `<div class="aa memo"><b>Why:</b> ${q.why.replace(/<[^>]*>/g,"")}</div>` : ""}
         </td>
         <td class="mk">${ok ? "✓" : "✗"}</td>
       </tr>`;
@@ -1302,6 +1373,7 @@ function buildSheetHTML(){
   .qq{font-weight:600;margin-bottom:5px}
   .aa{font-size:12px;color:#475569;margin-top:3px}
   .aa b{color:#0f172a}
+  .aa.memo{background:#eff6ff;border-left:3px solid #38bdf8;padding:5px 8px;border-radius:4px;color:#0c4a6e}
   .viol{border:1px solid #fca5a5;background:#fef2f2;border-radius:8px;padding:10px 14px;margin:18px 0;font-size:12px}
   .viol h3{margin:0 0 6px;color:#b91c1c;font-size:13px;letter-spacing:1px;text-transform:uppercase}
   .viol ul{margin:0;padding-left:18px}
@@ -1312,7 +1384,7 @@ function buildSheetHTML(){
 </style></head><body>
 
 <div class="hdr">
-  <h1>SHIVAMBU EXTRA CLASS — ANSWER SHEET</h1>
+  <h1>SHIVAMBU EXTRA CLASS — ANSWER SHEET &amp; MEMO</h1>
   <p>VB.NET Assessment · Classes, Objects, Properties, Arrays &amp; Strings</p>
 </div>
 
@@ -1339,7 +1411,7 @@ function buildSheetHTML(){
 </div>
 
 <table class="q">
-  <thead><tr><th>#</th><th>Question &amp; Response</th><th>Mark</th></tr></thead>
+  <thead><tr><th>#</th><th>Question · Response · Memo</th><th>Mark</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
 
@@ -1350,7 +1422,7 @@ function buildSheetHTML(){
 </div>
 
 <div class="foot">
-  Generated automatically by the Shivambu Extra Class Assessment System · 
+  Generated automatically by the Shivambu Extra Class Assessment System ·
   ${esc(S.student.number)} · ${esc(d.toLocaleString())}
 </div>
 
@@ -1388,6 +1460,7 @@ function doPrint(){
 }
 $("pdfBtn").addEventListener("click", doPrint);
 $("pdfBtn2").addEventListener("click", doPrint);
+$("downloadBtn").addEventListener("click", downloadAnswerSheet);
 
 /* =====================================================================
    START EXAM
@@ -1412,7 +1485,6 @@ $("startBtn").addEventListener("click", async ()=>{
   $("chipName").textContent = name;
   $("chipMeta").textContent = number + " · " + course + " · " + year;
 
-  /* reset */
   S.idx = 0;
   S.answers = new Array(QUESTIONS.length).fill(null);
   S.flags = new Array(QUESTIONS.length).fill(false);
@@ -1424,7 +1496,6 @@ $("startBtn").addEventListener("click", async ()=>{
   S.startedAt = Date.now();
   updateViolationBadge();
 
-  /* switch screens */
   $("startScreen").style.display = "none";
   $("resultScreen").style.display = "none";
   $("examScreen").style.display = "block";
@@ -1432,17 +1503,14 @@ $("startBtn").addEventListener("click", async ()=>{
   document.body.classList.add("exam");
   $("pdfBtn").style.display = "none";
 
-  /* go fullscreen (best effort) */
   try{
     if(document.documentElement.requestFullscreen){
       await document.documentElement.requestFullscreen();
     }
   }catch(e){ /* ignore */ }
 
-  /* webcam */
   await startWebcam();
 
-  /* activate proctoring + timer */
   examActive = true;
   startTimer();
   renderQuestion("next");
@@ -1450,10 +1518,10 @@ $("startBtn").addEventListener("click", async ()=>{
   modal({
     emoji:"🔒",
     title:"Exam Started",
-    text:"You have " + EXAM_MINUTES + " minutes.\n\n" +
+    text:"You have " + EXAM_MINUTES + " minutes and " + QUESTIONS.length + " questions.\n\n" +
          "• Your screen and webcam are being monitored.\n" +
          "• Copying is disabled.\n" +
-         "• Correct answers are hidden until you submit.\n" +
+         "• Correct answers (memo) are hidden until you submit.\n" +
          "• " + MAX_VIOLATIONS + " violations will end your exam.",
     buttons:[{ label:"Begin ✍️", cls:"green" }]
   });
@@ -1472,7 +1540,7 @@ $("rulesBtn").addEventListener("click", ()=>{
       "4. Right-click, copy, cut, paste and developer shortcuts are blocked.\n" +
       "5. Switching tabs/windows is detected and logged as a violation.\n" +
       "6. " + MAX_VIOLATIONS + " violations = immediate submission + cheating report.\n" +
-      "7. Answers are hidden until you submit your paper.\n" +
+      "7. The memo is hidden until you submit your paper.\n" +
       "8. You may flag questions and move freely between them before submitting.",
     buttons:[{ label:"Got it", cls:"primary" }]
   });
