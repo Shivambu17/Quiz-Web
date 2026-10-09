@@ -264,6 +264,8 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
   <span class="sep">|</span>
   <span class="proctor-item green" id="faceBadge">👁️ FACE VERIFIED</span>
   <span class="sep">|</span>
+  <span class="proctor-item" id="attemptBadge">📝 ATTEMPT 1 / 8</span>
+  <span class="sep">|</span>
   <span class="proctor-item" id="violationBadge">⚠️ VIOLATIONS: 0 / 8</span>
 </div>
 
@@ -306,7 +308,10 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
       <div class="center">
         <div class="big-emoji">📝</div>
         <h2 class="start-title">Student Registration</h2>
-        <p class="start-sub">Your student number will be locked to this session — <b>one attempt only</b></p>
+        <p class="start-sub">
+          You have <b>8 attempts</b> for this assessment.
+          <span id="attemptHint" style="display:block;margin-top:6px;color:#7dd3fc;font-weight:800"></span>
+        </p>
       </div>
 
       <div class="grid2">
@@ -336,15 +341,15 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
       </div>
 
       <div class="rules">
-        <h4>⛔ Strict Assessment Conditions</h4>
+        <h4>📋 Assessment Conditions</h4>
         <ul>
-          <li><b>One attempt only.</b> A student number can never be used twice — no exceptions.</li>
+          <li><b>8 attempts allowed.</b> After your 8th attempt you will not be able to access this test again.</li>
           <li><b>Camera is compulsory.</b> If the camera is off, blocked or removed, the exam refuses to run.</li>
-          <li><b>Face scan is compulsory</b> and is permanently bound to your student number.</li>
-          <li><b>Time limit:</b> 1 hour 30 minutes. The paper auto-submits at 00:00:00.</li>
-          <li><b>Up to 8 violations allowed</b> — only the 8th one ends your exam.</li>
+          <li><b>Face scan is compulsory</b> and is bound to your student number (same face must be used for every attempt).</li>
+          <li><b>Time limit:</b> 1 hour 30 minutes per attempt. The paper auto-submits at 00:00.</li>
+          <li><b>Up to 8 violations allowed per attempt</b> — the 8th ends that attempt.</li>
           <li>Copying, right-click, DevTools, tab-switching and exiting fullscreen are all violations.</li>
-          <li>Answers (memo) stay hidden until you submit.</li>
+          <li>Answers (memo) are shown after each submission so you can study before your next attempt.</li>
         </ul>
       </div>
 
@@ -372,7 +377,6 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
       <div class="scanchecks">
         <span class="chk" id="chkCam">📷 Camera</span>
         <span class="chk" id="chkFace">🙂 Face Detected</span>
-        <span class="chk" id="chkLive">💫 Liveness</span>
         <span class="chk" id="chkMatch">🔗 Identity Bound</span>
       </div>
 
@@ -387,7 +391,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
       <div class="center" style="margin-top:22px">
         <button class="btn green big" id="startExamBtn" type="button" disabled>🔒 Verify Identity &amp; Begin Exam</button>
         <p style="margin-top:14px;color:var(--muted);font-size:.74rem">
-          Your face signature is stored locally and locked to your student number. One attempt only.
+          Your face signature is stored locally and locked to your student number.
         </p>
       </div>
     </div>
@@ -432,6 +436,11 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
     <p id="resMsg" style="font-weight:800;font-size:1.05rem;margin:10px 0 4px"></p>
     <p style="color:var(--muted);font-size:.84rem" id="resMeta"></p>
 
+    <div id="attemptsPanel" style="margin:18px auto;max-width:460px;padding:14px 18px;border-radius:14px;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.35);color:#bae6fd;font-size:.88rem;line-height:1.6">
+      <div style="font-size:.68rem;letter-spacing:1.4px;text-transform:uppercase;color:#7dd3fc;font-weight:900;margin-bottom:6px">Attempts Used</div>
+      <div id="attemptsText">—</div>
+    </div>
+
     <div style="margin:20px 0 6px;font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)">
       Memo &amp; Answer Review (now unlocked)
     </div>
@@ -440,9 +449,10 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
     <div class="nav" style="justify-content:center;margin-top:24px">
       <button class="btn green" id="downloadBtn" type="button">⬇️ Download Answer Sheet</button>
       <button class="btn primary" id="pdfBtn2" type="button">🖨️ Print / Save as PDF</button>
+      <button class="btn pink" id="retryBtn" type="button" style="display:none">🔄 Start Next Attempt</button>
     </div>
-    <p style="margin-top:18px;color:#fca5a5;font-size:.76rem;font-weight:700">
-      ⛔ This student number is now permanently closed. A new attempt is not possible.
+    <p style="margin-top:18px;color:#fca5a5;font-size:.76rem;font-weight:700" id="lockMsg">
+      ⛔ After your 8th attempt, this student number will be permanently closed.
     </p>
   </section>
 </div>
@@ -461,21 +471,22 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
 
 <script>
 /* =====================================================================
-   CONFIG  —  1h30m exam, 8-attempt grace on camera / face
+   CONFIG  —  1h30m exam · 8 attempts per student · 8 violations per attempt
+   Camera used ONLY for face verification (no voice, no liveness motion)
    ===================================================================== */
-const EXAM_MINUTES = 90;             // 1 hour 30 minutes
+const EXAM_MINUTES = 90;
 const EXAM_SECONDS = EXAM_MINUTES * 60;
-const MAX_VIOLATIONS = 8;            // relaxed: 8 chances total
-const FACE_MATCH_THRESHOLD = 13;     // registration identity binding (unchanged)
-const FACE_LIVE_THRESHOLD = 26;      // in-exam tolerance (relaxed)
-const FACE_CHECK_INTERVAL = 20000;   // check every 20s instead of 12s
+const MAX_VIOLATIONS = 8;            // per attempt
+const MAX_ATTEMPTS = 8;              // total attempts per student number
+const FACE_MATCH_THRESHOLD = 18;     // identity binding (matches same student across attempts)
+const FACE_LIVE_THRESHOLD = 28;      // in-exam tolerance (very forgiving)
+const FACE_CHECK_INTERVAL = 25000;   // 25s between in-exam face checks
 const FACE_MISS_LIMIT = 8;           // 8 consecutive misses before a violation
 
 /* =====================================================================
-   QUESTION BANK — 30 questions (Assessment 2)
+   QUESTION BANK — 30 questions
    ===================================================================== */
 const QUESTIONS = [
-  /* 1 */
   { type:"mc",
     q:`The <b>Add Fruit</b> button must save the values entered in <code>txtName</code>, <code>txtQuantity</code> and <code>txtPrice</code> into three parallel one-dimensional arrays named <code>arName</code>, <code>arPrice</code> and <code>arQuantity</code>, using <code>arCnt</code> as the counter. Which block of code is correct?`,
     opts:[
@@ -512,28 +523,24 @@ arCnt(arCnt) += 1`,
     correct:0,
     why:`Inputs are read from the text boxes, each value is stored into the <b>same index</b> of its parallel array using <code>arCnt</code>, and the counter is incremented with <code>arCnt += 1</code>. Option B resets the counter to 1, option C drops the subscript (invalid for arrays) and option D treats the counter as an array.` },
 
-  /* 2 */
   { type:"mc",
     q:`Which of the following represents the result for the statement:<br><br><code>intProvince = "Joburg".Length ^ 2</code>`,
     opts:["36","6","18","12","None of the Answers"],
     correct:0,
     why:`<code>"Joburg"</code> has <b>6</b> characters. <code>^</code> is the exponent operator, so 6 ^ 2 = <b>36</b>.` },
 
-  /* 3 */
   { type:"mc",
     q:`Given the VB code below:<br><br><code>For position As Integer = 0 To arCount - 1<br>&nbsp;&nbsp;&nbsp;&nbsp;lstDisplay.Items.Add( [A] )<br>Next</code><br><br>Select the statement that represents the missing code <code>[A]</code> for a Form Load that displays all saved prices from the array <code>arPrice</code> into the list box.`,
     opts:["arPrice(position)","arPrice += 1","arPrice","arPrice( )","None of the Answers"],
     correct:0,
     why:`Inside the loop, <code>position</code> is the index, so each element is read as <b>arPrice(position)</b>. Writing just <code>arPrice</code> refers to the whole array, which cannot be added to a list box.` },
 
-  /* 4 */
   { type:"mc",
     q:`The <code>dblAmount</code> array is declared as follows:<br><br><code>Dim dblAmount() As Double = {100.5, 212.2, 405.8, 600.1, 750.4}</code><br><br>What would be the value of <code>dblAmount(1)</code>?`,
     opts:["100.5","405.8","750.4","600.1","212.2"],
     correct:4,
     why:`Arrays are <b>zero-based</b>. Index 0 = 100.5, index 1 = <b>212.2</b>, index 2 = 405.8, and so on.` },
 
-  /* 5 */
   { type:"mc",
     q:`The statement <code>intCount = txtStreetName.Text.Trim.Length</code> — which of the following is TRUE?`,
     opts:[
@@ -546,7 +553,6 @@ arCnt(arCnt) += 1`,
     correct:4,
     why:`<code>Trim</code> removes <b>all</b> leading and trailing spaces before <code>Length</code> is evaluated, so those spaces are <b>excluded</b> from the count.` },
 
-  /* 6 */
   { type:"mc",
     q:`Which of the following statements uses the <b>Public properties</b> to initialise the Private variables?`,
     opts:[
@@ -571,7 +577,6 @@ End Sub`
     correct:0,
     why:`The constructor receives parameters and assigns them to the <b>Public properties</b> (Itemnumber, ItemName). The properties then update the Private variables. Options B and E write directly to the Private variables and ignore the parameters; option C has no parameters and reads undefined variables.` },
 
-  /* 7 */
   { type:"mc",
     q:`What statement assigns the number of characters in the <code>strState</code> variable to the <code>intNum</code> variable?`,
     opts:[
@@ -584,7 +589,6 @@ End Sub`
     correct:1,
     why:`The <b>Length</b> property of a String returns its number of characters: <code>intNum = strState.Length</code>. <code>MaxLength</code> belongs to text boxes, not strings.` },
 
-  /* 8 */
   { type:"mc",
     q:`You need to validate that the parameter received by the <b>Set</b> property is exactly 3 characters long before assigning it. Select the correct code.`,
     opts:[
@@ -638,7 +642,6 @@ End Property`
     correct:1,
     why:`Only option B assigns in the correct direction — <b>_cpu = value</b> — and only when the length is exactly 3. Option A reverses the assignment, option D assigns again outside the If (defeating the validation), and option E uses <code>&lt;&gt;</code> so it accepts everything except 3 characters.` },
 
-  /* 9 */
   { type:"mc",
     q:`Which of the following statements assigns the squares of the numbers from 1 through 5 to an <code>intNumbers</code> array?`,
     opts:[
@@ -663,7 +666,6 @@ Next intX`
     correct:0,
     why:`Five values need five elements, so <code>Dim intNumbers(4)</code> (indices 0–4). Using <code>intX - 1</code> maps the loop values 1…5 onto indices 0…4 exactly. Option B is too small (index 4 overflows), and options D and E use <code>intX + 1</code>, which overflows and leaves index 0 unused.` },
 
-  /* 10 */
   { type:"mc",
     q:`Which of the following represents the <b>overload</b> constructor?`,
     opts:[
@@ -688,7 +690,6 @@ End Sub`,
     correct:2,
     why:`An overloaded constructor is the one that accepts a <b>different (unique) parameter list</b> — here <code>New(strNum, strName)</code> — and it correctly assigns the parameters to the Public properties. Option B has no parameters but uses undefined variables; option D ignores the parameters.` },
 
-  /* 11 */
   { type:"mc",
     q:`Given the VB code below, fill in the missing code of the MenuStrip to display <code>FrmAddStudent</code> inside the MDI container.<br><br><code>Dim objFrm As New [A]<br>[B] = Me<br>[C]</code>`,
     opts:[
@@ -709,7 +710,6 @@ objFrm.ShowDialog()`,
     correct:0,
     why:`Create the child form, set its <b>MdiParent</b> to the MDI container (<code>Me</code>), then call <b>Show()</b>. Option B never sets MdiParent, option C instantiates the generic Form base class, and option D uses ShowDialog which opens a modal dialog outside the MDI container.` },
 
-  /* 12 */
   { type:"mc",
     q:`Which of the following statements assigns the string <code>"Kitty"</code> to the <b>seventh</b> element in a one-dimensional array named <code>strPetNames</code>?`,
     opts:[
@@ -722,7 +722,6 @@ objFrm.ShowDialog()`,
     correct:4,
     why:`VB.NET arrays are zero-based, so the 7th element has index <b>6</b>, and VB uses <b>parentheses</b> for subscripts: <code>strPetNames(6) = "Kitty"</code>.` },
 
-  /* 13 */
   { type:"mc",
     q:`Which of the following statements is TRUE about the code below?<br><br><code>Public Property Score As Integer</code>`,
     opts:[
@@ -735,7 +734,6 @@ objFrm.ShowDialog()`,
     correct:4,
     why:`This is an <b>auto-implemented property</b>. VB.NET creates the Public property <b>Score</b>, a <b>hidden Private</b> backing variable <b>_Score</b>, and <b>hidden</b> Get and Set blocks — you do not write them yourself.` },
 
-  /* 14 */
   { type:"mc",
     q:`Which of the following is TRUE for the statement <code>intNum = randGen.Next(1, 70)</code>?`,
     opts:[
@@ -748,7 +746,6 @@ objFrm.ShowDialog()`,
     correct:3,
     why:`<code>Next(minValue, maxValue)</code> returns a value from <b>minValue</b> up to but <b>excluding</b> maxValue. So it returns 1 through <b>69</b> and never 70.` },
 
-  /* 15 */
   { type:"mc",
     q:`A class contains an auto-implemented property named <code>Stdname</code>. Which of the following is the correct way for the default constructor to assign the string <code>"Steyn"</code> to the variable associated with the property?`,
     opts:[
@@ -761,7 +758,6 @@ objFrm.ShowDialog()`,
     correct:2,
     why:`An auto-implemented property hides its backing field, so the constructor must assign through the <b>property itself</b>, and VB is case-insensitive but the property is spelled <code>Stdname</code>: <b>Stdname = "Steyn"</b>.` },
 
-  /* 16 */
   { type:"mc",
     q:`What is used by the code to display the name of <code>objPerson</code> in this code?<br><br><code>MessageBox.Show(objPerson.Name)</code>`,
     opts:[
@@ -774,7 +770,6 @@ objFrm.ShowDialog()`,
     correct:1,
     why:`Reading <code>objPerson.Name</code> invokes the <b>Get</b> accessor of the <b>Name property</b>. A Set block only runs when a value is assigned.` },
 
-  /* 17 */
   { type:"mc",
     q:`Select the statement that describes how an application can access the Private variables in a class.`,
     opts:[
@@ -787,42 +782,36 @@ objFrm.ShowDialog()`,
     correct:3,
     why:`Code <b>outside</b> the class can only reach Private variables through <b>Public</b> properties. Private properties are only visible inside the class itself.` },
 
-  /* 18 */
   { type:"mc",
     q:`All constructors are ------------ that are named <code>New</code> and must have a unique parameter list within the class.`,
     opts:["None of the Answers","Property procedure","Sub procedure","Function","Either a function or a sub procedure"],
     correct:2,
     why:`Constructors are <b>Sub procedures</b> named <code>New</code>. They never return a value, so they cannot be Functions.` },
 
-  /* 19 */
   { type:"mc",
     q:`You distinguish one variable in a one-dimensional array from another variable in the same array by using a unique number, called -----`,
     opts:["Element","Position","Subscript","Variable","Location"],
     correct:2,
     why:`That unique number is the <b>subscript</b> (also called the index). The element is the value stored at that subscript.` },
 
-  /* 20 */
   { type:"tf",
     q:`The <code>IndexOf</code> method returns 1 when the string does not contain the substring.`,
     opts:["True","False"],
     correct:1,
     why:`<b>False.</b> <code>IndexOf</code> returns <b>-1</b> when the substring is not found. A return value of 1 would mean the substring was found at index 1.` },
 
-  /* 21 */
   { type:"mc",
     q:`A ------------- variable in a class can be accessed directly by a Public method in the same class.`,
     opts:["Private","Call","Set","Function","Get"],
     correct:0,
     why:`A <b>Private</b> variable is visible everywhere inside its own class — including from Public methods and properties — but not from outside the class.` },
 
-  /* 22 */
   { type:"mc",
     q:`Methods are referred to as blocks of code, declared as ------- that perform a specific task.`,
     opts:["Public","Private","Function","Sub","Objects"],
     correct:3,
     why:`Methods are declared as <b>Sub</b> procedures (or Functions when they return a value). "Public" and "Private" are access modifiers, not the method kind.` },
 
-  /* 23 */
   { type:"mc",
     q:`Which of the following statements creates a Random object named <code>randGen</code>?`,
     opts:[
@@ -835,21 +824,18 @@ objFrm.ShowDialog()`,
     correct:2,
     why:`The .NET class is called <b>Random</b>: <code>Dim randGen As New Random</code>. The other class names do not exist in the .NET Framework.` },
 
-  /* 24 */
   { type:"mc",
     q:`In which statement is the validation code in a Property procedure entered?`,
     opts:["Override","Get","Set","Overload","Public"],
     correct:2,
     why:`Validation belongs in the <b>Set</b> block — it runs every time a value is assigned, so invalid data never reaches the Private variable.` },
 
-  /* 25 */
   { type:"tf",
     q:`<code>Public Sub New()<br>&nbsp;&nbsp;&nbsp;&nbsp;StdNo = " "<br>&nbsp;&nbsp;&nbsp;&nbsp;Surname = " "<br>&nbsp;&nbsp;&nbsp;&nbsp;test1 = 0<br>&nbsp;&nbsp;&nbsp;&nbsp;test2 = 0<br>End Sub</code><br><br>The above statements describe a default constructor that initialises the variables StdNo, Surname, test1 and test2.`,
     opts:["True","False"],
     correct:0,
     why:`<b>True.</b> A parameterless <code>Sub New()</code> is the default constructor, and it sets initial values for all four members.` },
 
-  /* 26 */
   { type:"mc",
     q:`Given the VB code below, fill in the missing code of the <b>Button Increment All</b>, which adds 5 to each value in a one-dimensional array named <code>arNumber</code>.<br><br><code>For position As Integer = 0 To arCount - 1<br>&nbsp;&nbsp;&nbsp;&nbsp;[A] += [B]<br>Next</code>`,
     opts:[
@@ -862,28 +848,24 @@ objFrm.ShowDialog()`,
     correct:0,
     why:`Each element is addressed with its subscript — <code>arNumber(position)</code> — and 5 is added to it, giving <code>arNumber(position) += 5</code>.` },
 
-  /* 27 */
   { type:"mc",
     q:`-------------- refers to two or more methods with the same name but with different parameter lists.`,
     opts:["Default","Class","Constructor","Overload","None of the Answers"],
     correct:3,
     why:`That is the definition of <b>Overload</b> (method overloading). The compiler picks the correct version from the argument list you supply.` },
 
-  /* 28 */
   { type:"mc",
     q:`Given the VB code below:<br><br><code>Public Const AR_MAX As Integer = 9<br>Public arCarName(AR_MAX) As String<br>Public arCnt As Integer<br>lblDisplay.Text = String.Format("{0} Out Of 10", [A])</code><br><br>Select the appropriate code to display the number of cars that have been saved by the application out of 10.`,
     opts:["None of the Answers","arMax","ar_MAX","arCnt","arCarName"],
     correct:3,
     why:`<code>arCnt</code> is the counter that tracks how many cars have been saved, so it is the value that goes into the placeholder.` },
 
-  /* 29 */
   { type:"mc",
     q:`In a default constructor, the default value of a Property with the String data type is always --------`,
     opts:["Filled","None of the Answers","Assign a value","Empty","New"],
     correct:3,
     why:`A String property with no explicit assignment in the default constructor is <b>Empty</b> (an empty string, <code>""</code>), never <code>Nothing</code> for a declared String.` },
 
-  /* 30 */
   { type:"mc",
     q:`If the <code>strPresident</code> variable contains the string <code>"Jacobson"</code>, what value would <code>strPresident.IndexOf("son")</code> return?`,
     opts:["5","4","-1","None of the Answers","6"],
@@ -892,10 +874,10 @@ objFrm.ShowDialog()`,
 ];
 
 /* =====================================================================
-   REGISTRY
+   REGISTRY  —  per-student record with attempt history
    ===================================================================== */
-const REG_KEY  = "shivambu_registry_v3";
-const FACE_KEY = "shivambu_faceindex_v3";
+const REG_KEY  = "shivambu_registry_v4";
+const FACE_KEY = "shivambu_faceindex_v4";
 
 function loadRegistry(){
   try { return JSON.parse(localStorage.getItem(REG_KEY)) || {}; } catch(e){ return {}; }
@@ -908,6 +890,36 @@ function loadFaceIndex(){
 }
 function saveFaceIndex(f){
   try { localStorage.setItem(FACE_KEY, JSON.stringify(f)); } catch(e){}
+}
+
+/* Get (or create) the record for a student number */
+function getStudentRecord(number){
+  const registry = loadRegistry();
+  const key = number.toUpperCase();
+  if(!registry[key]){
+    registry[key] = {
+      name: "",
+      course: "",
+      year: "",
+      faceSig: null,
+      attempts: [],          // array of { n, score, total, violations, timestamp, reason, snapshot }
+      createdAt: Date.now(),
+      locked: false
+    };
+    saveRegistry(registry);
+  }
+  return registry[key];
+}
+
+/* How many attempts have been used */
+function attemptsUsed(number){
+  const rec = getStudentRecord(number);
+  return rec.attempts ? rec.attempts.length : 0;
+}
+
+/* Remaining attempts */
+function attemptsLeft(number){
+  return Math.max(0, MAX_ATTEMPTS - attemptsUsed(number));
 }
 
 /* =====================================================================
@@ -930,7 +942,8 @@ const S = {
   faceSig: null,
   snapshot: null,
   faceMissStreak: 0,
-  faceMonitorId: null
+  faceMonitorId: null,
+  attemptNumber: 1
 };
 
 const REG = {
@@ -949,7 +962,6 @@ const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 const letter = i => "ABCDE"[i] || "?";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-/* Supports H:MM:SS when the exam is longer than an hour */
 const fmt = sec => {
   sec = Math.max(0, Math.floor(sec));
   const h = Math.floor(sec / 3600);
@@ -1011,6 +1023,7 @@ function blockAccess(title, msg, code){
   $("camPanel").style.display = "none";
   $("examScreen").style.display = "none";
   $("startScreen").style.display = "none";
+  $("resultScreen").style.display = "none";
 }
 
 /* =====================================================================
@@ -1054,7 +1067,7 @@ function rainConfetti(){
 })();
 
 /* =====================================================================
-   FACE ENGINE
+   FACE ENGINE  —  no voice, no liveness. Just face detection + hash.
    ===================================================================== */
 const workCv  = document.createElement("canvas"); workCv.width = 96;  workCv.height = 72;
 const workCtx = workCv.getContext("2d", { willReadFrequently:true });
@@ -1082,28 +1095,21 @@ function hamming(a,b){
   return d;
 }
 
-function analyseFrame(video, prevGray){
+/* Face analysis: only skin tone + brightness (no motion, no voice) */
+function analyseFace(video){
   workCtx.drawImage(video, 0, 0, 96, 72);
   const img = workCtx.getImageData(0,0,96,72);
   const d = img.data;
   const N = 96*72;
-  const gray = new Float32Array(N);
   let skin = 0, bright = 0;
-  for(let i=0,p=0;i<d.length;i+=4,p++){
+  for(let i=0;i<d.length;i+=4){
     const r=d[i], g=d[i+1], b=d[i+2];
     const gy = 0.299*r + 0.587*g + 0.114*b;
-    gray[p] = gy;
-    if(gy > 45) bright++;
+    if(gy > 40) bright++;
     const mx = Math.max(r,g,b), mn = Math.min(r,g,b);
-    if(r>95 && g>40 && b>20 && (mx-mn)>15 && Math.abs(r-g)>15 && r>g && r>b) skin++;
+    if(r>90 && g>38 && b>18 && (mx-mn)>12 && Math.abs(r-g)>12 && r>g && r>b) skin++;
   }
-  let motion = 0;
-  if(prevGray){
-    let acc = 0;
-    for(let i=0;i<N;i++) acc += Math.abs(gray[i] - prevGray[i]);
-    motion = acc / N;
-  }
-  return { skin: skin/N, bright: bright/N, motion, gray };
+  return { skin: skin/N, bright: bright/N };
 }
 
 function computeFaceHash(video){
@@ -1157,7 +1163,6 @@ async function requestCamera(videoEl){
   return stream;
 }
 
-/* ---- RELAXED: only after 3 lost-feed signals do we log a violation ---- */
 let camLostCount = 0;
 
 function onCameraLost(){
@@ -1181,11 +1186,11 @@ function onCameraLost(){
 }
 
 /* =====================================================================
-   FACE SCAN (registration) — RELAXED thresholds + faster progress
+   FACE SCAN (registration)  —  SIMPLE: face present → capture signature
    ===================================================================== */
 const SCAN = {
-  active:false, progress:0, motion:0, faceOk:false,
-  lastGray:null, timer:null, done:false
+  active:false, progress:0, faceOk:false,
+  timer:null, done:false
 };
 
 function setCheck(id, state){
@@ -1198,41 +1203,28 @@ function scanTick(){
   const v = $("scanVideo");
   if(!v || v.readyState < 2 || !v.videoWidth) return;
 
-  const a = analyseFrame(v, SCAN.lastGray);
-  SCAN.lastGray = a.gray;
-
-  /* RELAXED: much easier to satisfy the face condition */
+  const a = analyseFace(v);
   const faceOk = a.skin > 0.05 && a.bright > 0.07;
   SCAN.faceOk = faceOk;
 
-  /* RELAXED: easier liveness (tiny motion is enough) */
-  if(a.motion > 1.2) SCAN.motion++;
-  else if(SCAN.motion > 0 && Math.random() < 0.15) SCAN.motion--;
+  if(faceOk) SCAN.progress = Math.min(100, SCAN.progress + 4);
+  else       SCAN.progress = Math.max(0,   SCAN.progress - 1);
 
-  /* Fills faster, drains slower */
-  if(faceOk) SCAN.progress = Math.min(100, SCAN.progress + 6);
-  else       SCAN.progress = Math.max(0,   SCAN.progress - 2);
-
-  const oval = $("scanOval");
-  oval.className = "scan-oval" + (faceOk ? " ok" : " bad");
-
+  $("scanOval").className = "scan-oval" + (faceOk ? " ok" : " bad");
   $("scanFill").style.width = SCAN.progress + "%";
 
   if(!faceOk){
     $("scanStatus").textContent = a.bright < 0.07
       ? "TOO DARK — MOVE INTO BETTER LIGHT"
       : "NO FACE DETECTED — CENTRE YOUR FACE IN THE OVAL";
-  } else if(SCAN.motion < 3){
-    $("scanStatus").textContent = "HOLD STILL… NOW BLINK OR TURN YOUR HEAD SLOWLY";
   } else {
-    $("scanStatus").textContent = "CAPTURING BIOMETRIC SIGNATURE… " + Math.round(SCAN.progress) + "%";
+    $("scanStatus").textContent = "CAPTURING FACE SIGNATURE… " + Math.round(SCAN.progress) + "%";
   }
 
   setCheck("chkCam", true);
   setCheck("chkFace", faceOk);
-  setCheck("chkLive", SCAN.motion >= 3);
 
-  if(SCAN.progress >= 100 && SCAN.motion >= 3 && !SCAN.done){
+  if(SCAN.progress >= 100 && !SCAN.done){
     SCAN.done = true;
     finishScan();
   }
@@ -1252,7 +1244,7 @@ async function finishScan(){
     await sleep(110);
   }
   if(!sigs.length){
-    SCAN.done = false; SCAN.progress = 0; SCAN.motion = 0;
+    SCAN.done = false; SCAN.progress = 0;
     SCAN.active = true;
     SCAN.timer = setInterval(scanTick, 160);
     $("scanStatus").textContent = "SIGNATURE FAILED — PLEASE TRY AGAIN";
@@ -1271,42 +1263,59 @@ async function finishScan(){
 }
 
 /* =====================================================================
-   IDENTITY VERIFICATION
+   IDENTITY VERIFICATION  —  8 attempts allowed
    ===================================================================== */
 function verifyIdentity(){
   const number = REG.details.number.toUpperCase();
-  const registry = loadRegistry();
-  const faces    = loadFaceIndex();
+  const rec = getStudentRecord(number);
+  const used = rec.attempts.length;
 
-  /* 1 — student number already used */
-  if(registry[number]){
-    const rec = registry[number];
+  /* Check if student already exhausted all 8 attempts */
+  if(used >= MAX_ATTEMPTS){
     blockAccess(
-      "STUDENT NUMBER ALREADY USED",
-      "Student number " + number + " has already been used for this assessment on " +
-      new Date(rec.timestamp).toLocaleString() + ".\n\n" +
-      "Only ONE attempt is permitted per student. This session has been refused and logged.",
-      "DUP-NUMBER-" + number
+      "ALL 8 ATTEMPTS USED",
+      "Student number " + number + " has already used all " + MAX_ATTEMPTS + " attempts.\n\n" +
+      "You are no longer allowed to access this assessment.\n" +
+      "Please contact your lecturer if you believe this is an error.",
+      "ATTEMPTS-EXHAUSTED"
     );
     return;
   }
 
-  /* 2 — face already registered under a different number */
-  for(const h in faces){
-    const d = hamming(h, REG.faceSig);
-    if(d <= FACE_MATCH_THRESHOLD){
+  /* Face must be the SAME face registered on the very first attempt */
+  if(rec.faceSig){
+    const d = hamming(rec.faceSig, REG.faceSig);
+    if(d > FACE_MATCH_THRESHOLD){
       blockAccess(
-        "FACE ALREADY REGISTERED",
-        "This face is already bound to student number " + faces[h].number + ".\n\n" +
-        "A face may only be linked to a single student number. " +
-        "The scanned face does not match the identity being claimed — access refused.",
+        "FACE DOES NOT MATCH",
+        "The face detected does not match the face registered to student number " + number + ".\n\n" +
+        "The same student must use the same face for every attempt.\n" +
+        "Access refused.",
         "FACE-MISMATCH"
       );
       return;
     }
   }
 
-  /* 3 — passed */
+  /* First ever attempt — also ensure face isn't already registered elsewhere */
+  if(!rec.faceSig){
+    const faces = loadFaceIndex();
+    for(const h in faces){
+      if(faces[h].number === number) continue;
+      const d = hamming(h, REG.faceSig);
+      if(d <= FACE_MATCH_THRESHOLD){
+        blockAccess(
+          "FACE ALREADY REGISTERED",
+          "This face is already bound to student number " + faces[h].number + ".\n\n" +
+          "A face may only be linked to a single student number.",
+          "FACE-DUPLICATE"
+        );
+        return;
+      }
+    }
+  }
+
+  /* Passed */
   REG.verified = true;
   setCheck("chkMatch", true);
   $("scanStatus").textContent = "✅ IDENTITY VERIFIED — READY TO BEGIN";
@@ -1314,15 +1323,17 @@ function verifyIdentity(){
   $("scanOval").className = "scan-oval ok";
   $("startExamBtn").disabled = false;
 
+  const nextAttempt = used + 1;
   modal({
     emoji:"✅",
     title:"Identity Verified",
     text:
-      "Face signature bound to student number " + number + ".\n\n" +
-      "• One attempt only — this number is now locked.\n" +
+      "Face verified for student number " + number + ".\n\n" +
+      "• This will be your attempt " + nextAttempt + " of " + MAX_ATTEMPTS + ".\n" +
+      "• You have " + (MAX_ATTEMPTS - used) + " attempt(s) remaining.\n" +
       "• Your camera must stay ON for the whole exam.\n" +
       "• Up to " + MAX_VIOLATIONS + " violations allowed.\n" +
-      "• " + EXAM_MINUTES + " minutes (" + fmt(EXAM_SECONDS) + ") for " + QUESTIONS.length + " questions.",
+      "• " + fmt(EXAM_SECONDS) + " for " + QUESTIONS.length + " questions.",
     buttons:[{ label:"Continue", cls:"green" }]
   });
 }
@@ -1418,7 +1429,6 @@ function logViolation(reason){
   S.violationLog.push({ t: new Date().toLocaleTimeString(), reason });
 }
 
-/* ---- RELAXED violation handler: friendlier warnings, ends only at 8 ---- */
 function registerViolation(reason){
   if(!examActive) return;
   S.violations++;
@@ -1428,13 +1438,12 @@ function registerViolation(reason){
   if(S.violations >= MAX_VIOLATIONS){
     modal({
       emoji:"🛑",
-      title:"EXAM TERMINATED",
-      text:"You have reached " + MAX_VIOLATIONS + " violations.\n\n" +
+      title:"ATTEMPT TERMINATED",
+      text:"You have reached " + MAX_VIOLATIONS + " violations in this attempt.\n\n" +
            "Reason: " + reason + "\n\n" +
-           "Your paper is being submitted immediately and a cheating report " +
-           "has been attached to your answer sheet.",
+           "This attempt is being submitted immediately. You may start a new attempt if you still have any remaining.",
       danger:true,
-      buttons:[{ label:"Submit Now", cls:"red", action:()=>forceFinish("Violation limit reached") }]
+      buttons:[{ label:"Submit Attempt", cls:"red", action:()=>forceFinish("Violation limit reached") }]
     });
     return;
   }
@@ -1442,12 +1451,11 @@ function registerViolation(reason){
   const left = MAX_VIOLATIONS - S.violations;
   toast("⚠️ Violation " + S.violations + " / " + MAX_VIOLATIONS + " — " + reason, 3200, true);
 
-  /* Only pop a modal when you're close to the limit (last 2 chances) */
   if(left <= 2){
     modal({
       emoji:"⚠️",
       title:"Please stay focused",
-      text: reason + "\n\nYou have " + left + " chance(s) left before the exam ends automatically.",
+      text: reason + "\n\nYou have " + left + " chance(s) left before this attempt ends automatically.",
       buttons:[{ label:"OK — Continue", cls:"primary" }]
     });
   }
@@ -1460,8 +1468,15 @@ function updateViolationBadge(){
   b.style.color = S.violations === 0 ? "#bbf7d0" : "#fca5a5";
 }
 
+function updateAttemptBadge(){
+  const b = $("attemptBadge");
+  if(!b) return;
+  b.textContent = "📝 ATTEMPT " + S.attemptNumber + " / " + MAX_ATTEMPTS;
+  b.style.color = "#e0f2fe";
+}
+
 /* =====================================================================
-   IN-EXAM FACE MONITOR — RELAXED
+   IN-EXAM FACE MONITOR  —  only checks a face is present, no voice
    ===================================================================== */
 function startFaceMonitor(){
   clearInterval(S.faceMonitorId);
@@ -1471,15 +1486,13 @@ function startFaceMonitor(){
     const v = $("camVideo");
     if(!v || v.readyState < 2 || !v.videoWidth) return;
 
-    const a = analyseFrame(v, null);
-    /* RELAXED: very forgiving thresholds */
+    const a = analyseFace(v);
     const faceOk = a.skin > 0.04 && a.bright > 0.06;
 
     if(!faceOk){
       S.faceMissStreak++;
       $("faceBadge").textContent = "⚠️ FACE NOT VISIBLE";
       $("faceBadge").className = "proctor-item amber";
-      /* RELAXED: needs 8 consecutive misses to count */
       if(S.faceMissStreak >= FACE_MISS_LIMIT){
         S.faceMissStreak = 0;
         registerViolation("Face not visible to the camera");
@@ -1490,12 +1503,10 @@ function startFaceMonitor(){
     const h = computeFaceHash(v);
     if(h && S.faceSig){
       const d = hamming(h, S.faceSig);
-      /* RELAXED: much wider hash tolerance during live monitoring */
       if(d > FACE_LIVE_THRESHOLD){
         S.faceMissStreak++;
         $("faceBadge").textContent = "⚠️ FACE MISMATCH";
         $("faceBadge").className = "proctor-item amber";
-        /* Only after many consecutive mismatches do we log anything */
         if(S.faceMissStreak >= 4){
           S.faceMissStreak = 0;
           registerViolation("A different person is at the camera");
@@ -1740,38 +1751,61 @@ function forceFinish(reason){
     if(ok) S.score++;
   });
 
+  /* ---- Save the attempt into the student record ---- */
   const number = S.student.number.toUpperCase();
   const registry = loadRegistry();
-  registry[number] = {
+  const rec = registry[number] || {
     name: S.student.name,
     course: S.student.course,
     year: S.student.year,
     faceSig: S.faceSig,
-    snapshot: S.snapshot ? S.snapshot.slice(0, 200000) : null,
-    timestamp: Date.now(),
+    attempts: [],
+    createdAt: Date.now(),
+    locked: false
+  };
+  rec.name = S.student.name;
+  rec.course = S.student.course;
+  rec.year = S.student.year;
+  if(!rec.faceSig) rec.faceSig = S.faceSig;
+
+  const attemptsUsedBefore = rec.attempts.length;
+  const attemptNo = attemptsUsedBefore + 1;
+
+  rec.attempts.push({
+    n: attemptNo,
     score: S.score,
     total: QUESTIONS.length,
     violations: S.violations,
+    timestamp: Date.now(),
     reason: reason,
-    completed: true
-  };
+    timeUsed: S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0,
+    snapshot: S.snapshot ? S.snapshot.slice(0, 150000) : null,
+    violationLog: S.violationLog.slice()
+  });
+
+  if(rec.attempts.length >= MAX_ATTEMPTS) rec.locked = true;
+
+  registry[number] = rec;
   saveRegistry(registry);
 
-  const faces = loadFaceIndex();
-  if(S.faceSig) faces[S.faceSig] = { number: number, name: S.student.name };
-  saveFaceIndex(faces);
+  /* Only register face on first ever attempt */
+  if(attemptNo === 1 && S.faceSig){
+    const faces = loadFaceIndex();
+    faces[S.faceSig] = { number: number, name: S.student.name };
+    saveFaceIndex(faces);
+  }
 
   stopAllCameras();
   $("camPanel").style.display = "none";
   $("proctorBar").style.display = "none";
 
-  showResults(reason);
+  showResults(reason, attemptNo);
 }
 
 /* =====================================================================
    RESULTS
    ===================================================================== */
-function showResults(reason){
+function showResults(reason, attemptNo){
   $("examScreen").style.display = "none";
   $("resultScreen").style.display = "block";
   $("pdfBtn").style.display = "inline-block";
@@ -1785,11 +1819,11 @@ function showResults(reason){
   $("ring").style.background =
     "conic-gradient(" + color + " " + deg + "deg, rgba(255,255,255,.14) " + deg + "deg)";
 
-  let emoji="🏁", title="Paper Submitted", msg="";
+  let emoji="🏁", title="Attempt " + attemptNo + " Submitted", msg="";
   if(pct === 100){ emoji="👑"; title="PERFECT SCORE!"; msg="Flawless. Outstanding work."; }
   else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your classes from your objects."; }
   else if(pct >= 60){ emoji="👍"; title="Good effort!"; msg="A quick review of the memo and you're unstoppable."; }
-  else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the memo below carefully."; }
+  else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the memo below carefully before your next attempt."; }
   else { emoji="🦆"; title="More revision needed"; msg="Even the rubber duck believes in you."; }
 
   $("resEmoji").textContent = emoji;
@@ -1803,6 +1837,39 @@ function showResults(reason){
     "⚠️ Violations: <b style='color:" + (S.violations ? "#f87171" : "#4ade80") + "'>" +
     S.violations + "</b>";
 
+  /* Attempts panel */
+  const rec = getStudentRecord(S.student.number);
+  const usedCount = rec.attempts.length;
+  const remaining = Math.max(0, MAX_ATTEMPTS - usedCount);
+
+  const attText = $("attemptsText");
+  let historyHTML = "<b>Attempt " + attemptNo + " of " + MAX_ATTEMPTS + "</b> complete.<br>" +
+                    "<b>" + remaining + "</b> attempt(s) remaining.";
+  if(rec.attempts.length > 1){
+    historyHTML += "<div style='margin-top:8px;font-size:.82rem;color:#cbd5e1'>Previous attempts:<br>" +
+      rec.attempts.slice(0, -1).map(a =>
+        "• Attempt " + a.n + ": " + a.score + "/" + a.total + " (" +
+        Math.round(a.score/a.total*100) + "%)"
+      ).join("<br>") + "</div>";
+  }
+  attText.innerHTML = historyHTML;
+
+  /* Retry button — only if attempts remain */
+  const retry = $("retryBtn");
+  if(remaining > 0){
+    retry.style.display = "inline-block";
+    retry.textContent = "🔄 Start Attempt " + (attemptNo + 1) + " of " + MAX_ATTEMPTS;
+    $("lockMsg").textContent =
+      "✅ You still have " + remaining + " attempt(s) remaining. After attempt " + MAX_ATTEMPTS + ", access ends permanently.";
+    $("lockMsg").style.color = "#86efac";
+  } else {
+    retry.style.display = "none";
+    $("lockMsg").textContent =
+      "⛔ You have used all " + MAX_ATTEMPTS + " attempts. This student number is now permanently closed.";
+    $("lockMsg").style.color = "#fca5a5";
+  }
+
+  /* Review list */
   const list = $("reviewList");
   list.innerHTML = "";
   QUESTIONS.forEach((q,i)=>{
@@ -1844,14 +1911,61 @@ function showResults(reason){
   modal({
     emoji, title,
     text: msg + "\n\nThe memo (correct answers) is now unlocked below.\n" +
-          "Student number " + S.student.number + " is now permanently locked — no second attempt.",
-    buttons:[
-      { label:"⬇️ Download Answer Sheet", cls:"green", action: downloadAnswerSheet },
-      { label:"Close", cls:"ghost" }
-    ]
+          (remaining > 0
+            ? "You have " + remaining + " attempt(s) remaining."
+            : "All " + MAX_ATTEMPTS + " attempts used. Access is now permanently closed."),
+    buttons: remaining > 0
+      ? [
+          { label:"🔄 Next Attempt", cls:"pink", action: startNextAttempt },
+          { label:"Close", cls:"ghost" }
+        ]
+      : [
+          { label:"⬇️ Download Answer Sheet", cls:"green", action: downloadAnswerSheet },
+          { label:"Close", cls:"ghost" }
+        ]
   });
 
   scrollTo({ top:0, behavior:"smooth" });
+}
+
+/* =====================================================================
+   START NEXT ATTEMPT
+   ===================================================================== */
+function startNextAttempt(){
+  /* Reset per-attempt state but keep student identity */
+  S.idx = 0;
+  S.answers = new Array(QUESTIONS.length).fill(null);
+  S.flags = new Array(QUESTIONS.length).fill(false);
+  S.score = 0;
+  S.violations = 0;
+  S.violationLog = [];
+  S.finished = false;
+  S.faceMissStreak = 0;
+  camLostCount = 0;
+  S.faceSig = REG.faceSig;
+  S.snapshot = REG.snapshot;
+  updateViolationBadge();
+
+  /* Show registration step again so the student verifies their face */
+  $("resultScreen").style.display = "none";
+  $("examScreen").style.display = "none";
+  $("startScreen").style.display = "block";
+  document.body.classList.remove("exam");
+  $("pdfBtn").style.display = "inline-block";
+
+  /* Pre-fill the details */
+  $("fName").value = S.student.name;
+  $("fNumber").value = S.student.number;
+  $("fCourse").value = S.student.course;
+  $("fYear").value = S.student.year;
+
+  /* Show attempt hint */
+  const used = attemptsUsed(S.student.number);
+  $("attemptHint").textContent = "Attempts used: " + used + " / " + MAX_ATTEMPTS +
+    " — You have " + (MAX_ATTEMPTS - used) + " remaining.";
+
+  gotoStep(1);
+  toast("🔄 Ready for your next attempt. Verify your face to begin.", 3200);
 }
 
 /* =====================================================================
@@ -1861,6 +1975,9 @@ function buildSheetHTML(){
   const used = S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0;
   const pct = Math.round(S.score / QUESTIONS.length * 100);
   const d = new Date();
+  const rec = getStudentRecord(S.student.number);
+  const usedCount = rec.attempts.length;
+  const remaining = Math.max(0, MAX_ATTEMPTS - usedCount);
 
   let rows = "";
   QUESTIONS.forEach((q,i)=>{
@@ -1891,6 +2008,22 @@ function buildSheetHTML(){
   const viol = S.violationLog.length
     ? `<ul>${S.violationLog.map(v=>`<li>${esc(v.t)} — ${esc(v.reason)}</li>`).join("")}</ul>`
     : "<p style='color:#16a34a'><b>No violations recorded.</b></p>";
+
+  const hist = rec.attempts.length
+    ? `<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:6px">
+        <thead><tr><th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">#</th>
+        <th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Score</th>
+        <th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Violations</th>
+        <th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Date</th></tr></thead>
+        <tbody>
+        ${rec.attempts.map(a=>`
+          <tr><td style="padding:4px">${a.n}</td>
+          <td style="padding:4px">${a.score}/${a.total} (${Math.round(a.score/a.total*100)}%)</td>
+          <td style="padding:4px">${a.violations}</td>
+          <td style="padding:4px">${new Date(a.timestamp).toLocaleString()}</td></tr>
+        `).join("")}
+        </tbody></table>`
+    : "<p>No attempts recorded yet.</p>";
 
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
@@ -1940,6 +2073,8 @@ function buildSheetHTML(){
       <td class="k">Year of Study</td><td>${esc(S.student.year)}</td></tr>
   <tr><td class="k">Date &amp; Time</td><td>${esc(d.toLocaleString())}</td>
       <td class="k">Time Used</td><td>${fmt(used)} of ${fmt(EXAM_SECONDS)}</td></tr>
+  <tr><td class="k">Attempt Number</td><td>${usedCount} of ${MAX_ATTEMPTS}</td>
+      <td class="k">Attempts Remaining</td><td>${remaining}</td></tr>
 </table>
 
 <div class="score">
@@ -1950,14 +2085,21 @@ function buildSheetHTML(){
 </div>
 
 <div class="lock">
-  <b>🔒 SINGLE-ATTEMPT LOCK:</b> Student number <b>${esc(S.student.number)}</b> is permanently locked to this
-  submission. This student may not write this assessment again. Face signature was bound to this student number
-  at the start of the session.
+  <b>📝 ATTEMPT TRACKING:</b> ${usedCount} of ${MAX_ATTEMPTS} attempts used.
+  ${remaining > 0
+    ? "You still have <b>" + remaining + "</b> attempt(s) remaining."
+    : "<b>All 8 attempts used — access permanently closed.</b>"}
+  Face signature was bound to this student number on the first attempt.
 </div>
 
 <div class="viol">
-  <h3>Proctoring Report</h3>
-  <p style="margin:0 0 6px">Session monitored via screen-activity logging, webcam proctoring and periodic face verification.</p>
+  <h3>Attempt History</h3>
+  ${hist}
+</div>
+
+<div class="viol">
+  <h3>Proctoring Report (this attempt)</h3>
+  <p style="margin:0 0 6px">Session monitored via screen-activity logging and periodic face verification.</p>
   ${viol}
 </div>
 
@@ -1987,7 +2129,7 @@ function downloadAnswerSheet(){
   const a = document.createElement("a");
   const safe = (S.student.number || "student").replace(/[^a-z0-9_-]/gi,"");
   a.href = url;
-  a.download = "ShivambuExtraClass_AnswerSheet_" + safe + ".html";
+  a.download = "ShivambuExtraClass_AnswerSheet_" + safe + "_attempt" + S.attemptNumber + ".html";
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -2007,6 +2149,7 @@ function doPrint(){
 $("pdfBtn").addEventListener("click", doPrint);
 $("pdfBtn2").addEventListener("click", doPrint);
 $("downloadBtn").addEventListener("click", downloadAnswerSheet);
+$("retryBtn").addEventListener("click", startNextAttempt);
 
 /* =====================================================================
    REGISTRATION — STEP 1 → STEP 2
@@ -2034,35 +2177,54 @@ $("toScanBtn").addEventListener("click", async ()=>{
     return;
   }
 
-  REG.details = { name, number, course, year };
-  $("scanNum").textContent = number.toUpperCase();
+  const num = number.toUpperCase();
+  const rec = getStudentRecord(num);
+  const used = rec.attempts.length;
 
-  const registry = loadRegistry();
-  if(registry[number.toUpperCase()]){
-    const rec = registry[number.toUpperCase()];
+  /* Block if all 8 attempts are exhausted */
+  if(used >= MAX_ATTEMPTS){
     blockAccess(
-      "STUDENT NUMBER ALREADY USED",
-      "Student number " + number.toUpperCase() + " has already been used for this assessment on " +
-      new Date(rec.timestamp).toLocaleString() + ".\n\n" +
-      "Only ONE attempt is permitted per student. This session has been refused and logged.",
-      "DUP-NUMBER-" + number.toUpperCase()
+      "ALL 8 ATTEMPTS USED",
+      "Student number " + num + " has already used all " + MAX_ATTEMPTS + " attempts.\n\n" +
+      "You are no longer allowed to access this assessment.\n" +
+      "Please contact your lecturer if you believe this is an error.",
+      "ATTEMPTS-EXHAUSTED"
     );
     return;
   }
+
+  /* If the student exists, keep name/course/year consistent */
+  if(used > 0){
+    REG.details = {
+      name: rec.name || name,
+      number: num,
+      course: rec.course || course,
+      year: rec.year || year
+    };
+    $("fName").value = REG.details.name;
+    $("fCourse").value = REG.details.course;
+    $("fYear").value = REG.details.year;
+  } else {
+    REG.details = { name, number, course, year };
+  }
+
+  $("scanNum").textContent = REG.details.number;
+  $("attemptHint").textContent =
+    "Attempts used: " + used + " / " + MAX_ATTEMPTS +
+    " — You have " + (MAX_ATTEMPTS - used) + " remaining.";
 
   gotoStep(2);
   await beginScan();
 });
 
 async function beginScan(){
-  SCAN.active = false; SCAN.progress = 0; SCAN.motion = 0; SCAN.done = false;
-  SCAN.lastGray = null;
+  SCAN.active = false; SCAN.progress = 0; SCAN.done = false;
   clearInterval(SCAN.timer);
   $("scanFill").style.width = "0%";
   $("scanOval").className = "scan-oval";
   $("startExamBtn").disabled = true;
   setCheck("chkCam", null); setCheck("chkFace", null);
-  setCheck("chkLive", null); setCheck("chkMatch", null);
+  setCheck("chkMatch", null);
   $("scanTag").textContent = "● SCANNING";
   $("scanStatus").textContent = "REQUESTING CAMERA ACCESS…";
   $("camDeniedBox").style.display = "none";
@@ -2111,20 +2273,21 @@ $("startExamBtn").addEventListener("click", async ()=>{
     return;
   }
 
-  const registry = loadRegistry();
   const number = REG.details.number.toUpperCase();
-  if(registry[number]){
+  const rec = getStudentRecord(number);
+  if(rec.attempts.length >= MAX_ATTEMPTS){
     blockAccess(
-      "STUDENT NUMBER ALREADY USED",
-      "Student number " + number + " has already been used. Only one attempt is allowed.",
-      "DUP-NUMBER-" + number
+      "ALL 8 ATTEMPTS USED",
+      "Student number " + number + " has already used all " + MAX_ATTEMPTS + " attempts.",
+      "ATTEMPTS-EXHAUSTED"
     );
     return;
   }
 
-  S.student = { ...REG.details, number: REG.details.number.toUpperCase() };
+  S.student = { ...REG.details, number: number };
   S.faceSig = REG.faceSig;
   S.snapshot = REG.snapshot;
+  S.attemptNumber = rec.attempts.length + 1;
 
   $("chipAvatar").textContent = S.student.name.charAt(0).toUpperCase();
   $("chipName").textContent = S.student.name;
@@ -2141,6 +2304,7 @@ $("startExamBtn").addEventListener("click", async ()=>{
   S.faceMissStreak = 0;
   camLostCount = 0;
   updateViolationBadge();
+  updateAttemptBadge();
 
   clearInterval(SCAN.timer);
   SCAN.active = false;
@@ -2171,14 +2335,12 @@ $("startExamBtn").addEventListener("click", async ()=>{
 
   modal({
     emoji:"🔒",
-    title:"Exam Started — Locked Session",
+    title:"Attempt " + S.attemptNumber + " of " + MAX_ATTEMPTS + " — Started",
     text:
-      "You have " + fmt(EXAM_SECONDS) + " (" + EXAM_MINUTES + " minutes) and " +
-      QUESTIONS.length + " questions.\n\n" +
-      "• Camera and face verification run for the entire session.\n" +
-      "• Your student number is now permanently locked.\n" +
+      "You have " + fmt(EXAM_SECONDS) + " and " + QUESTIONS.length + " questions for this attempt.\n\n" +
+      "• Face verification runs for the entire session.\n" +
       "• Copying, tab-switching and DevTools are blocked.\n" +
-      "• Up to " + MAX_VIOLATIONS + " violations are allowed.\n" +
+      "• Up to " + MAX_VIOLATIONS + " violations allowed this attempt.\n" +
       "• The memo is hidden until you submit.",
     buttons:[{ label:"Begin ✍️", cls:"green" }]
   });
@@ -2191,16 +2353,16 @@ $("rulesBtn").addEventListener("click", ()=>{
   modal({
     emoji:"📋", title:"Exam Rules",
     text:
-      "1. Duration: " + fmt(EXAM_SECONDS) + " (" + EXAM_MINUTES + " minutes), auto-submit at 00:00.\n" +
-      "2. ONE ATTEMPT ONLY — a student number can never be reused.\n" +
-      "3. Camera is compulsory. No camera = no exam.\n" +
-      "4. Face scan is compulsory and is bound to your student number.\n" +
+      "1. Duration: " + fmt(EXAM_SECONDS) + " per attempt, auto-submit at 00:00.\n" +
+      "2. You have up to " + MAX_ATTEMPTS + " attempts. After " + MAX_ATTEMPTS + ", access ends permanently.\n" +
+      "3. Camera is compulsory — used only for face verification.\n" +
+      "4. The same face must be used for every attempt.\n" +
       "5. Face must remain visible for the whole session.\n" +
       "6. This session is recorded — screen activity is logged.\n" +
       "7. Right-click, copy, cut, paste and developer shortcuts are blocked.\n" +
       "8. Switching tabs/windows or leaving fullscreen is a violation.\n" +
-      "9. Up to " + MAX_VIOLATIONS + " violations allowed — the 8th ends the exam.\n" +
-      "10. The memo is hidden until you submit your paper.",
+      "9. Up to " + MAX_VIOLATIONS + " violations per attempt.\n" +
+      "10. The memo is shown after each submission so you can study.",
     buttons:[{ label:"Got it", cls:"primary" }]
   });
 });
@@ -2209,6 +2371,7 @@ $("rulesBtn").addEventListener("click", ()=>{
    BOOT
    ===================================================================== */
 updateViolationBadge();
+updateAttemptBadge();
 
 (function boot(){
   const hasCam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
@@ -2228,7 +2391,7 @@ updateViolationBadge();
     );
     return;
   }
-  setTimeout(()=>toast("Secure session · Fill in your details to begin 🎓", 3400), 700);
+  setTimeout(()=>toast("Secure session · 8 attempts available · Fill in your details to begin 🎓", 3600), 700);
 })();
 </script>
 </body>
