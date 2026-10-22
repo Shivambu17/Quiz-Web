@@ -3,282 +3,709 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SHIVAMBU EXTRA CLASS — VB.NET Assessment (Secure)</title>
+<title>INFOS TEST 2 — Database &amp; SQL Assessment</title>
 <style>
 :root{
-  --bg1:#0b1120; --bg2:#1e1b4b; --bg3:#0f766e; --bg4:#4c1d95;
-  --card: rgba(255,255,255,.09);
-  --stroke: rgba(255,255,255,.20);
-  --text:#f1f5f9; --muted:#cbd5e1;
-  --ok:#22c55e; --bad:#ef4444; --warn:#f59e0b;
-  --accent:#38bdf8; --accent2:#a78bfa;
-  --shadow: 0 24px 60px rgba(0,0,0,.45);
+  --bg-0:#0a0e1a;
+  --bg-1:#0f1729;
+  --bg-2:#141c30;
+  --surface:rgba(30,41,59,.55);
+  --surface-hi:rgba(51,65,85,.65);
+  --border:rgba(148,163,184,.16);
+  --border-hi:rgba(148,163,184,.34);
+  --text:#e2e8f0;
+  --text-dim:#94a3b8;
+  --text-mute:#64748b;
+
+  --primary:#3b82f6;
+  --primary-hi:#60a5fa;
+  --primary-deep:#2563eb;
+  --violet:#8b5cf6;
+  --success:#10b981;
+  --success-2:#059669;
+  --warning:#f59e0b;
+  --warning-2:#d97706;
+  --danger:#f43f5e;
+  --danger-2:#e11d48;
+  --info:#38bdf8;
+
+  --shadow-sm:0 2px 8px rgba(0,0,0,.30);
+  --shadow:0 8px 24px rgba(0,0,0,.40);
+  --shadow-lg:0 20px 44px rgba(0,0,0,.50);
+  --shadow-xl:0 32px 68px rgba(0,0,0,.58);
+
+  --r-sm:10px;--r-md:14px;--r-lg:20px;--r-xl:26px;
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
+html{scroll-behavior:smooth}
 body{
   margin:0;
-  font-family:'Segoe UI',system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  font-family:'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
   color:var(--text);
-  background:linear-gradient(-45deg,var(--bg1),var(--bg2),var(--bg3),var(--bg4));
-  background-size:400% 400%;
-  animation:bgShift 22s ease infinite;
+  background:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(59,130,246,.14), transparent 65%),
+    radial-gradient(ellipse 700px 400px at 100% 100%, rgba(139,92,246,.10), transparent 65%),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:-.005em;
   overflow-x:hidden;
-  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+  -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
 }
-@keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-.orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.4;pointer-events:none;z-index:0;animation:float 18s ease-in-out infinite}
-.orb.o1{width:340px;height:340px;background:#38bdf8;top:-100px;left:-90px}
-.orb.o2{width:300px;height:300px;background:#a78bfa;bottom:-90px;right:-70px;animation-delay:-5s}
-.orb.o3{width:250px;height:250px;background:#f472b6;top:42%;right:10%;animation-delay:-9s}
-@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.12)}66%{transform:translate(-30px,25px) scale(.94)}}
-
+button{font-family:inherit}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:9990}
 
+/* ============ PROCTOR BAR ============ */
 #proctorBar{
   position:fixed;top:0;left:0;right:0;z-index:9995;
-  display:none;align-items:center;justify-content:space-between;gap:10px;
-  padding:7px 14px;font-size:.72rem;font-weight:800;letter-spacing:.6px;
-  background:linear-gradient(90deg,rgba(127,29,29,.95),rgba(15,23,42,.95),rgba(127,29,29,.95));
-  border-bottom:1px solid rgba(248,113,113,.5);
-  box-shadow:0 6px 24px rgba(0,0,0,.5);
-  text-transform:uppercase;flex-wrap:wrap;
+  display:none;align-items:center;justify-content:center;flex-wrap:wrap;
+  background:rgba(10,14,26,.95);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(244,63,94,.32);
+  box-shadow:0 4px 24px rgba(0,0,0,.5);
+  color:var(--text-dim);
+  font-size:.7rem;font-weight:600;
 }
-.rec-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;margin-right:6px;animation:blink 1.1s infinite;box-shadow:0 0 12px #ef4444}
+#proctorBar .seg{
+  display:flex;align-items:center;gap:7px;
+  padding:10px 16px;
+  border-right:1px solid rgba(148,163,184,.10);
+  white-space:nowrap;letter-spacing:.4px;
+}
+#proctorBar .seg:last-child{border-right:none}
+#proctorBar .seg.rec{color:#fda4af;background:rgba(244,63,94,.07)}
+#proctorBar .seg.face-ok{color:#6ee7b7}
+#proctorBar .seg.face-bad{color:#fda4af;background:rgba(244,63,94,.10)}
+#proctorBar .seg.attempt{color:#93c5fd}
+#proctorBar .seg.viol{color:#fbbf24}
+#proctorBar .seg.viol.hot{color:#fda4af;background:rgba(244,63,94,.10)}
+#proctorBar .seg.deadline{color:var(--warning);font-weight:700}
+
+.rec-dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--danger);animation:blink 1.15s infinite;
+  box-shadow:0 0 8px var(--danger);
+}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
-.proctor-item{display:flex;align-items:center;gap:6px;color:#fecaca;white-space:nowrap}
-.proctor-item.green{color:#bbf7d0}
-.proctor-item.amber{color:#fde68a}
-#proctorBar .sep{opacity:.35}
 
+/* ============ WEBCAM ============ */
 #camPanel{
-  position:fixed;left:14px;bottom:14px;z-index:9996;width:170px;
-  border-radius:14px;overflow:hidden;border:1px solid rgba(248,113,113,.6);
-  background:#0b1120;box-shadow:0 18px 40px rgba(0,0,0,.6);display:none;
+  position:fixed;left:16px;bottom:16px;z-index:9996;width:190px;
+  border-radius:var(--r-md);overflow:hidden;
+  border:1px solid rgba(244,63,94,.38);
+  background:#05070f;
+  box-shadow:var(--shadow-lg);
+  display:none;
 }
-#camPanel .camHead{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;font-size:.6rem;font-weight:800;letter-spacing:.7px;background:rgba(127,29,29,.85);color:#fecaca}
-#camPanel video{width:100%;height:118px;object-fit:cover;display:block;background:#111;transform:scaleX(-1)}
-#camPanel .camFoot{padding:4px 8px;font-size:.58rem;letter-spacing:.5px;text-align:center;background:rgba(15,23,42,.95);color:#fca5a5}
-#camPanel .camFoot.ok{color:#86efac}
+#camPanel .camHead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 10px;font-size:.6rem;font-weight:700;letter-spacing:.8px;
+  background:linear-gradient(90deg,rgba(244,63,94,.20),rgba(10,14,26,.95));
+  color:#fda4af;border-bottom:1px solid rgba(244,63,94,.25);
+}
+#camPanel video{
+  width:100%;height:128px;object-fit:cover;display:block;
+  background:#0a0f1c;transform:scaleX(-1);
+}
+#camPanel .camFoot{
+  padding:5px 8px;font-size:.58rem;letter-spacing:.6px;text-align:center;
+  background:rgba(10,14,26,.98);color:#fbbf24;font-weight:700;
+}
+#camPanel .camFoot.ok{color:#6ee7b7}
+#camPanel .camFoot.bad{color:#fda4af}
 
-.wrap{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:22px 16px 100px}
-body.exam .wrap{padding-top:56px}
+/* ============ FACE ALERT ============ */
+#faceAlert{
+  position:fixed;inset:0;z-index:99999;display:none;place-items:center;
+  background:radial-gradient(circle at 50% 50%, rgba(76,5,25,.94), rgba(3,5,14,.98));
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+#faceAlert.show{display:grid}
+#faceAlert .inner{text-align:center;max-width:540px;padding:34px}
+#faceAlert .icon{font-size:96px;animation:pulseT .9s infinite;display:inline-block;filter:drop-shadow(0 10px 30px rgba(244,63,94,.5))}
+#faceAlert h2{
+  font-size:1.9rem;letter-spacing:3px;color:#fda4af;
+  margin:14px 0 10px;text-transform:uppercase;font-weight:800;
+  text-shadow:0 4px 20px rgba(244,63,94,.45);
+}
+#faceAlert p{color:#fecdd3;font-size:.98rem;line-height:1.7;margin:0 0 20px}
+#faceAlert .count{
+  font-size:3.4rem;font-weight:800;color:var(--warning);
+  font-variant-numeric:tabular-nums;margin:8px 0 0;
+  text-shadow:0 0 40px rgba(245,158,11,.55);
+}
+#faceAlert .count small{
+  font-size:.76rem;color:#fda4af;display:block;
+  letter-spacing:2.5px;text-transform:uppercase;margin-top:8px;font-weight:700;
+}
+@keyframes pulseT{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.05)}}
 
-header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand .logo{font-size:34px;animation:bounceY 2.4s ease-in-out infinite;filter:drop-shadow(0 6px 12px rgba(0,0,0,.4))}
-@keyframes bounceY{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(6deg)}}
-.brand h1{font-size:1.1rem;margin:0;letter-spacing:.5px;background:linear-gradient(90deg,#38bdf8,#a78bfa,#f472b6,#38bdf8);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
-@keyframes shine{to{background-position:300% 0}}
-.brand small{display:block;color:var(--muted);font-size:.7rem;letter-spacing:.8px;text-transform:uppercase}
-
-.tools{display:flex;gap:8px;flex-wrap:wrap}
-.tool{border:1px solid var(--stroke);background:var(--card);color:var(--text);padding:9px 13px;border-radius:12px;cursor:pointer;font-size:.78rem;font-weight:700;backdrop-filter:blur(10px);transition:transform .18s,box-shadow .18s}
-.tool:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 22px rgba(0,0,0,.35)}
-
-.card{background:var(--card);border:1px solid var(--stroke);border-radius:24px;padding:26px 24px 22px;backdrop-filter:blur(16px);box-shadow:var(--shadow);position:relative;overflow:hidden}
-.card::before{content:"";position:absolute;inset:0;border-radius:24px;pointer-events:none;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.10) 45%,transparent 60%);background-size:250% 100%;animation:sweep 6s linear infinite}
-@keyframes sweep{0%{background-position:200% 0}100%{background-position:-60% 0}}
-
-.anim-right{animation:slideInRight .45s cubic-bezier(.2,.9,.3,1.2) both}
-.anim-left{animation:slideInLeft .45s cubic-bezier(.2,.9,.3,1.2) both}
-@keyframes slideInRight{from{opacity:0;transform:translateX(70px) rotateY(-10deg) scale(.96)}to{opacity:1;transform:none}}
-@keyframes slideInLeft{from{opacity:0;transform:translateX(-70px) rotateY(10deg) scale(.96)}to{opacity:1;transform:none}}
-
-.steps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
-.stepdot{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--stroke);background:rgba(255,255,255,.05);color:var(--muted);transition:all .3s}
-.stepdot .n{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.66rem;background:rgba(255,255,255,.14)}
-.stepdot.active{border-color:var(--accent);color:#e0f2fe;background:rgba(56,189,248,.18);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
-.stepdot.active .n{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#06121f}
-.stepdot.done{border-color:rgba(74,222,128,.6);color:#bbf7d0;background:rgba(34,197,94,.14)}
-.stepdot.done .n{background:linear-gradient(135deg,#4ade80,#16a34a);color:#04140a}
-
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:620px){.grid2{grid-template-columns:1fr}}
-.field{display:flex;flex-direction:column;gap:6px}
-.field label{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
-.field input,.field select{padding:13px 15px;border-radius:13px;font-size:.95rem;font-family:inherit;border:1px solid var(--stroke);background:rgba(255,255,255,.08);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-user-select:text;user-select:text}
-.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(56,189,248,.22)}
-.field select option{background:#0f172a;color:#f1f5f9}
-
-.rules{margin:18px 0;padding:16px 18px;border-radius:16px;font-size:.82rem;line-height:1.65;background:rgba(239,68,68,.12);border:1px solid rgba(248,113,113,.45);color:#fecaca}
-.rules h4{margin:0 0 8px;font-size:.8rem;letter-spacing:1.2px;text-transform:uppercase;color:#fca5a5}
-.rules ul{margin:0;padding-left:20px}
-.rules li{margin-bottom:4px}
-
-.btn{border:none;cursor:pointer;font-family:inherit;font-weight:800;padding:14px 24px;border-radius:14px;font-size:.92rem;transition:transform .18s,box-shadow .18s,filter .18s}
-.btn:hover:not(:disabled){transform:translateY(-3px) scale(1.03);box-shadow:0 14px 30px rgba(0,0,0,.35)}
-.btn:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}
-.btn.primary{background:linear-gradient(135deg,#38bdf8,#a78bfa);color:#07121e}
-.btn.ghost{background:transparent;border:1px solid var(--stroke);color:var(--text)}
-.btn.green{background:linear-gradient(135deg,#4ade80,#16a34a);color:#04140a}
-.btn.pink{background:linear-gradient(135deg,#f472b6,#a78bfa);color:#1a0512}
-.btn.red{background:linear-gradient(135deg,#f87171,#dc2626);color:#fff}
-.btn.big{font-size:1.05rem;padding:17px 40px}
-
-.scan-stage{position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:#000;border:2px solid var(--stroke);box-shadow:0 20px 50px rgba(0,0,0,.6)}
-.scan-stage video{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1)}
-.scan-oval{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);width:52%;height:72%;border-radius:50%;border:3px dashed rgba(56,189,248,.85);box-shadow:0 0 0 9999px rgba(2,6,23,.58),0 0 26px rgba(56,189,248,.35) inset;pointer-events:none;transition:border-color .3s,box-shadow .3s}
-.scan-oval.ok{border-color:#4ade80;box-shadow:0 0 0 9999px rgba(2,6,23,.30),0 0 34px rgba(74,222,128,.65)}
-.scan-oval.bad{border-color:#f87171;box-shadow:0 0 0 9999px rgba(2,6,23,.65),0 0 34px rgba(248,113,113,.65)}
-.scan-stage .tag{position:absolute;left:10px;top:10px;padding:5px 11px;border-radius:999px;font-size:.62rem;font-weight:900;letter-spacing:1px;background:rgba(2,6,23,.8);border:1px solid var(--stroke);color:#e0f2fe}
-.scan-stage .tag.live{background:rgba(127,29,29,.9);border-color:rgba(248,113,113,.7);color:#fecaca}
-.scanbar{height:12px;border-radius:999px;background:rgba(255,255,255,.13);overflow:hidden;border:1px solid var(--stroke);margin:16px auto 8px;max-width:420px}
-.scanbar .fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c55e,#38bdf8,#a78bfa);transition:width .18s linear}
-.scanstatus{text-align:center;font-size:.8rem;font-weight:800;letter-spacing:.8px;color:#7dd3fc;min-height:22px}
-.scanchecks{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-.chk{font-size:.68rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);color:var(--muted)}
-.chk.on{border-color:rgba(74,222,128,.7);background:rgba(34,197,94,.16);color:#bbf7d0}
-.chk.err{border-color:rgba(248,113,113,.7);background:rgba(239,68,68,.16);color:#fecaca}
-
-#camDeniedBox{display:none;place-items:center;text-align:center;padding:34px 20px;border-radius:18px;border:2px dashed rgba(248,113,113,.7);background:rgba(239,68,68,.12);color:#fecaca;line-height:1.7}
-#camDeniedBox .big{font-size:52px;display:block;margin-bottom:8px}
-
-.examBar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.timerBox{display:flex;align-items:center;gap:12px;padding:11px 20px;border-radius:16px;background:var(--card);border:1px solid var(--stroke);backdrop-filter:blur(10px)}
-.timerBox .tlabel{font-size:.62rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
-#timer{font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:1px;color:#4ade80}
-#timer.warn{color:#fbbf24;animation:pulseT 1s infinite}
-#timer.danger{color:#f87171;animation:pulseT .55s infinite}
-@keyframes pulseT{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(1.06)}}
-
-.studentChip{display:flex;align-items:center;gap:10px;padding:9px 16px;border-radius:16px;background:var(--card);border:1px solid var(--stroke);backdrop-filter:blur(10px);font-size:.78rem;line-height:1.35}
-.studentChip .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#07121e;font-size:.9rem}
-.studentChip b{display:block;font-size:.85rem}
-.studentChip span{color:var(--muted);font-size:.68rem}
-
-.progress{height:10px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:0 0 14px;border:1px solid var(--stroke)}
-.progress .fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c55e,#38bdf8,#a78bfa,#f472b6);background-size:300% 100%;transition:width .5s cubic-bezier(.3,1.3,.4,1);animation:shine 3s linear infinite}
-
-.palette{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
-.pal{width:38px;height:38px;border-radius:11px;border:1px solid var(--stroke);background:rgba(255,255,255,.07);color:var(--text);font-weight:800;font-size:.78rem;cursor:pointer;transition:transform .15s,background .15s}
-.pal:hover{transform:scale(1.12)}
-.pal.done{background:linear-gradient(135deg,#38bdf8,#a78bfa);color:#07121e;border-color:transparent}
-.pal.current{outline:3px solid #fbbf24;outline-offset:1px}
-.pal.flagged{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#231400;border-color:transparent}
-
-.qhead{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-.pill{font-size:.68rem;letter-spacing:.8px;text-transform:uppercase;font-weight:800;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121f}
-.pill.ghost{background:transparent;color:var(--muted);border:1px dashed var(--stroke);font-weight:700}
-.qtext{font-size:1.2rem;line-height:1.55;margin:6px 0 18px}
-.qtext code{background:rgba(0,0,0,.3);padding:2px 6px;border-radius:6px;font-size:.94em}
-
-.opts{display:flex;flex-direction:column;gap:10px}
-.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;cursor:pointer;color:var(--text);background:rgba(255,255,255,.06);border:1px solid var(--stroke);padding:13px 15px;border-radius:15px;font-size:.96rem;font-family:inherit;transition:transform .16s,box-shadow .16s,background .16s,border-color .16s}
-.opt:hover{transform:translateX(6px);border-color:var(--accent);box-shadow:0 10px 24px rgba(0,0,0,.3)}
-.opt.picked{background:linear-gradient(90deg,rgba(56,189,248,.35),rgba(167,139,250,.18));border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.22)}
-.badge{flex:0 0 30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.82rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#06121f}
-.opt.picked .badge{background:linear-gradient(135deg,#4ade80,#16a34a);color:#04140a}
-.opt-body{flex:1;padding-top:3px;min-width:0}
-.opt-body pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:Consolas,"Courier New",monospace;font-size:.83rem;line-height:1.45;background:rgba(0,0,0,.3);padding:9px 11px;border-radius:10px}
-
-.textrow{display:flex;gap:10px;flex-wrap:wrap}
-.textrow input{flex:1;min-width:190px;padding:14px 16px;border-radius:14px;font-size:1rem;border:1px solid var(--stroke);background:rgba(255,255,255,.08);color:var(--text);font-family:inherit;outline:none;-webkit-user-select:text;user-select:text}
-.textrow input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(56,189,248,.22)}
-
-.savedNote{margin-top:14px;font-size:.82rem;color:#7dd3fc;font-weight:700;min-height:20px;display:flex;gap:8px;align-items:center}
-.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
-
-.center{text-align:center}
-.big-emoji{font-size:62px;animation:bounceY 2s ease-in-out infinite;display:inline-block}
-.start-title{font-size:1.6rem;margin:8px 0 6px}
-.start-sub{color:var(--muted);margin-bottom:18px}
-.ring{width:170px;height:170px;border-radius:50%;margin:12px auto 8px;display:grid;place-items:center;position:relative;background:conic-gradient(#22c55e 0deg,rgba(255,255,255,.14) 0deg);transition:background 1s ease}
-.ring::after{content:"";position:absolute;inset:14px;border-radius:50%;background:rgba(10,14,30,.78);backdrop-filter:blur(6px)}
-.ring .val{position:relative;z-index:2;font-size:2.1rem;font-weight:900}
-.ring .lbl{position:relative;z-index:2;font-size:.66rem;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
-
-.review{margin-top:18px;display:flex;flex-direction:column;gap:8px;max-height:460px;overflow:auto;padding-right:6px;text-align:left}
-.rev{display:flex;gap:10px;align-items:flex-start;font-size:.83rem;padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-left-width:5px}
-.rev.ok{border-left-color:var(--ok)}
-.rev.no{border-left-color:var(--bad)}
-.rev .m{font-weight:900;font-size:1rem}
-.rev.ok .m{color:#4ade80}
-.rev.no .m{color:#f87171}
-.rev small{color:var(--muted);display:block;margin-top:4px;line-height:1.5}
-.rev small b{color:#7dd3fc}
-.rev .memo{margin-top:6px;padding:7px 9px;border-radius:9px;background:rgba(56,189,248,.10);border:1px solid rgba(56,189,248,.28);color:#bae6fd;font-size:.78rem;line-height:1.5}
-.rev .memo b{color:#fbbf24}
-
-.modal-bg{position:fixed;inset:0;background:rgba(2,6,23,.75);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:99999;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
-.modal-bg.show{opacity:1;pointer-events:auto}
-.modal{max-width:470px;width:100%;text-align:center;padding:28px 24px;border-radius:24px;border:1px solid var(--stroke);background:linear-gradient(160deg,rgba(56,189,248,.18),rgba(167,139,250,.18)),rgba(15,23,42,.95);box-shadow:0 30px 70px rgba(0,0,0,.6);color:#f1f5f9;transform:scale(.75) rotate(-3deg);transition:transform .4s cubic-bezier(.2,1.5,.4,1)}
-.modal-bg.show .modal{transform:scale(1) rotate(0)}
-.modal.danger{background:linear-gradient(160deg,rgba(239,68,68,.30),rgba(127,29,29,.35)),rgba(15,23,42,.96);border-color:rgba(248,113,113,.65)}
-.modal.danger h3{color:#fca5a5}
-.modal .m-emoji{font-size:54px;animation:bounceY 1.6s ease-in-out infinite;display:inline-block}
-.modal h3{margin:8px 0 8px;font-size:1.28rem}
-.modal p{margin:0 0 18px;color:#cbd5e1;font-size:.9rem;line-height:1.6;white-space:pre-line}
-.modal .mBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-
-#blockScreen{position:fixed;inset:0;z-index:999999;display:none;place-items:center;padding:24px;
-  background:radial-gradient(circle at 50% 30%,rgba(127,29,29,.96),rgba(2,6,23,.99) 70%);text-align:center}
+/* ============ BLOCK ============ */
+#blockScreen{
+  position:fixed;inset:0;z-index:999999;display:none;place-items:center;padding:24px;
+  background:radial-gradient(circle at 50% 30%, rgba(100,10,25,.94), rgba(3,5,14,.995) 70%);
+  text-align:center;
+}
 #blockScreen.show{display:grid}
 #blockScreen .inner{max-width:620px}
-#blockScreen .icon{font-size:88px;animation:pulseT 1.4s infinite}
-#blockScreen h2{font-size:1.7rem;letter-spacing:2px;color:#fca5a5;margin:10px 0 6px;text-transform:uppercase}
-#blockScreen p{color:#fecaca;font-size:.98rem;line-height:1.75;margin:0 auto 8px;max-width:560px}
-#blockScreen .code{margin-top:18px;font-family:Consolas,monospace;font-size:.74rem;letter-spacing:1px;color:#f87171;border:1px dashed rgba(248,113,113,.5);padding:10px 16px;border-radius:12px;display:inline-block}
-#blockScreen .seal{margin-top:22px;font-size:.68rem;letter-spacing:2px;color:#7f1d1d;text-transform:uppercase}
+#blockScreen .icon{font-size:88px;animation:pulseT 1.4s infinite;display:inline-block}
+#blockScreen h2{
+  font-size:1.8rem;letter-spacing:2px;color:#fda4af;
+  margin:14px 0 8px;text-transform:uppercase;font-weight:800;
+}
+#blockScreen p{
+  color:#fecdd3;font-size:.98rem;line-height:1.8;
+  margin:0 auto 8px;max-width:560px;white-space:pre-line;
+}
+#blockScreen .code{
+  margin-top:20px;font-family:'JetBrains Mono',Consolas,monospace;
+  font-size:.74rem;letter-spacing:1px;color:var(--warning);
+  border:1px dashed rgba(245,158,11,.5);padding:11px 18px;
+  border-radius:var(--r-sm);display:inline-block;background:rgba(245,158,11,.05);
+}
+#blockScreen .seal{
+  margin-top:24px;font-size:.66rem;letter-spacing:3px;
+  color:#7f1d1d;text-transform:uppercase;font-weight:700;
+}
 
-#toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:99998;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
-.toast{padding:11px 20px;border-radius:999px;font-size:.84rem;font-weight:800;background:rgba(15,23,42,.95);color:#f8fafc;border:1px solid var(--stroke);box-shadow:0 14px 30px rgba(0,0,0,.5);animation:toastIn .4s cubic-bezier(.2,1.5,.4,1) both;max-width:92vw;text-align:center}
-.toast.bad{background:rgba(127,29,29,.96);border-color:rgba(248,113,113,.6);color:#fecaca}
-.toast.out{animation:toastOut .35s forwards}
-@keyframes toastIn{from{opacity:0;transform:translateY(26px) scale(.85)}to{opacity:1;transform:none}}
-@keyframes toastOut{to{opacity:0;transform:translateY(20px) scale(.9)}}
+/* ============ LAYOUT ============ */
+.wrap{position:relative;z-index:2;max-width:1040px;margin:0 auto;padding:24px 18px 100px}
+body.exam .wrap{padding-top:68px}
 
+header.top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;margin-bottom:22px;
+}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .logo{
+  width:52px;height:52px;border-radius:var(--r-md);display:grid;place-items:center;
+  font-size:24px;
+  background:linear-gradient(135deg, rgba(59,130,246,.22), rgba(139,92,246,.14));
+  border:1px solid rgba(59,130,246,.32);
+  box-shadow:0 8px 22px rgba(59,130,246,.20), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.brand h1{
+  font-size:1rem;margin:0;letter-spacing:.2px;font-weight:700;
+  background:linear-gradient(90deg,#93c5fd,#bfdbfe,#93c5fd);
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 8s linear infinite;
+}
+@keyframes shine{to{background-position:200% 0}}
+.brand small{
+  display:block;color:var(--text-mute);font-size:.66rem;
+  letter-spacing:1.1px;text-transform:uppercase;margin-top:3px;font-weight:600;
+}
+
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tool{
+  border:1px solid var(--border);background:var(--surface);
+  color:var(--text-dim);padding:9px 15px;border-radius:11px;cursor:pointer;
+  font-size:.78rem;font-weight:600;
+  transition:all .2s;
+}
+.tool:hover{
+  transform:translateY(-1px);border-color:var(--border-hi);
+  background:var(--surface-hi);color:var(--text);box-shadow:var(--shadow-sm);
+}
+
+/* ============ CARDS ============ */
+.card{
+  background:linear-gradient(180deg, rgba(30,41,59,.55), rgba(15,23,42,.55));
+  border:1px solid var(--border);
+  border-radius:var(--r-xl);
+  padding:30px 28px 26px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* ============ ANIMATION ============ */
+.anim-right{animation:slideR .42s cubic-bezier(.2,.9,.3,1.15) both}
+.anim-left{animation:slideL .42s cubic-bezier(.2,.9,.3,1.15) both}
+@keyframes slideR{from{opacity:0;transform:translateX(48px)}to{opacity:1;transform:none}}
+@keyframes slideL{from{opacity:0;transform:translateX(-48px)}to{opacity:1;transform:none}}
+
+/* ============ STEPS ============ */
+.steps{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.stepdot{
+  display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
+  font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  border:1px solid var(--border);background:rgba(255,255,255,.02);
+  color:var(--text-mute);transition:all .3s;
+}
+.stepdot .n{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  font-size:.68rem;background:rgba(148,163,184,.14);font-weight:700;
+}
+.stepdot.active{
+  border-color:rgba(59,130,246,.55);color:#dbeafe;
+  background:linear-gradient(135deg, rgba(59,130,246,.22), rgba(139,92,246,.14));
+  box-shadow:0 0 0 3px rgba(59,130,246,.10);
+}
+.stepdot.active .n{
+  background:linear-gradient(135deg, var(--primary), var(--violet));
+  color:#fff;box-shadow:0 4px 12px rgba(59,130,246,.35);
+}
+.stepdot.done{border-color:rgba(16,185,129,.5);color:#a7f3d0;background:rgba(16,185,129,.08)}
+.stepdot.done .n{background:linear-gradient(135deg, var(--success), var(--success-2));color:#04140a}
+
+/* ============ FORM ============ */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{
+  font-size:.68rem;font-weight:700;letter-spacing:1.1px;
+  text-transform:uppercase;color:var(--text-mute);
+}
+.field input,.field select{
+  padding:14px 16px;border-radius:var(--r-sm);font-size:.95rem;font-family:inherit;
+  border:1px solid var(--border);background:rgba(15,23,42,.5);
+  color:var(--text);outline:none;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+  -webkit-user-select:text;user-select:text;
+}
+.field input::placeholder{color:#475569}
+.field input:focus,.field select:focus{
+  border-color:rgba(59,130,246,.6);
+  background:rgba(59,130,246,.06);
+  box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
+.field select option{background:#0f1729;color:var(--text)}
+
+/* ============ RULES ============ */
+.rules{
+  margin:22px 0;padding:18px 20px;border-radius:var(--r-md);
+  font-size:.83rem;line-height:1.7;
+  background:linear-gradient(135deg, rgba(244,63,94,.07), rgba(244,63,94,.03));
+  border:1px solid rgba(244,63,94,.24);
+  color:#fecdd3;
+}
+.rules h4{
+  margin:0 0 10px;font-size:.72rem;letter-spacing:1.3px;
+  text-transform:uppercase;color:#fda4af;font-weight:800;
+}
+.rules ul{margin:0;padding-left:20px}
+.rules li{margin-bottom:5px}
+.rules b{color:var(--warning)}
+
+/* ============ BUTTONS (with fallback background) ============ */
+.btn{
+  border:none;cursor:pointer;font-family:inherit;font-weight:700;
+  padding:13px 24px;border-radius:11px;font-size:.92rem;letter-spacing:.2px;
+  transition:transform .15s, box-shadow .2s, filter .15s;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  background:#334155;color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn:active:not(:disabled){transform:translateY(0);box-shadow:var(--shadow-sm)}
+.btn:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.4)}
+.btn.primary{
+  background:linear-gradient(135deg, var(--primary), var(--primary-deep));
+  color:#fff;
+  box-shadow:0 4px 14px rgba(59,130,246,.28), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.btn.ghost{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-dim);
+}
+.btn.ghost:hover:not(:disabled){
+  background:rgba(255,255,255,.06);border-color:var(--border-hi);color:var(--text);
+}
+.btn.green{
+  background:linear-gradient(135deg, var(--success), var(--success-2));
+  color:#04140a;
+  box-shadow:0 4px 14px rgba(16,185,129,.24), inset 0 1px 0 rgba(255,255,255,.14);
+}
+.btn.pink{
+  background:linear-gradient(135deg, #ec4899, var(--violet));
+  color:#fff;
+  box-shadow:0 4px 14px rgba(236,72,153,.24), inset 0 1px 0 rgba(255,255,255,.14);
+}
+.btn.red{
+  background:linear-gradient(135deg, var(--danger), var(--danger-2));
+  color:#fff;
+  box-shadow:0 4px 14px rgba(244,63,94,.24), inset 0 1px 0 rgba(255,255,255,.10);
+}
+.btn.big{font-size:1rem;padding:15px 36px}
+
+/* ============ SCAN ============ */
+.scan-stage{
+  position:relative;width:100%;max-width:420px;margin:0 auto;
+  aspect-ratio:4/3;border-radius:var(--r-lg);overflow:hidden;
+  background:#05070f;border:2px solid rgba(59,130,246,.32);
+  box-shadow:var(--shadow-xl), inset 0 0 50px rgba(59,130,246,.08);
+}
+.scan-stage video{
+  width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1);
+}
+.scan-oval{
+  position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);
+  width:52%;height:72%;border-radius:50%;
+  border:3px dashed rgba(59,130,246,.8);
+  box-shadow:0 0 0 9999px rgba(3,5,14,.55), 0 0 36px rgba(59,130,246,.35) inset;
+  pointer-events:none;transition:all .3s;
+}
+.scan-oval.ok{
+  border-color:var(--success);
+  box-shadow:0 0 0 9999px rgba(3,5,14,.30), 0 0 44px rgba(16,185,129,.6) inset;
+}
+.scan-oval.bad{
+  border-color:var(--danger);
+  box-shadow:0 0 0 9999px rgba(3,5,14,.65), 0 0 44px rgba(244,63,94,.6) inset;
+}
+.scan-stage .tag{
+  position:absolute;left:12px;top:12px;padding:6px 12px;border-radius:999px;
+  font-size:.62rem;font-weight:700;letter-spacing:1px;
+  background:rgba(3,5,14,.85);border:1px solid var(--border);color:#93c5fd;
+  backdrop-filter:blur(10px);
+}
+.scan-stage .tag.live{
+  background:rgba(244,63,94,.20);border-color:rgba(244,63,94,.5);color:#fda4af;
+}
+.scanbar{
+  height:10px;border-radius:999px;background:rgba(148,163,184,.08);
+  overflow:hidden;border:1px solid var(--border);
+  margin:20px auto 10px;max-width:420px;
+}
+.scanbar .fill{
+  height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg, var(--primary), var(--violet), var(--success));
+  transition:width .2s ease;
+  box-shadow:0 0 16px rgba(139,92,246,.45);
+}
+.scanstatus{
+  text-align:center;font-size:.82rem;font-weight:700;
+  letter-spacing:.5px;color:#93c5fd;min-height:22px;
+}
+.scanchecks{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.chk{
+  font-size:.66rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:6px 13px;border-radius:999px;border:1px solid var(--border);
+  background:rgba(255,255,255,.02);color:var(--text-mute);transition:all .3s;
+}
+.chk.on{
+  border-color:rgba(16,185,129,.6);background:rgba(16,185,129,.14);
+  color:#6ee7b7;box-shadow:0 0 0 3px rgba(16,185,129,.08);
+}
+.chk.err{
+  border-color:rgba(244,63,94,.6);background:rgba(244,63,94,.14);color:#fda4af;
+}
+#camDeniedBox{
+  display:none;place-items:center;text-align:center;padding:34px 22px;
+  border-radius:var(--r-md);border:2px dashed rgba(244,63,94,.5);
+  background:rgba(244,63,94,.06);color:#fecdd3;line-height:1.7;
+}
+#camDeniedBox .big{font-size:52px;display:block;margin-bottom:10px}
+
+/* ============ EXAM BAR ============ */
+.examBar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;margin-bottom:16px;
+}
+.timerBox{
+  display:flex;align-items:center;gap:14px;padding:13px 22px;
+  border-radius:var(--r-md);
+  background:linear-gradient(135deg, rgba(30,41,59,.65), rgba(15,23,42,.55));
+  border:1px solid var(--border);
+  backdrop-filter:blur(16px);
+}
+.timerBox .tlabel{
+  font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text-mute);font-weight:700;
+}
+#timer{
+  font-size:1.65rem;font-weight:800;font-variant-numeric:tabular-nums;
+  letter-spacing:.4px;color:var(--success);transition:color .3s;
+}
+#timer.warn{color:var(--warning);animation:pulseT 1.2s infinite}
+#timer.danger{color:var(--danger);animation:pulseT .6s infinite}
+
+.studentChip{
+  display:flex;align-items:center;gap:11px;padding:10px 18px;
+  border-radius:var(--r-md);
+  background:linear-gradient(135deg, rgba(30,41,59,.65), rgba(15,23,42,.55));
+  border:1px solid var(--border);backdrop-filter:blur(16px);
+  font-size:.78rem;line-height:1.35;
+}
+.studentChip .av{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;background:linear-gradient(135deg, var(--primary), var(--violet));
+  color:#fff;font-size:.92rem;
+  box-shadow:0 4px 14px rgba(59,130,246,.32);
+}
+.studentChip b{display:block;font-size:.86rem;color:var(--text)}
+.studentChip span{color:var(--text-mute);font-size:.68rem}
+
+/* ============ PROGRESS ============ */
+.progress{
+  height:8px;border-radius:999px;background:rgba(148,163,184,.08);
+  overflow:hidden;margin:0 0 16px;border:1px solid var(--border);
+}
+.progress .fill{
+  height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg, var(--primary), var(--violet), var(--success));
+  transition:width .55s cubic-bezier(.3,1.3,.4,1);
+  box-shadow:0 0 14px rgba(139,92,246,.4);
+}
+
+/* ============ PALETTE ============ */
+.palette{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.pal{
+  width:40px;height:40px;border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--text-dim);
+  font-weight:700;font-size:.78rem;cursor:pointer;
+  transition:all .15s;
+}
+.pal:hover{transform:scale(1.08);border-color:var(--border-hi);background:rgba(255,255,255,.06)}
+.pal.done{
+  background:linear-gradient(135deg, var(--primary), var(--violet));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 12px rgba(59,130,246,.30);
+}
+.pal.current{outline:2.5px solid var(--warning);outline-offset:2px}
+.pal.flagged{
+  background:linear-gradient(135deg, var(--warning), var(--warning-2));
+  color:#1a0f00;border-color:transparent;
+}
+
+/* ============ QUESTION ============ */
+.qhead{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.pill{
+  font-size:.66rem;letter-spacing:.9px;text-transform:uppercase;font-weight:800;
+  padding:7px 13px;border-radius:999px;
+  background:linear-gradient(90deg, var(--primary), var(--violet));
+  color:#fff;
+  box-shadow:0 4px 12px rgba(59,130,246,.28), inset 0 1px 0 rgba(255,255,255,.15);
+}
+.pill.ghost{
+  background:transparent;color:var(--text-mute);
+  border:1px dashed var(--border);box-shadow:none;font-weight:600;
+}
+.qtext{
+  font-size:1.12rem;line-height:1.6;margin:8px 0 22px;
+  font-weight:600;color:var(--text);letter-spacing:-.01em;
+}
+.qtext code{
+  background:rgba(59,130,246,.14);padding:3px 8px;border-radius:5px;
+  font-size:.9em;color:#bfdbfe;
+  font-family:'JetBrains Mono',Consolas,monospace;
+  border:1px solid rgba(59,130,246,.20);
+}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;cursor:pointer;
+  color:var(--text);background:rgba(30,41,59,.35);
+  border:1px solid var(--border);padding:14px 16px;border-radius:var(--r-md);
+  font-size:.94rem;font-family:inherit;line-height:1.55;
+  transition:all .18s;
+}
+.opt:hover{
+  transform:translateX(3px);border-color:rgba(59,130,246,.5);
+  background:rgba(59,130,246,.06);box-shadow:var(--shadow-sm);
+}
+.opt.picked{
+  background:linear-gradient(135deg, rgba(59,130,246,.22), rgba(139,92,246,.10));
+  border-color:rgba(59,130,246,.6);
+  box-shadow:0 0 0 3px rgba(59,130,246,.10), var(--shadow-sm);
+}
+.badge{
+  flex:0 0 30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:.8rem;
+  background:linear-gradient(135deg, var(--primary), var(--violet));color:#fff;
+  box-shadow:0 4px 10px rgba(59,130,246,.30), inset 0 1px 0 rgba(255,255,255,.16);
+  transition:all .22s;
+}
+.opt.picked .badge{
+  background:linear-gradient(135deg, var(--success), var(--success-2));
+  box-shadow:0 4px 12px rgba(16,185,129,.35);
+}
+.opt-body{flex:1;padding-top:3px;min-width:0}
+.opt-body pre{
+  margin:0;white-space:pre-wrap;word-break:break-word;
+  font-family:'JetBrains Mono',Consolas,'Courier New',monospace;
+  font-size:.82rem;line-height:1.55;
+  background:rgba(3,5,14,.5);padding:10px 12px;border-radius:8px;
+  color:#cbd5e1;border:1px solid rgba(148,163,184,.10);
+}
+.savedNote{
+  margin-top:16px;font-size:.82rem;color:#93c5fd;
+  font-weight:700;min-height:20px;display:flex;gap:8px;align-items:center;
+}
+.nav{
+  display:flex;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap;
+}
+
+/* ============ RESULTS ============ */
+.center{text-align:center}
+.big-emoji{
+  font-size:64px;animation:bounceY 2.2s ease-in-out infinite;
+  display:inline-block;filter:drop-shadow(0 12px 28px rgba(59,130,246,.3));
+}
+@keyframes bounceY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.start-title{font-size:1.6rem;margin:10px 0 6px;font-weight:700;letter-spacing:-.01em}
+.start-sub{color:var(--text-dim);margin-bottom:20px;font-size:.94rem}
+
+.ring{
+  width:180px;height:180px;border-radius:50%;margin:16px auto 12px;
+  display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--success) 0deg, rgba(148,163,184,.10) 0deg);
+  transition:background 1s ease;
+  box-shadow:0 16px 44px rgba(16,185,129,.20), inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.ring::after{
+  content:"";position:absolute;inset:16px;border-radius:50%;
+  background:rgba(10,14,26,.9);backdrop-filter:blur(10px);
+}
+.ring .val{position:relative;z-index:2;font-size:2.2rem;font-weight:800;letter-spacing:-.02em}
+.ring .lbl{
+  position:relative;z-index:2;font-size:.66rem;letter-spacing:2px;
+  color:var(--text-mute);text-transform:uppercase;font-weight:700;margin-top:2px;
+}
+
+.review{
+  margin-top:22px;display:flex;flex-direction:column;gap:9px;
+  max-height:480px;overflow:auto;padding-right:8px;text-align:left;
+}
+.review::-webkit-scrollbar{width:8px}
+.review::-webkit-scrollbar-thumb{background:rgba(148,163,184,.2);border-radius:4px}
+.rev{
+  display:flex;gap:12px;align-items:flex-start;font-size:.83rem;
+  padding:12px 14px;border-radius:var(--r-sm);
+  background:rgba(30,41,59,.35);border:1px solid var(--border);
+  border-left-width:4px;transition:background .2s;
+}
+.rev:hover{background:rgba(30,41,59,.55)}
+.rev.ok{border-left-color:var(--success)}
+.rev.no{border-left-color:var(--danger)}
+.rev .m{font-weight:800;font-size:1rem;flex:0 0 18px}
+.rev.ok .m{color:var(--success)}
+.rev.no .m{color:var(--danger)}
+.rev small{
+  color:var(--text-dim);display:block;margin-top:4px;
+  line-height:1.55;font-size:.79rem;
+}
+.rev small b{color:var(--text)}
+.rev .memo{
+  margin-top:8px;padding:8px 11px;border-radius:8px;
+  background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.20);
+  color:#bfdbfe;font-size:.78rem;line-height:1.55;
+}
+
+/* ============ MODAL ============ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(3,5,14,.82);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:grid;place-items:center;z-index:99999;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.modal-bg.show{opacity:1;pointer-events:auto}
+.modal{
+  max-width:480px;width:100%;text-align:center;padding:32px 28px;
+  border-radius:var(--r-xl);
+  border:1px solid rgba(59,130,246,.32);
+  background:linear-gradient(160deg, rgba(59,130,246,.16), rgba(139,92,246,.10)), rgba(15,23,41,.98);
+  box-shadow:var(--shadow-xl), inset 0 1px 0 rgba(255,255,255,.06);
+  color:var(--text);
+  transform:scale(.85) translateY(10px);
+  transition:transform .35s cubic-bezier(.2,1.3,.4,1);
+}
+.modal-bg.show .modal{transform:scale(1) translateY(0)}
+.modal.danger{
+  background:linear-gradient(160deg, rgba(244,63,94,.22), rgba(100,10,25,.28)), rgba(15,23,41,.98);
+  border-color:rgba(244,63,94,.48);
+}
+.modal.danger h3{color:#fda4af}
+.modal .m-emoji{
+  font-size:56px;animation:bounceY 1.8s ease-in-out infinite;
+  display:inline-block;filter:drop-shadow(0 10px 22px rgba(59,130,246,.3));
+}
+.modal h3{margin:12px 0 10px;font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+.modal p{
+  margin:0 0 22px;color:var(--text-dim);
+  font-size:.92rem;line-height:1.65;white-space:pre-line;
+}
+.modal .mBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ============ TOAST ============ */
+#toasts{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:99998;display:flex;flex-direction:column;gap:10px;
+  align-items:center;pointer-events:none;
+}
+.toast{
+  padding:12px 22px;border-radius:999px;font-size:.84rem;font-weight:700;
+  background:rgba(15,23,41,.97);color:var(--text);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  backdrop-filter:blur(16px);
+  animation:toastIn .38s cubic-bezier(.2,1.4,.4,1) both;
+  max-width:92vw;text-align:center;
+}
+.toast.bad{
+  background:rgba(100,10,25,.97);border-color:rgba(244,63,94,.5);color:#fecdd3;
+}
+.toast.out{animation:toastOut .32s forwards}
+@keyframes toastIn{from{opacity:0;transform:translateY(24px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(18px) scale(.92)}}
+
+/* ============ MEDIA ============ */
+@media(max-width:640px){
+  .qtext{font-size:1.04rem}
+  .card{padding:22px 16px 18px;border-radius:var(--r-lg)}
+  #camPanel{width:130px}
+  #camPanel video{height:90px}
+  #faceAlert .icon{font-size:68px}
+  #faceAlert h2{font-size:1.4rem;letter-spacing:2px}
+  #faceAlert .count{font-size:2.4rem}
+  .brand h1{font-size:.9rem}
+  .brand .logo{width:44px;height:44px;font-size:20px}
+  #proctorBar .seg{padding:8px 10px;font-size:.62rem}
+}
 @media print{
-  body{background:#fff !important;color:#000 !important;animation:none !important}
-  .orb,#confetti,.wrap,#toasts,.modal-bg,#proctorBar,#camPanel,#blockScreen{display:none !important}
+  body{background:#fff !important;color:#000 !important}
+  #confetti,.wrap,#toasts,.modal-bg,#proctorBar,#camPanel,#blockScreen,#faceAlert{display:none !important}
   #printArea{display:block !important}
 }
 #printArea{display:none}
-@media(max-width:640px){
-  .qtext{font-size:1.06rem}
-  .card{padding:20px 15px 16px;border-radius:20px}
-  #camPanel{width:120px}
-  #camPanel video{height:88px}
-}
 </style>
 </head>
 <body>
 
-<!-- ======= HARD BLOCK SCREEN ======= -->
 <div id="blockScreen">
   <div class="inner">
     <div class="icon">⛔</div>
     <h2 id="blockTitle">ACCESS DENIED</h2>
     <p id="blockMsg">This session has been refused.</p>
     <div class="code" id="blockCode">REF: SEC-LOCK</div>
-    <div class="seal">Shivambu Extra Class · Secure Assessment Gateway</div>
+    <div class="seal">INFOS TEST 2 · Secure Assessment Gateway</div>
   </div>
 </div>
 
-<!-- ======= PROCTOR BAR ======= -->
-<div id="proctorBar">
-  <span class="proctor-item"><span class="rec-dot"></span>REC — SCREEN RECORDING</span>
-  <span class="sep">|</span>
-  <span class="proctor-item" id="camBadge"><span class="rec-dot"></span>WEBCAM LIVE</span>
-  <span class="sep">|</span>
-  <span class="proctor-item green" id="faceBadge">👁️ FACE VERIFIED</span>
-  <span class="sep">|</span>
-  <span class="proctor-item" id="attemptBadge">📝 ATTEMPT 1 / 8</span>
-  <span class="sep">|</span>
-  <span class="proctor-item" id="violationBadge">⚠️ VIOLATIONS: 0 / 8</span>
+<div id="faceAlert">
+  <div class="inner">
+    <div class="icon">🚫</div>
+    <h2>FACE NOT DETECTED</h2>
+    <p>You <b>must</b> keep your face visible to the camera at all times.<br>Return to the camera immediately or you will receive a violation.</p>
+    <div class="count" id="faceAlertCount">8</div>
+    <div class="count"><small>Seconds until violation</small></div>
+  </div>
 </div>
 
-<!-- ======= WEBCAM PANEL ======= -->
+<div id="proctorBar">
+  <span class="seg rec"><span class="rec-dot"></span>REC</span>
+  <span class="seg" id="camBadge"><span class="rec-dot"></span>CAM LIVE</span>
+  <span class="seg face-ok" id="faceBadge">👁️ FACE VERIFIED</span>
+  <span class="seg attempt" id="attemptBadge">📝 1 / 8</span>
+  <span class="seg viol" id="violationBadge">⚠️ 0 / 5</span>
+  <span class="seg deadline" id="deadlineBadge">⏰ 22 OCT 2026 · 20:00</span>
+</div>
+
 <div id="camPanel">
   <div class="camHead"><span>● LIVE</span><span id="camStatus">CONNECTING…</span></div>
   <video id="camVideo" autoplay muted playsinline></video>
-  <div class="camFoot" id="camFoot">PROCTOR SEES THIS FEED</div>
+  <div class="camFoot" id="camFoot">PROCTOR SEES THIS</div>
 </div>
 
-<div class="orb o1"></div>
-<div class="orb o2"></div>
-<div class="orb o3"></div>
 <canvas id="confetti"></canvas>
 
 <div class="wrap">
@@ -286,8 +713,8 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
     <div class="brand">
       <div class="logo">🎓</div>
       <div>
-        <h1>SHIVAMBU EXTRA CLASS</h1>
-        <small>VB.NET Assessment · Arrays · Strings · Classes · Properties</small>
+        <h1>INFOS TEST 2 · DATABASE &amp; SQL</h1>
+        <small>Oracle 10g · DDL · DML · Constraints · Joins</small>
       </div>
     </div>
     <div class="tools">
@@ -296,21 +723,19 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
     </div>
   </header>
 
-  <!-- ================= REGISTRATION ================= -->
   <section class="card" id="startScreen">
     <div class="steps">
       <div class="stepdot active" data-step="1"><span class="n">1</span>Student Details</div>
       <div class="stepdot" data-step="2"><span class="n">2</span>Face Verification</div>
     </div>
 
-    <!-- STEP 1 -->
     <div id="step1">
       <div class="center">
         <div class="big-emoji">📝</div>
         <h2 class="start-title">Student Registration</h2>
         <p class="start-sub">
           You have <b>8 attempts</b> for this assessment.
-          <span id="attemptHint" style="display:block;margin-top:6px;color:#7dd3fc;font-weight:800"></span>
+          <span id="attemptHint" style="display:block;margin-top:6px;color:#93c5fd;font-weight:700"></span>
         </p>
       </div>
 
@@ -347,18 +772,19 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
           <li><b>Camera is compulsory.</b> If the camera is off, blocked or removed, the exam refuses to run.</li>
           <li><b>Face scan is compulsory</b> and is bound to your student number (same face must be used for every attempt).</li>
           <li><b>Time limit:</b> 1 hour 30 minutes per attempt. The paper auto-submits at 00:00.</li>
-          <li><b>Up to 8 violations allowed per attempt</b> — the 8th ends that attempt.</li>
+          <li><b>Up to 5 violations allowed per attempt</b> — the 5th ends that attempt.</li>
+          <li><b>Your face must remain visible at all times.</b> If the camera loses sight of your face for 8 seconds, you receive a violation.</li>
           <li>Copying, right-click, DevTools, tab-switching and exiting fullscreen are all violations.</li>
+          <li><b>⏰ This assessment closes permanently on 22 October 2026 at 20:00.</b></li>
           <li>Answers (memo) are shown after each submission so you can study before your next attempt.</li>
         </ul>
       </div>
 
       <div class="center">
-        <button class="btn primary big" id="toScanBtn" type="button">➡️ Continue to Face Verification</button>
+        <button class="btn primary big" id="toScanBtn" type="button">Continue to Face Verification →</button>
       </div>
     </div>
 
-    <!-- STEP 2 -->
     <div id="step2" style="display:none">
       <div class="center">
         <h2 class="start-title">Biometric Identity Verification</h2>
@@ -385,19 +811,18 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
         <b>CAMERA ACCESS IS REQUIRED</b><br>
         The exam cannot start without a live camera feed.<br>
         Allow camera access in your browser, then press <b>Retry Camera</b>.
-        <div style="margin-top:16px"><button class="btn red" id="retryCamBtn" type="button">🔄 Retry Camera</button></div>
+        <div style="margin-top:16px"><button class="btn red" id="retryCamBtn" type="button">Retry Camera</button></div>
       </div>
 
-      <div class="center" style="margin-top:22px">
+      <div class="center" style="margin-top:24px">
         <button class="btn green big" id="startExamBtn" type="button" disabled>🔒 Verify Identity &amp; Begin Exam</button>
-        <p style="margin-top:14px;color:var(--muted);font-size:.74rem">
+        <p style="margin-top:16px;color:var(--text-mute);font-size:.74rem">
           Your face signature is stored locally and locked to your student number.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- ================= EXAM ================= -->
   <section id="examScreen" style="display:none">
     <div class="examBar">
       <div class="timerBox">
@@ -421,7 +846,6 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
     <div class="card" id="card"></div>
   </section>
 
-  <!-- ================= RESULT ================= -->
   <section class="card center" id="resultScreen" style="display:none">
     <div class="big-emoji" id="resEmoji">🏁</div>
     <h2 class="start-title" id="resTitle">Exam Submitted</h2>
@@ -429,29 +853,29 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
 
     <div class="ring" id="ring">
       <div>
-        <div class="val" id="resScore">0/30</div>
+        <div class="val" id="resScore">0/45</div>
         <div class="lbl">Correct</div>
       </div>
     </div>
-    <p id="resMsg" style="font-weight:800;font-size:1.05rem;margin:10px 0 4px"></p>
-    <p style="color:var(--muted);font-size:.84rem" id="resMeta"></p>
+    <p id="resMsg" style="font-weight:700;font-size:1.05rem;margin:12px 0 4px"></p>
+    <p style="color:var(--text-dim);font-size:.84rem" id="resMeta"></p>
 
-    <div id="attemptsPanel" style="margin:18px auto;max-width:460px;padding:14px 18px;border-radius:14px;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.35);color:#bae6fd;font-size:.88rem;line-height:1.6">
-      <div style="font-size:.68rem;letter-spacing:1.4px;text-transform:uppercase;color:#7dd3fc;font-weight:900;margin-bottom:6px">Attempts Used</div>
+    <div id="attemptsPanel" style="margin:20px auto;max-width:480px;padding:16px 20px;border-radius:var(--r-md);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.24);color:#bfdbfe;font-size:.88rem;line-height:1.6;text-align:left">
+      <div style="font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:#93c5fd;font-weight:800;margin-bottom:8px">Attempts Used</div>
       <div id="attemptsText">—</div>
     </div>
 
-    <div style="margin:20px 0 6px;font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)">
+    <div style="margin:22px 0 8px;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-mute);font-weight:700">
       Memo &amp; Answer Review (now unlocked)
     </div>
     <div class="review" id="reviewList"></div>
 
-    <div class="nav" style="justify-content:center;margin-top:24px">
+    <div class="nav" style="justify-content:center;margin-top:26px">
       <button class="btn green" id="downloadBtn" type="button">⬇️ Download Answer Sheet</button>
       <button class="btn primary" id="pdfBtn2" type="button">🖨️ Print / Save as PDF</button>
       <button class="btn pink" id="retryBtn" type="button" style="display:none">🔄 Start Next Attempt</button>
     </div>
-    <p style="margin-top:18px;color:#fca5a5;font-size:.76rem;font-weight:700" id="lockMsg">
+    <p style="margin-top:20px;color:#fda4af;font-size:.76rem;font-weight:700" id="lockMsg">
       ⛔ After your 8th attempt, this student number will be permanently closed.
     </p>
   </section>
@@ -470,589 +894,349 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:12p
 <div id="printArea"></div>
 
 <script>
+"use strict";
 /* =====================================================================
-   CONFIG  —  1h30m exam · 8 attempts per student · 8 violations per attempt
-   Camera used ONLY for face verification (no voice, no liveness motion)
+   CONFIG
    ===================================================================== */
-const EXAM_MINUTES = 90;
-const EXAM_SECONDS = EXAM_MINUTES * 60;
-const MAX_VIOLATIONS = 8;            // per attempt
-const MAX_ATTEMPTS = 8;              // total attempts per student number
-const FACE_MATCH_THRESHOLD = 18;     // identity binding (matches same student across attempts)
-const FACE_LIVE_THRESHOLD = 28;      // in-exam tolerance (very forgiving)
-const FACE_CHECK_INTERVAL = 25000;   // 25s between in-exam face checks
-const FACE_MISS_LIMIT = 8;           // 8 consecutive misses before a violation
+var DEADLINE_STR   = "2026-10-22T20:00:00";
+var DEADLINE       = new Date(DEADLINE_STR).getTime();
+var EXAM_MINUTES   = 90;
+var EXAM_SECONDS   = EXAM_MINUTES * 60;
+var MAX_VIOLATIONS = 5;
+var MAX_ATTEMPTS   = 8;
+
+var FACE_MATCH_THRESHOLD = 18;
+var FACE_LIVE_THRESHOLD  = 22;
+var FACE_CHECK_INTERVAL  = 1000;
+var FACE_MISS_LIMIT      = 8;
 
 /* =====================================================================
-   QUESTION BANK — 30 questions
+   QUESTIONS
    ===================================================================== */
-const QUESTIONS = [
-  { type:"mc",
-    q:`The <b>Add Fruit</b> button must save the values entered in <code>txtName</code>, <code>txtQuantity</code> and <code>txtPrice</code> into three parallel one-dimensional arrays named <code>arName</code>, <code>arPrice</code> and <code>arQuantity</code>, using <code>arCnt</code> as the counter. Which block of code is correct?`,
+var QUESTIONS = [
+  { type:"tf", q:`The <code>CREATE TABLE</code> statement cannot contain a subquery.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> <code>CREATE TABLE new AS SELECT * FROM old</code> (CTAS) contains a subquery.` },
+  { type:"mc", q:`Which of the following types of software programs can be used to reference objects that are composed of individual data elements?`, opts:["RDBMS","ORDBMS","OODBMS","GUIRDBMS"], correct:1,
+    why:`An <b>ORDBMS</b> (Object-Relational DBMS) can store objects built from individual data elements.` },
+  { type:"mc", q:`To see all the fields and records in the <code>employees</code> table you can run the following query:`, opts:["SELECT * FROM employees;","SELECT all FROM employees;","SELECT columns FROM employees;","SELECT # FROM employees;"], correct:0,
+    why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
+  { type:"mc", q:`Foreign key constraints are named using the ____________ of both tables.`, opts:["foreign key name","short table name","UID suffix","full table name"], correct:1,
+    why:`Oracle 10g's default naming convention for foreign keys uses the <b>short table name</b> of both tables.` },
+  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following is a valid SQL statement?`, opts:["SELECT * FROM contact;","SELECT * FROM pubid;","SELECT * FROM publisher;","SELECT * FROM name;"], correct:2,
+    why:`The table is named <b>PUBLISHER</b>, so <code>SELECT * FROM publisher;</code> is the only valid query.` },
+  { type:"mc", q:`Engineering is the process of transforming a Logical Data Model to a Relational Model.`, opts:["Reverse","Top-Down","Target","Forward"], correct:3,
+    why:`Logical → Relational is the <b>Forward</b> engineering direction.` },
+  { type:"mc", q:`Which of the following commands is used to issue a query?`, opts:["FROM","SELECT","QUER","QUESTION"], correct:1,
+    why:`<b>SELECT</b> is the command used to issue a query against the database.` },
+  { type:"tf", q:`The <code>DELETE TABLE</code> command can be used to remove a table from a database.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> There is no <code>DELETE TABLE</code> command. Use <code>DROP TABLE</code>.` },
+  { type:"mc", q:`Which command is used to rename a table you own?`, opts:["RENAME...TO","ALTER TABLE...RENAME","ALTER TABLE...SET NAME","RENAME...AS"], correct:0,
+    why:`The Oracle SQL*Plus command is <code>RENAME old_name TO new_name</code>.` },
+  { type:"tf", q:`You can override the default order by using parentheses around the expressions that you want to calculate.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> Parentheses force a particular evaluation order.` },
+  { type:"tf", q:`A database must be shut down before the <code>ALTER TABLE</code> command can be executed.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> <code>ALTER TABLE</code> runs online while the database is up.` },
+  { type:"mc", q:`The column definition of <code>NUMBER(7,4)</code> indicates a precision of:`, opts:["11","4","7","3"], correct:2,
+    why:`<code>NUMBER(p,s)</code> — p is precision, s is scale. Here precision = 7.` },
+  { type:"mc", q:`Which of the following rules does <b>not</b> apply to column names in Oracle 10g?`, opts:["Column names must begin with a letter.","Column names can contain an ampersand (&).","Column names can be up to 30 characters in length.","Column names can contain numbers."], correct:1,
+    why:`An ampersand is <b>not</b> allowed in an Oracle column name.` },
+  { type:"mc", q:`Which of the following keywords can be used to indicate that a column alias should be included in the results?`, opts:["AS","FROM","ALIAS","SELECT"], correct:0,
+    why:`<code>AS</code> introduces a column alias, e.g. <code>SELECT salary * 12 AS "Annual Salary"</code>.` },
+  { type:"mc", q:`Which of the following is displayed by the <code>DESCRIBE</code> command?`, opts:["column names","all of the above","not null requirements","datatypes"], correct:1,
+    why:`<code>DESCRIBE</code> displays column names, data types and NOT NULL constraints — <b>all of the above</b>.` },
+  { type:"mc", q:`Which of the following statements is an example of a <b>SELF-JOIN</b>?`,
     opts:[
-`strName = txtName.Text
-intQuantity = txtQuantity.Text
-decPrice = txtPrice.Text
-arName(arCnt) = strName
-arQuantity(arCnt) = intQuantity
-arPrice(arCnt) = CDec(decPrice)
-arCnt += 1`,
-`strName = txtName.Text
-intQuantity = txtQuantity.Text
-decPrice = txtPrice.Text
-arName(arCnt) = strName
-arQuantity(arCnt) = intQuantity
-arPrice(arCnt) = CDec(decPrice)
-arCnt = 1`,
-`strName = txtName.Text
-intQuantity = txtQuantity.Text
-decPrice = txtPrice.Text
-arName = strName
-arQuantity = intQuantity
-arPrice = CDec(decPrice)
-arCnt += 1`,
-`strName = txtName.Text
-intQuantity = txtQuantity.Text
-decPrice = txtPrice.Text
-arName(arCnt) = strName
-arQuantity(arCnt) = intQuantity
-arPrice(arCnt) = CDec(decPrice)
-arCnt(arCnt) += 1`,
-      "None of the Answers"
-    ],
-    correct:0,
-    why:`Inputs are read from the text boxes, each value is stored into the <b>same index</b> of its parallel array using <code>arCnt</code>, and the counter is incremented with <code>arCnt += 1</code>. Option B resets the counter to 1, option C drops the subscript (invalid for arrays) and option D treats the counter as an array.` },
-
-  { type:"mc",
-    q:`Which of the following represents the result for the statement:<br><br><code>intProvince = "Joburg".Length ^ 2</code>`,
-    opts:["36","6","18","12","None of the Answers"],
-    correct:0,
-    why:`<code>"Joburg"</code> has <b>6</b> characters. <code>^</code> is the exponent operator, so 6 ^ 2 = <b>36</b>.` },
-
-  { type:"mc",
-    q:`Given the VB code below:<br><br><code>For position As Integer = 0 To arCount - 1<br>&nbsp;&nbsp;&nbsp;&nbsp;lstDisplay.Items.Add( [A] )<br>Next</code><br><br>Select the statement that represents the missing code <code>[A]</code> for a Form Load that displays all saved prices from the array <code>arPrice</code> into the list box.`,
-    opts:["arPrice(position)","arPrice += 1","arPrice","arPrice( )","None of the Answers"],
-    correct:0,
-    why:`Inside the loop, <code>position</code> is the index, so each element is read as <b>arPrice(position)</b>. Writing just <code>arPrice</code> refers to the whole array, which cannot be added to a list box.` },
-
-  { type:"mc",
-    q:`The <code>dblAmount</code> array is declared as follows:<br><br><code>Dim dblAmount() As Double = {100.5, 212.2, 405.8, 600.1, 750.4}</code><br><br>What would be the value of <code>dblAmount(1)</code>?`,
-    opts:["100.5","405.8","750.4","600.1","212.2"],
-    correct:4,
-    why:`Arrays are <b>zero-based</b>. Index 0 = 100.5, index 1 = <b>212.2</b>, index 2 = 405.8, and so on.` },
-
-  { type:"mc",
-    q:`The statement <code>intCount = txtStreetName.Text.Trim.Length</code> — which of the following is TRUE?`,
+      "SELECT department_id, department_name, location_id, city\nFROM departments NATURAL JOIN locations;",
+      "SELECT e.employee_id, e.last_name, e.department_id, d.department_id, d.location_id\nFROM employees e JOIN departments d ON (e.department_id = d.department_id);",
+      "SELECT worker.last_name emp, manager.last_name mgr\nFROM employees worker JOIN employees manager\nON (worker.manager_id = manager.employee_id);",
+      "SELECT e.employee_id, e.last_name, e.department_id, d.department_id, d.location_id\nFROM employees e JOIN departments d\nON (e.department_id = d.department_id)\nAND e.manager_id = 149;"
+    ], correct:2,
+    why:`A <b>self-join</b> joins a table to <b>itself</b>. Option C joins <code>employees</code> to <code>employees</code>.` },
+  { type:"tf", q:`The <code>MODIFY TABLE</code> command can be used to change the size of a table.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> There is no <code>MODIFY TABLE</code> command. Use <code>ALTER TABLE ... MODIFY ...</code>.` },
+  { type:"mc", q:`Which of the following terms refers to commands that are used to create or modify database tables?`, opts:["data control language (DCL)","data formatting language (DFL)","data manipulation language (DML)","data definition language (DDL)"], correct:3,
+    why:`<b>DDL</b> covers <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>, <code>RENAME</code>.` },
+  { type:"mc", q:`Which of the following commands will drop any columns marked as <code>UNUSED</code> from the table?`, opts:["ALTER TABLE tablea DROP (unused);","DROP COLUMN FROM tablea WHERE column_status = UNUSED;","ALTER TABLE tablea DROP UNUSED COLUMNS;","DROP UNUSED COLUMNS;"], correct:2,
+    why:`The correct syntax is <code>ALTER TABLE tablea DROP UNUSED COLUMNS;</code>.` },
+  { type:"mc", q:`Which of the following commands will display the structure of the <code>CUSTOMERS</code> table?`, opts:["DESCRIBE customers;","SHOW customers;","STRUCT customers;","DISPLAY customers;"], correct:0,
+    why:`The SQL*Plus command is <code>DESCRIBE customers;</code> (or <code>DESC customers;</code>).` },
+  { type:"mc", q:`What is the correct answer for the arithmetic expression <code>9 + 2 + 3 - 2</code> using the order of operations employed by Oracle 10g?`, opts:["12","10","13","31"], correct:0,
+    why:`(9+2) = 11, (11+3) = 14, (14-2) = <b>12</b>.` },
+  { type:"mc", q:`Which of the following rules apply to table names in Oracle 10g?`, opts:["Names can begin with a number.","Names can be up to 225 characters in length.","Names can contain blank spaces.","Names can contain a number sign (#)."], correct:3,
+    why:`Oracle table names may contain <code>_</code>, <code>$</code> and <code>#</code>. No leading digits, no spaces, max 30 chars.` },
+  { type:"mc", q:`A database transaction consists of the following <b>except</b>:`, opts:["DML statements representing one consistent change to data.","One DDL statement","One TCL statement","SELECT queries"], correct:3,
+    why:`Plain <b>SELECT</b> queries are not part of a transaction.` },
+  { type:"mc", q:`Which of the following commands will change the name of the <code>PROMOTION</code> table to <code>GIFT</code>?`, opts:["ALTER TABLE promotion TO gift.","ALTER TABLE promotion NAME TO gift.","RENAME TABLE promotion TO gift.","RENAME promotion TO gift."], correct:3,
+    why:`The SQL*Plus command is <code>RENAME promotion TO gift;</code>.` },
+  { type:"mc", q:`Which of the following SQL*Plus commands will display the structure of a table?`, opts:["DESCRIBE","DISPLAY","DSC","VIEW"], correct:0,
+    why:`<b>DESCRIBE</b> (or <code>DESC</code>) displays column definitions.` },
+  { type:"tf", q:`A database object is a defined, self-contained structure in Oracle 10g.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> Tables, views, indexes, sequences, synonyms and procedures are database objects.` },
+  { type:"mc", q:`A column alias must be contained within double quotation marks ("") if it contains which of the following?`, opts:["blank spaces","all of the above","special symbols","characters that should be displayed in lower or mixed case"], correct:1,
+    why:`Blank spaces, special symbols and case-sensitive characters all require double quotes — <b>all of the above</b>.` },
+  { type:"mc", q:`Based on the structure of the <code>PROMOTION</code> table, which command ensures the value in <code>MINRETAL</code> is less than <code>MAXRETAL</code>?`,
     opts:[
-      "Assigns the number of counts in the txtStreetName.Text property, for <b>both</b> leading and trailing space in count to the intCount variable.",
-      "Assigns the number of counts in the txtStreetName.Text property, for <b>either</b> the leading or the trailing space in count to the intCount variable.",
-      "Assigns the number of counts in the txtStreetName.Text property, for <b>neither</b> the leading nor the trailing space in count to the intCount variable.",
-      "Assigns the number of counts in the txtStreetName.Text property, <b>including</b> any leading or trailing space in count to the intCount variable.",
-      "Assigns the number of counts in the txtStreetName.Text property, <b>excluding</b> any leading or trailing space in count to the intCount variable."
-    ],
-    correct:4,
-    why:`<code>Trim</code> removes <b>all</b> leading and trailing spaces before <code>Length</code> is evaluated, so those spaces are <b>excluded</b> from the count.` },
-
-  { type:"mc",
-    q:`Which of the following statements uses the <b>Public properties</b> to initialise the Private variables?`,
+      "ALTER TABLE promotion MODIFY MINRETAL CHECK (< maxretail);",
+      "ALTER TABLE promotion MODIFY CHECK (minretal < maxretail);",
+      "ALTER TABLE promotion ADD CHECK (minretal < maxretail);",
+      "ALTER TABLE promotion ADD CHECK minretal < maxretail;"
+    ], correct:2,
+    why:`The correct syntax is <code>ALTER TABLE promotion ADD CHECK (minretal &lt; maxretail);</code>.` },
+  { type:"tf", q:`The attribute that you assign as a primary UID is automatically set to mandatory.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> A primary key is <code>NOT NULL</code> by definition.` },
+  { type:"mc", q:`A primary key must contain a value and the value must be ________.`, opts:["blank","greater than zero","null","unique"], correct:3,
+    why:`A primary key must be <b>unique</b> and never NULL.` },
+  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which SQL statement will display only <b>two</b> columns in the results?`, opts:["none of the above","SELECT * FROM publisher;","SELECT contact person, name FROM publisher;","SELECT contact, name FROM publisher;"], correct:3,
+    why:`<code>SELECT contact, name FROM publisher;</code> lists exactly two columns.` },
+  { type:"mc", q:`Data manipulation language (DML) includes all of the following <b>except</b>:`, opts:["COMMIT","INSERT","DELETE","UPDATE"], correct:0,
+    why:`<b>COMMIT</b> is a TCL command. DML is INSERT/UPDATE/DELETE/SELECT.` },
+  { type:"mc", q:`Which of the following keywords is used to remove a database table in Oracle 10g?`, opts:["DELETE TABLE","DROP TABLE","ALTER TABLE...DROP","TRUNCATE TABLE"], correct:1,
+    why:`<code>DROP TABLE</code> removes the table and its data.` },
+  { type:"mc", q:`Which of the following statements is correct?`,
     opts:[
-`Public Sub New(ByVal strItemnum As String, ByVal strItemname As String)
-    Itemnumber = strItemnum
-    ItemName = strItemname
-End Sub`,
-`Public Sub New()
-    _Itemnumber = " "
-    _ItemName = " "
-End Sub`,
-`Public Sub New()
-    Itemnumber = _strItemnum
-    ItemName = _strItemname
-End Sub`,
-      "None of the Answers",
-`Public Sub New(ByVal strItemnum As String, ByVal strItemname As String)
-    _Itemnumber = " "
-    _ItemName = " "
-End Sub`
-    ],
-    correct:0,
-    why:`The constructor receives parameters and assigns them to the <b>Public properties</b> (Itemnumber, ItemName). The properties then update the Private variables. Options B and E write directly to the Private variables and ignore the parameters; option C has no parameters and reads undefined variables.` },
-
-  { type:"mc",
-    q:`What statement assigns the number of characters in the <code>strState</code> variable to the <code>intNum</code> variable?`,
+      "Character columns are listed first in the output, followed by numeric columns.",
+      "The columns will be listed in the results in the same order they are listed in the SELECT clause of the SELECT statement.",
+      "The columns will be listed in the results in the same order they are stored in the database table.",
+      "Numeric columns are listed first in the output, followed by character columns."
+    ], correct:1,
+    why:`The <b>SELECT clause</b> controls column order in the output.` },
+  { type:"mc", q:`In which format does Oracle 10g display a date value by default?`, opts:["DD-MON-YY","DD-MON-YYYY","DD/MM/YYYY","DAY-MM-YY"], correct:0,
+    why:`The default date display format is <b>DD-MON-YY</b>.` },
+  { type:"mc", q:`In Oracle SQL Developer Data Modeler, which sequence correctly engineers a Logical model to a Relational model?`,
     opts:[
-      "intNum = strState.LengthMax",
-      "intNum = strState.Length",
-      "intNum = State.Length",
-      "intNum = strState.MaxLength",
-      "intNum = strState.LengthOf"
-    ],
-    correct:1,
-    why:`The <b>Length</b> property of a String returns its number of characters: <code>intNum = strState.Length</code>. <code>MaxLength</code> belongs to text boxes, not strings.` },
-
-  { type:"mc",
-    q:`You need to validate that the parameter received by the <b>Set</b> property is exactly 3 characters long before assigning it. Select the correct code.`,
-    opts:[
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length = 3 Then
-            value = _cpu
-        End If
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`,
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length = 3 Then
-            _cpu = value
-        End If
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`,
-      "None of the Answers",
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length = 3 Then
-            _cpu = value
-        End If
-        _cpu = value
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`,
-`Private _cpu As String
-Public Property CPU As String
-    Set(value As String)
-        If value.Length <> 3 Then
-            _cpu = value
-        End If
-    End Set
-    Get
-        Return _cpu
-    End Get
-End Property`
-    ],
-    correct:1,
-    why:`Only option B assigns in the correct direction — <b>_cpu = value</b> — and only when the length is exactly 3. Option A reverses the assignment, option D assigns again outside the If (defeating the validation), and option E uses <code>&lt;&gt;</code> so it accepts everything except 3 characters.` },
-
-  { type:"mc",
-    q:`Which of the following statements assigns the squares of the numbers from 1 through 5 to an <code>intNumbers</code> array?`,
-    opts:[
-`Dim intNumbers(4) As Integer
-For intX As Integer = 1 To 5
-    intNumbers(intX - 1) = intX ^ 2
-Next intX`,
-`Dim intNumbers(3) As Integer
-For intX As Integer = 1 To 5
-    intNumbers(intX - 1) = intX ^ 2
-Next intX`,
-      "None of the Answers",
-`Dim intNumbers(6) As Integer
-For intX As Integer = 1 To 5
-    intNumbers(intX + 1) = intX ^ 2
-Next intX`,
-`Dim intNumbers(4) As Integer
-For intX As Integer = 1 To 5
-    intNumbers(intX + 1) = intX ^ 2
-Next intX`
-    ],
-    correct:0,
-    why:`Five values need five elements, so <code>Dim intNumbers(4)</code> (indices 0–4). Using <code>intX - 1</code> maps the loop values 1…5 onto indices 0…4 exactly. Option B is too small (index 4 overflows), and options D and E use <code>intX + 1</code>, which overflows and leaves index 0 unused.` },
-
-  { type:"mc",
-    q:`Which of the following represents the <b>overload</b> constructor?`,
-    opts:[
-`Public Sub New()
-    _Number = " "
-    _EmpName = " "
-End Sub`,
-`Public Sub New()
-    Number = strNum
-    EmpName = strName
-End Sub`,
-`Public Sub New(ByVal strNum As String, ByVal strName As String)
-    Number = strNum
-    EmpName = strName
-End Sub`,
-`Public Sub New(ByVal strNum As String, ByVal strName As String)
-    _Number = " "
-    _EmpName = " "
-End Sub`,
-      "None of the Answers"
-    ],
-    correct:2,
-    why:`An overloaded constructor is the one that accepts a <b>different (unique) parameter list</b> — here <code>New(strNum, strName)</code> — and it correctly assigns the parameters to the Public properties. Option B has no parameters but uses undefined variables; option D ignores the parameters.` },
-
-  { type:"mc",
-    q:`Given the VB code below, fill in the missing code of the MenuStrip to display <code>FrmAddStudent</code> inside the MDI container.<br><br><code>Dim objFrm As New [A]<br>[B] = Me<br>[C]</code>`,
-    opts:[
-`Dim objFrm As New FrmAddStudent
-objFrm.MdiParent = Me
-objFrm.Show()`,
-`Dim objFrm As New FrmAddStudent
-objFrm = Me
-objFrm.Show()`,
-`Dim objFrm As New Form
-objFrm.MdiParent = Me
-objFrm.Show()`,
-`Dim objFrm As New FrmAddStudent
-objFrm.MdiParent = Me
-objFrm.ShowDialog()`,
-      "None of the Answers"
-    ],
-    correct:0,
-    why:`Create the child form, set its <b>MdiParent</b> to the MDI container (<code>Me</code>), then call <b>Show()</b>. Option B never sets MdiParent, option C instantiates the generic Form base class, and option D uses ShowDialog which opens a modal dialog outside the MDI container.` },
-
-  { type:"mc",
-    q:`Which of the following statements assigns the string <code>"Kitty"</code> to the <b>seventh</b> element in a one-dimensional array named <code>strPetNames</code>?`,
-    opts:[
-      'strPetNames( ) = "Kitty"',
-      'strPetNames[6] = "Kitty"',
-      'strPetNames(7) = "Kitty"',
-      'strPetNames[7] = "Kitty"',
-      'strPetNames(6) = "Kitty"'
-    ],
-    correct:4,
-    why:`VB.NET arrays are zero-based, so the 7th element has index <b>6</b>, and VB uses <b>parentheses</b> for subscripts: <code>strPetNames(6) = "Kitty"</code>.` },
-
-  { type:"mc",
-    q:`Which of the following statements is TRUE about the code below?<br><br><code>Public Property Score As Integer</code>`,
-    opts:[
-      "Creates a Public property named Score, a Private variable named _Score, a hidden Get and Set blocks.",
-      "Creates a Public property named Score, a hidden Private variable named _Score, a Get and Set blocks.",
-      "Creates a hidden Public property named Score, a hidden Private variable named _Score, a hidden Get and Set blocks.",
-      "None of the Answers.",
-      "Creates a Public property named Score, a hidden Private variable named _Score, a hidden Get and Set blocks."
-    ],
-    correct:4,
-    why:`This is an <b>auto-implemented property</b>. VB.NET creates the Public property <b>Score</b>, a <b>hidden Private</b> backing variable <b>_Score</b>, and <b>hidden</b> Get and Set blocks — you do not write them yourself.` },
-
-  { type:"mc",
-    q:`Which of the following is TRUE for the statement <code>intNum = randGen.Next(1, 70)</code>?`,
-    opts:[
-      "Assigns a random number from 1 to 71 to the intNum variable",
-      "Assigns a random number from 1 to 68 to the intNum variable.",
-      "Assigns a random number from 1 to 69 and includes 70 to the intNum variable.",
-      "Assigns a random number from 1 to 69 and excludes 70 to the intNum variable.",
-      "Assigns a random number from 1 to 70 to the intNum variable."
-    ],
-    correct:3,
-    why:`<code>Next(minValue, maxValue)</code> returns a value from <b>minValue</b> up to but <b>excluding</b> maxValue. So it returns 1 through <b>69</b> and never 70.` },
-
-  { type:"mc",
-    q:`A class contains an auto-implemented property named <code>Stdname</code>. Which of the following is the correct way for the default constructor to assign the string <code>"Steyn"</code> to the variable associated with the property?`,
-    opts:[
-      '_strStdname = "Steyn"',
-      'StdName = "Steyn"',
-      'Stdname = "Steyn"',
-      "None of the Answers",
-      '_Stdname = "Steyn"'
-    ],
-    correct:2,
-    why:`An auto-implemented property hides its backing field, so the constructor must assign through the <b>property itself</b>, and VB is case-insensitive but the property is spelled <code>Stdname</code>: <b>Stdname = "Steyn"</b>.` },
-
-  { type:"mc",
-    q:`What is used by the code to display the name of <code>objPerson</code> in this code?<br><br><code>MessageBox.Show(objPerson.Name)</code>`,
-    opts:[
-      "The set sub of the Name property",
-      "The get sub of the Name property",
-      "The get sub of the Name object",
-      "The show sub of the Name property",
-      "The set sub of the Name object"
-    ],
-    correct:1,
-    why:`Reading <code>objPerson.Name</code> invokes the <b>Get</b> accessor of the <b>Name property</b>. A Set block only runs when a value is assigned.` },
-
-  { type:"mc",
-    q:`Select the statement that describes how an application can access the Private variables in a class.`,
-    opts:[
-      "Using properties created by neither Public nor Private Property procedures.",
-      "Using properties created by either Public or Private Property procedures.",
-      "Using properties created by both Public and Private Property procedures.",
-      "Using properties created by Public Property procedure.",
-      "Using properties created by Private Property procedure."
-    ],
-    correct:3,
-    why:`Code <b>outside</b> the class can only reach Private variables through <b>Public</b> properties. Private properties are only visible inside the class itself.` },
-
-  { type:"mc",
-    q:`All constructors are ------------ that are named <code>New</code> and must have a unique parameter list within the class.`,
-    opts:["None of the Answers","Property procedure","Sub procedure","Function","Either a function or a sub procedure"],
-    correct:2,
-    why:`Constructors are <b>Sub procedures</b> named <code>New</code>. They never return a value, so they cannot be Functions.` },
-
-  { type:"mc",
-    q:`You distinguish one variable in a one-dimensional array from another variable in the same array by using a unique number, called -----`,
-    opts:["Element","Position","Subscript","Variable","Location"],
-    correct:2,
-    why:`That unique number is the <b>subscript</b> (also called the index). The element is the value stored at that subscript.` },
-
-  { type:"tf",
-    q:`The <code>IndexOf</code> method returns 1 when the string does not contain the substring.`,
-    opts:["True","False"],
-    correct:1,
-    why:`<b>False.</b> <code>IndexOf</code> returns <b>-1</b> when the substring is not found. A return value of 1 would mean the substring was found at index 1.` },
-
-  { type:"mc",
-    q:`A ------------- variable in a class can be accessed directly by a Public method in the same class.`,
-    opts:["Private","Call","Set","Function","Get"],
-    correct:0,
-    why:`A <b>Private</b> variable is visible everywhere inside its own class — including from Public methods and properties — but not from outside the class.` },
-
-  { type:"mc",
-    q:`Methods are referred to as blocks of code, declared as ------- that perform a specific task.`,
-    opts:["Public","Private","Function","Sub","Objects"],
-    correct:3,
-    why:`Methods are declared as <b>Sub</b> procedures (or Functions when they return a value). "Public" and "Private" are access modifiers, not the method kind.` },
-
-  { type:"mc",
-    q:`Which of the following statements creates a Random object named <code>randGen</code>?`,
-    opts:[
-      "Dim Gen As New RandomNumber",
-      "Dim randGen As New RandomNumber",
-      "Dim randGen As New Random",
-      "Dim randGen As New RandomObject",
-      "Dim randGen As New Generator"
-    ],
-    correct:2,
-    why:`The .NET class is called <b>Random</b>: <code>Dim randGen As New Random</code>. The other class names do not exist in the .NET Framework.` },
-
-  { type:"mc",
-    q:`In which statement is the validation code in a Property procedure entered?`,
-    opts:["Override","Get","Set","Overload","Public"],
-    correct:2,
-    why:`Validation belongs in the <b>Set</b> block — it runs every time a value is assigned, so invalid data never reaches the Private variable.` },
-
-  { type:"tf",
-    q:`<code>Public Sub New()<br>&nbsp;&nbsp;&nbsp;&nbsp;StdNo = " "<br>&nbsp;&nbsp;&nbsp;&nbsp;Surname = " "<br>&nbsp;&nbsp;&nbsp;&nbsp;test1 = 0<br>&nbsp;&nbsp;&nbsp;&nbsp;test2 = 0<br>End Sub</code><br><br>The above statements describe a default constructor that initialises the variables StdNo, Surname, test1 and test2.`,
-    opts:["True","False"],
-    correct:0,
-    why:`<b>True.</b> A parameterless <code>Sub New()</code> is the default constructor, and it sets initial values for all four members.` },
-
-  { type:"mc",
-    q:`Given the VB code below, fill in the missing code of the <b>Button Increment All</b>, which adds 5 to each value in a one-dimensional array named <code>arNumber</code>.<br><br><code>For position As Integer = 0 To arCount - 1<br>&nbsp;&nbsp;&nbsp;&nbsp;[A] += [B]<br>Next</code>`,
-    opts:[
-      "[A] = arNumber(position) &nbsp; [B] = 5",
-      "[A] = arNumber &nbsp; [B] = 5",
-      "[A] = arNumber(position) &nbsp; [B] = arCount",
-      "[A] = 5 &nbsp; [B] = arNumber(position)",
-      "[A] = position &nbsp; [B] = 5"
-    ],
-    correct:0,
-    why:`Each element is addressed with its subscript — <code>arNumber(position)</code> — and 5 is added to it, giving <code>arNumber(position) += 5</code>.` },
-
-  { type:"mc",
-    q:`-------------- refers to two or more methods with the same name but with different parameter lists.`,
-    opts:["Default","Class","Constructor","Overload","None of the Answers"],
-    correct:3,
-    why:`That is the definition of <b>Overload</b> (method overloading). The compiler picks the correct version from the argument list you supply.` },
-
-  { type:"mc",
-    q:`Given the VB code below:<br><br><code>Public Const AR_MAX As Integer = 9<br>Public arCarName(AR_MAX) As String<br>Public arCnt As Integer<br>lblDisplay.Text = String.Format("{0} Out Of 10", [A])</code><br><br>Select the appropriate code to display the number of cars that have been saved by the application out of 10.`,
-    opts:["None of the Answers","arMax","ar_MAX","arCnt","arCarName"],
-    correct:3,
-    why:`<code>arCnt</code> is the counter that tracks how many cars have been saved, so it is the value that goes into the placeholder.` },
-
-  { type:"mc",
-    q:`In a default constructor, the default value of a Property with the String data type is always --------`,
-    opts:["Filled","None of the Answers","Assign a value","Empty","New"],
-    correct:3,
-    why:`A String property with no explicit assignment in the default constructor is <b>Empty</b> (an empty string, <code>""</code>), never <code>Nothing</code> for a declared String.` },
-
-  { type:"mc",
-    q:`If the <code>strPresident</code> variable contains the string <code>"Jacobson"</code>, what value would <code>strPresident.IndexOf("son")</code> return?`,
-    opts:["5","4","-1","None of the Answers","6"],
-    correct:0,
-    why:`"Jacobson" → J(0) a(1) c(2) o(3) b(4) s(5) o(6) n(7). The substring <b>"son"</b> begins at index <b>5</b>.` }
+      "Select the Relational model, click the Engineer to Logical model icon, accept defaults, click Engineer.",
+      "Select the Relational model, accept defaults, click the Engineer to Logical Model icon, click Engineer.",
+      "Select the Logical model, click the Engineer to Relational model icon, accept defaults, click Engineer.",
+      "Click the Engineer to Relational model icon, select the Logical model, click Engineer, accept defaults."
+    ], correct:2,
+    why:`You must <b>select the Logical model</b> first, then choose <b>Engineer to Relational Model</b>.` },
+  { type:"mc", q:`Which of the following symbols represents all the columns contained in a table?`, opts:["%","*","#","@"], correct:1,
+    why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
+  { type:"tf", q:`The <code>INTERVAL</code> datatype can be used to identify a specific interval, or amount, of time.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> <code>INTERVAL</code> stores durations of time.` },
+  { type:"tf", q:`You must first select the Logical model you want to work with in order to engineer it to a relational model.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> The Logical model must be selected before running the engineer step.` },
+  { type:"tf", q:`In the SQL Commands option of Oracle APEX, you can run more than one SQL command at a time.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> APEX SQL Commands executes <b>one</b> statement at a time.` },
+  { type:"mc", q:`If the results of a SELECT statement include more than one column, the column names must be separated in the SELECT clause by which of the following symbols?`, opts:[",",";","space","|"], correct:0,
+    why:`Columns in the <code>SELECT</code> clause are separated by <b>commas</b>.` },
+  { type:"tf", q:`The <code>ALPHANUMERIC</code> datatype can be used to store characters and numbers to a maximum width of 2000.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> There is no <code>ALPHANUMERIC</code> datatype in Oracle.` },
+  { type:"mc", q:`Which of the following types of columns will automatically left-align the column heading when it is displayed?`, opts:["numeric","character","date","both character and date"], correct:1,
+    why:`<b>Character</b> columns are left-aligned by default.` },
+  { type:"mc", q:`A _________ clause creates an equijoin between two tables using one column with the same name, regardless of the data type.`, opts:["EQUI-JOIN","NATURAL JOIN","USING","ON"], correct:2,
+    why:`The <b>USING</b> clause joins on a column that appears with the same name in both tables.` },
+  { type:"tf", q:`You can delete a row that contains a primary key that is used as a foreign key in another table.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> Oracle blocks deletion while child rows reference it.` }
 ];
 
 /* =====================================================================
-   REGISTRY  —  per-student record with attempt history
+   STORAGE
    ===================================================================== */
-const REG_KEY  = "shivambu_registry_v4";
-const FACE_KEY = "shivambu_faceindex_v4";
+var REG_KEY  = "infos_test2_registry_v4";
+var FACE_KEY = "infos_test2_faceindex_v4";
 
-function loadRegistry(){
-  try { return JSON.parse(localStorage.getItem(REG_KEY)) || {}; } catch(e){ return {}; }
-}
-function saveRegistry(r){
-  try { localStorage.setItem(REG_KEY, JSON.stringify(r)); } catch(e){}
-}
-function loadFaceIndex(){
-  try { return JSON.parse(localStorage.getItem(FACE_KEY)) || {}; } catch(e){ return {}; }
-}
-function saveFaceIndex(f){
-  try { localStorage.setItem(FACE_KEY, JSON.stringify(f)); } catch(e){}
-}
+function loadRegistry(){ try { return JSON.parse(localStorage.getItem(REG_KEY)) || {}; } catch(e){ return {}; } }
+function saveRegistry(r){ try { localStorage.setItem(REG_KEY, JSON.stringify(r)); } catch(e){} }
+function loadFaceIndex(){ try { return JSON.parse(localStorage.getItem(FACE_KEY)) || {}; } catch(e){ return {}; } }
+function saveFaceIndex(f){ try { localStorage.setItem(FACE_KEY, JSON.stringify(f)); } catch(e){} }
 
-/* Get (or create) the record for a student number */
 function getStudentRecord(number){
-  const registry = loadRegistry();
-  const key = number.toUpperCase();
+  var registry = loadRegistry();
+  var key = String(number).toUpperCase();
   if(!registry[key]){
-    registry[key] = {
-      name: "",
-      course: "",
-      year: "",
-      faceSig: null,
-      attempts: [],          // array of { n, score, total, violations, timestamp, reason, snapshot }
-      createdAt: Date.now(),
-      locked: false
-    };
+    registry[key] = { name:"", course:"", year:"", faceSig:null, attempts:[], createdAt:Date.now(), locked:false };
     saveRegistry(registry);
   }
   return registry[key];
 }
-
-/* How many attempts have been used */
-function attemptsUsed(number){
-  const rec = getStudentRecord(number);
-  return rec.attempts ? rec.attempts.length : 0;
-}
-
-/* Remaining attempts */
-function attemptsLeft(number){
-  return Math.max(0, MAX_ATTEMPTS - attemptsUsed(number));
-}
+function attemptsUsed(number){ var r = getStudentRecord(number); return r.attempts ? r.attempts.length : 0; }
 
 /* =====================================================================
    STATE
    ===================================================================== */
-const S = {
-  student: { name:"", number:"", course:"", year:"" },
-  idx: 0,
-  answers: new Array(QUESTIONS.length).fill(null),
-  flags: new Array(QUESTIONS.length).fill(false),
-  score: 0,
-  remaining: EXAM_SECONDS,
-  timerId: null,
-  startedAt: null,
-  endedAt: null,
-  violations: 0,
-  violationLog: [],
-  finished: false,
-  stream: null,
-  faceSig: null,
-  snapshot: null,
-  faceMissStreak: 0,
-  faceMonitorId: null,
-  attemptNumber: 1
+var S = {
+  student:{ name:"", number:"", course:"", year:"" },
+  idx:0,
+  answers:new Array(QUESTIONS.length).fill(null),
+  flags:new Array(QUESTIONS.length).fill(false),
+  score:0,
+  remaining:EXAM_SECONDS,
+  timerId:null,
+  startedAt:null,
+  endedAt:null,
+  violations:0,
+  violationLog:[],
+  finished:false,
+  stream:null,
+  faceSig:null,
+  snapshot:null,
+  faceMissStreak:0,
+  faceMonitorId:null,
+  attemptNumber:1
 };
-
-const REG = {
-  step: 1,
-  details: { name:"", number:"", course:"", year:"" },
-  faceSig: null,
-  snapshot: null,
-  verified: false
-};
+var REG = { step:1, details:{ name:"", number:"", course:"", year:"" }, faceSig:null, snapshot:null, verified:false };
+var examActive = false;
 
 /* =====================================================================
    HELPERS
    ===================================================================== */
-const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-const letter = i => "ABCDE"[i] || "?";
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-const fmt = sec => {
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function letter(i){ return "ABCDE"[i] || "?"; }
+function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+function fmt(sec){
   sec = Math.max(0, Math.floor(sec));
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  const s = sec % 60;
+  var h = Math.floor(sec / 3600);
+  var m = Math.floor((sec % 3600) / 60);
+  var s = sec % 60;
   if(h > 0) return h + ":" + String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
   return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
-};
+}
+function norm(s){
+  return String(s).toLowerCase()
+    .replace(/[\u2018\u2019]/g,"'")
+    .replace(/[\u201C\u201D]/g,'"')
+    .replace(/\s+/g,"")
+    .replace(/\.$/,"");
+}
 
-const norm = s => String(s).toLowerCase()
-  .replace(/[\u2018\u2019]/g,"'")
-  .replace(/[\u201C\u201D]/g,'"')
-  .replace(/\s+/g,"")
-  .replace(/\.$/,"");
-
-function toast(msg, ms=2600, bad=false){
-  const el = document.createElement("div");
+function toast(msg, ms, bad){
+  ms = ms || 2600; bad = !!bad;
+  var el = document.createElement("div");
   el.className = "toast" + (bad ? " bad" : "");
   el.textContent = msg;
-  $("toasts").appendChild(el);
-  setTimeout(()=>{ el.classList.add("out"); setTimeout(()=>el.remove(),360); }, ms);
+  var host = $("toasts");
+  if(host) host.appendChild(el);
+  setTimeout(function(){ el.classList.add("out"); setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 340); }, ms);
 }
 
-function modal({emoji="ℹ️", title="Notice", text="", buttons=[], danger=false}){
-  const box = $("modalBox");
+function modal(opts){
+  opts = opts || {};
+  var emoji = opts.emoji || "ℹ️";
+  var title = opts.title || "Notice";
+  var text  = opts.text || "";
+  var buttons = opts.buttons || [];
+  var danger = !!opts.danger;
+
+  var box = $("modalBox");
+  var mEmoji = $("mEmoji");
+  var mTitle = $("mTitle");
+  var mText  = $("mText");
+  var mBtns  = $("mBtns");
+  var mBg    = $("modalBg");
+  if(!box || !mBg) return;
+
   box.className = "modal" + (danger ? " danger" : "");
-  $("mEmoji").textContent = emoji;
-  $("mTitle").textContent = title;
-  $("mText").textContent = text;
-  const wrap = $("mBtns");
-  wrap.innerHTML = "";
-  buttons.forEach(b=>{
-    const btn = document.createElement("button");
+  mEmoji.textContent = emoji;
+  mTitle.textContent = title;
+  mText.textContent = text;
+  mBtns.innerHTML = "";
+  buttons.forEach(function(b){
+    var btn = document.createElement("button");
     btn.className = "btn " + (b.cls || "primary");
     btn.type = "button";
-    btn.textContent = b.label;
-    btn.addEventListener("click", ()=>{ closeModal(); if(b.action) b.action(); });
-    wrap.appendChild(btn);
+    btn.textContent = b.label || "OK";
+    btn.addEventListener("click", function(){
+      closeModal();
+      if(b.action){ try { b.action(); } catch(e){ console.error("Action failed:", e); toast("Action failed.", 2600, true); } }
+    });
+    mBtns.appendChild(btn);
   });
-  $("modalBg").classList.add("show");
+  mBg.classList.add("show");
 }
-function closeModal(){ $("modalBg").classList.remove("show"); }
-$("modalBg").addEventListener("click", e=>{ if(e.target === $("modalBg")) closeModal(); });
+function closeModal(){
+  var mBg = $("modalBg");
+  if(mBg) mBg.classList.remove("show");
+}
+var modalBgEl = $("modalBg");
+if(modalBgEl){
+  modalBgEl.addEventListener("click", function(e){
+    if(e.target === modalBgEl) closeModal();
+  });
+}
+
+/* =====================================================================
+   DEADLINE
+   ===================================================================== */
+function deadlinePassed(){ return Date.now() >= DEADLINE; }
+function deadlineCountdown(){
+  var diff = DEADLINE - Date.now();
+  if(diff <= 0) return "CLOSED";
+  var d = Math.floor(diff / 86400000);
+  var h = Math.floor((diff % 86400000) / 3600000);
+  var m = Math.floor((diff % 3600000) / 60000);
+  if(d > 0) return d + "d " + h + "h " + m + "m";
+  return h + "h " + m + "m";
+}
+function updateDeadlineBadge(){
+  var b = $("deadlineBadge");
+  if(!b) return;
+  if(deadlinePassed()){
+    b.textContent = "⛔ CLOSED";
+    b.style.color = "#f87171";
+    return;
+  }
+  b.textContent = "⏰ 22 OCT 2026 · 20:00 (" + deadlineCountdown() + ")";
+}
 
 /* =====================================================================
    HARD BLOCK
    ===================================================================== */
 function blockAccess(title, msg, code){
-  $("blockTitle").textContent = title;
-  $("blockMsg").textContent = msg;
-  $("blockCode").textContent = "REF: " + (code || "SEC-LOCK-" + Date.now().toString(36).toUpperCase());
-  $("blockScreen").classList.add("show");
+  var bt = $("blockTitle"); if(bt) bt.textContent = title;
+  var bm = $("blockMsg");   if(bm) bm.textContent = msg;
+  var bc = $("blockCode");  if(bc) bc.textContent = "REF: " + (code || "SEC-LOCK-" + Date.now().toString(36).toUpperCase());
+  var bs = $("blockScreen"); if(bs) bs.classList.add("show");
+
   try { stopAllCameras(); } catch(e){}
   examActive = false;
-  clearInterval(S.timerId);
-  clearInterval(SCAN.timer);
-  clearInterval(S.faceMonitorId);
-  $("proctorBar").style.display = "none";
-  $("camPanel").style.display = "none";
-  $("examScreen").style.display = "none";
-  $("startScreen").style.display = "none";
-  $("resultScreen").style.display = "none";
+  try { clearInterval(S.timerId); } catch(e){}
+  try { clearInterval(SCAN.timer); } catch(e){}
+  try { clearInterval(S.faceMonitorId); } catch(e){}
+  hideFaceAlert();
+
+  var pb = $("proctorBar"); if(pb) pb.style.display = "none";
+  var cp = $("camPanel");   if(cp) cp.style.display = "none";
+  var es = $("examScreen"); if(es) es.style.display = "none";
+  var ss = $("startScreen"); if(ss) ss.style.display = "none";
+  var rs = $("resultScreen"); if(rs) rs.style.display = "none";
 }
 
 /* =====================================================================
    CONFETTI
    ===================================================================== */
-const cvs = $("confetti"), ctx = cvs.getContext("2d");
-let parts = [];
-const COLORS = ["#f87171","#fbbf24","#34d399","#60a5fa","#a78bfa","#f472b6","#22d3ee"];
-function sizeCanvas(){ cvs.width = innerWidth; cvs.height = innerHeight; }
-addEventListener("resize", sizeCanvas); sizeCanvas();
+var cvs = $("confetti");
+var ctx = cvs ? cvs.getContext("2d") : null;
+var parts = [];
+var COLORS = ["#3b82f6","#8b5cf6","#10b981","#f59e0b","#ec4899","#38bdf8"];
+function sizeCanvas(){ if(!cvs) return; cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
+window.addEventListener("resize", sizeCanvas);
+sizeCanvas();
 
 function rainConfetti(){
-  for(let k=0;k<6;k++){
-    setTimeout(()=>{
-      for(let i=0;i<40;i++){
-        parts.push({
-          x: Math.random()*cvs.width, y: -20 - Math.random()*220,
-          vx: (Math.random()-.5)*3, vy: 2 + Math.random()*4,
-          size: 6 + Math.random()*10, color: COLORS[(Math.random()*COLORS.length)|0],
-          rot: Math.random()*Math.PI, vr: (Math.random()-.5)*.3, life: 1
-        });
-      }
-    }, k*150);
+  if(!ctx) return;
+  for(var k=0;k<6;k++){
+    (function(kk){
+      setTimeout(function(){
+        for(var i=0;i<40;i++){
+          parts.push({
+            x: Math.random()*cvs.width, y: -20 - Math.random()*220,
+            vx: (Math.random()-.5)*3, vy: 2 + Math.random()*4,
+            size: 6 + Math.random()*10,
+            color: COLORS[(Math.random()*COLORS.length)|0],
+            rot: Math.random()*Math.PI, vr: (Math.random()-.5)*.3, life: 1
+          });
+        }
+      }, kk*150);
+    })(k);
   }
 }
 (function loop(){
+  if(!ctx){ return; }
   ctx.clearRect(0,0,cvs.width,cvs.height);
-  for(let i=parts.length-1;i>=0;i--){
-    const p = parts[i];
+  for(var i=parts.length-1;i>=0;i--){
+    var p = parts[i];
     p.vy += .17; p.vx *= .993; p.x += p.vx; p.y += p.vy;
     p.rot += p.vr; p.life -= .0075;
     if(p.life <= 0 || p.y > cvs.height + 60){ parts.splice(i,1); continue; }
@@ -1067,272 +1251,246 @@ function rainConfetti(){
 })();
 
 /* =====================================================================
-   FACE ENGINE  —  no voice, no liveness. Just face detection + hash.
+   FACE ENGINE
    ===================================================================== */
-const workCv  = document.createElement("canvas"); workCv.width = 96;  workCv.height = 72;
-const workCtx = workCv.getContext("2d", { willReadFrequently:true });
-const hashCv  = document.createElement("canvas"); hashCv.width = 8;   hashCv.height = 8;
-const hashCtx = hashCv.getContext("2d", { willReadFrequently:true });
-const snapCv  = document.createElement("canvas"); snapCv.width = 160; snapCv.height = 120;
-const snapCtx = snapCv.getContext("2d");
+var workCv = document.createElement("canvas"); workCv.width = 96; workCv.height = 72;
+var workCtx = workCv.getContext("2d", { willReadFrequently:true });
+var hashCv = document.createElement("canvas"); hashCv.width = 8; hashCv.height = 8;
+var hashCtx = hashCv.getContext("2d", { willReadFrequently:true });
+var snapCv = document.createElement("canvas"); snapCv.width = 160; snapCv.height = 120;
+var snapCtx = snapCv.getContext("2d");
 
 function bitsToHex(bits){
-  let hex = "";
-  for(let i=0;i<bits.length;i+=4) hex += parseInt(bits.substr(i,4),2).toString(16);
+  var hex = "";
+  for(var i=0;i<bits.length;i+=4) hex += parseInt(bits.substr(i,4),2).toString(16);
   return hex;
 }
 function hexToBits(hex){
-  let bits = "";
-  for(const ch of hex) bits += parseInt(ch,16).toString(2).padStart(4,"0");
+  var bits = "";
+  for(var i=0;i<hex.length;i++) bits += parseInt(hex[i],16).toString(2).padStart(4,"0");
   return bits;
 }
 function hamming(a,b){
   if(!a || !b) return 64;
-  const ba = hexToBits(a), bb = hexToBits(b);
-  const n = Math.min(ba.length, bb.length);
-  let d = Math.abs(ba.length - bb.length);
-  for(let i=0;i<n;i++) if(ba[i] !== bb[i]) d++;
+  var ba = hexToBits(a), bb = hexToBits(b);
+  var n = Math.min(ba.length, bb.length);
+  var d = Math.abs(ba.length - bb.length);
+  for(var i=0;i<n;i++) if(ba[i] !== bb[i]) d++;
   return d;
 }
-
-/* Face analysis: only skin tone + brightness (no motion, no voice) */
 function analyseFace(video){
-  workCtx.drawImage(video, 0, 0, 96, 72);
-  const img = workCtx.getImageData(0,0,96,72);
-  const d = img.data;
-  const N = 96*72;
-  let skin = 0, bright = 0;
-  for(let i=0;i<d.length;i+=4){
-    const r=d[i], g=d[i+1], b=d[i+2];
-    const gy = 0.299*r + 0.587*g + 0.114*b;
+  try {
+    workCtx.drawImage(video, 0, 0, 96, 72);
+  } catch(e){ return { skin:0, bright:0 }; }
+  var img = workCtx.getImageData(0,0,96,72);
+  var d = img.data;
+  var N = 96*72;
+  var skin = 0, bright = 0;
+  for(var i=0;i<d.length;i+=4){
+    var r=d[i], g=d[i+1], b=d[i+2];
+    var gy = 0.299*r + 0.587*g + 0.114*b;
     if(gy > 40) bright++;
-    const mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+    var mx = Math.max(r,g,b), mn = Math.min(r,g,b);
     if(r>90 && g>38 && b>18 && (mx-mn)>12 && Math.abs(r-g)>12 && r>g && r>b) skin++;
   }
   return { skin: skin/N, bright: bright/N };
 }
-
 function computeFaceHash(video){
-  const vw = video.videoWidth  || 640;
-  const vh = video.videoHeight || 480;
-  const cw = vw * 0.60, ch = vh * 0.72;
-  const sx = (vw - cw) / 2;
-  const sy = Math.max(0, (vh - ch) / 2 - vh * 0.04);
-  try{
-    hashCtx.drawImage(video, sx, sy, cw, ch, 0, 0, 8, 8);
-  }catch(e){ return null; }
-  const d = hashCtx.getImageData(0,0,8,8).data;
-  const g = [];
-  let sum = 0;
-  for(let i=0;i<d.length;i+=4){
-    const v = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+  var vw = video.videoWidth  || 640;
+  var vh = video.videoHeight || 480;
+  var cw = vw * 0.60, ch = vh * 0.72;
+  var sx = (vw - cw) / 2;
+  var sy = Math.max(0, (vh - ch) / 2 - vh * 0.04);
+  try { hashCtx.drawImage(video, sx, sy, cw, ch, 0, 0, 8, 8); } catch(e){ return null; }
+  var d = hashCtx.getImageData(0,0,8,8).data;
+  var g = []; var sum = 0;
+  for(var i=0;i<d.length;i+=4){
+    var v = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
     g.push(v); sum += v;
   }
-  const avg = sum / g.length;
-  let bits = "";
-  for(const v of g) bits += v > avg ? "1" : "0";
+  var avg = sum / g.length;
+  var bits = "";
+  for(var j=0;j<g.length;j++) bits += g[j] > avg ? "1" : "0";
   return bitsToHex(bits);
 }
-
 function captureSnapshot(video){
-  try{
-    snapCtx.drawImage(video, 0, 0, 160, 120);
-    return snapCv.toDataURL("image/jpeg", 0.55);
-  }catch(e){ return null; }
+  try { snapCtx.drawImage(video, 0, 0, 160, 120); return snapCv.toDataURL("image/jpeg", 0.55); }
+  catch(e){ return null; }
 }
 
 /* =====================================================================
-   CAMERA MANAGEMENT
+   CAMERA
    ===================================================================== */
 function stopAllCameras(){
-  if(S.stream){ S.stream.getTracks().forEach(t=>{ try{t.stop();}catch(e){} }); S.stream = null; }
+  if(S.stream){
+    S.stream.getTracks().forEach(function(t){ try { t.stop(); } catch(e){} });
+    S.stream = null;
+  }
 }
-
 async function requestCamera(videoEl){
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: { width:{ideal:640}, height:{ideal:480}, facingMode:"user" },
-    audio: false
+  var stream = await navigator.mediaDevices.getUserMedia({
+    video:{ width:{ideal:640}, height:{ideal:480}, facingMode:"user" },
+    audio:false
   });
   S.stream = stream;
   videoEl.srcObject = stream;
   try { await videoEl.play(); } catch(e){}
-  stream.getVideoTracks().forEach(t=>{
+  stream.getVideoTracks().forEach(function(t){
     t.addEventListener("ended", onCameraLost);
     t.addEventListener("mute",  onCameraLost);
   });
   return stream;
 }
-
-let camLostCount = 0;
-
+var camLostCount = 0;
 function onCameraLost(){
   if(S.finished) return;
   if(examActive){
     camLostCount++;
-    if(camLostCount >= 3){
+    if(camLostCount >= 2){
       registerViolation("Camera feed lost / disconnected");
       camLostCount = 0;
     } else {
       toast("📷 Camera signal interrupted — check your camera.", 3000, true);
     }
   } else {
-    $("camDeniedBox").style.display = "grid";
-    $("scanVideo").style.display = "none";
-    $("scanStatus").textContent = "CAMERA LOST — VERIFICATION IMPOSSIBLE";
-    $("chkCam").className = "chk err";
-    $("startExamBtn").disabled = true;
+    var cd = $("camDeniedBox"); if(cd) cd.style.display = "grid";
+    var sv = $("scanVideo"); if(sv) sv.style.display = "none";
+    var ss = $("scanStatus"); if(ss) ss.textContent = "CAMERA LOST — VERIFICATION IMPOSSIBLE";
+    var cc = $("chkCam"); if(cc) cc.className = "chk err";
+    var se = $("startExamBtn"); if(se) se.disabled = true;
     SCAN.active = false;
   }
 }
 
 /* =====================================================================
-   FACE SCAN (registration)  —  SIMPLE: face present → capture signature
+   FACE SCAN
    ===================================================================== */
-const SCAN = {
-  active:false, progress:0, faceOk:false,
-  timer:null, done:false
-};
-
+var SCAN = { active:false, progress:0, faceOk:false, timer:null, done:false };
 function setCheck(id, state){
-  const el = $(id);
+  var el = $(id);
+  if(!el) return;
   el.className = "chk" + (state === true ? " on" : state === false ? " err" : "");
 }
-
 function scanTick(){
   if(!SCAN.active) return;
-  const v = $("scanVideo");
+  var v = $("scanVideo");
   if(!v || v.readyState < 2 || !v.videoWidth) return;
-
-  const a = analyseFace(v);
-  const faceOk = a.skin > 0.05 && a.bright > 0.07;
+  var a = analyseFace(v);
+  var faceOk = a.skin > 0.05 && a.bright > 0.07;
   SCAN.faceOk = faceOk;
-
   if(faceOk) SCAN.progress = Math.min(100, SCAN.progress + 4);
   else       SCAN.progress = Math.max(0,   SCAN.progress - 1);
-
-  $("scanOval").className = "scan-oval" + (faceOk ? " ok" : " bad");
-  $("scanFill").style.width = SCAN.progress + "%";
-
-  if(!faceOk){
-    $("scanStatus").textContent = a.bright < 0.07
-      ? "TOO DARK — MOVE INTO BETTER LIGHT"
-      : "NO FACE DETECTED — CENTRE YOUR FACE IN THE OVAL";
-  } else {
-    $("scanStatus").textContent = "CAPTURING FACE SIGNATURE… " + Math.round(SCAN.progress) + "%";
+  var oval = $("scanOval"); if(oval) oval.className = "scan-oval" + (faceOk ? " ok" : " bad");
+  var fill = $("scanFill"); if(fill) fill.style.width = SCAN.progress + "%";
+  var st = $("scanStatus");
+  if(st){
+    if(!faceOk){
+      st.textContent = a.bright < 0.07
+        ? "TOO DARK — MOVE INTO BETTER LIGHT"
+        : "NO FACE DETECTED — CENTRE YOUR FACE IN THE OVAL";
+    } else {
+      st.textContent = "CAPTURING FACE SIGNATURE… " + Math.round(SCAN.progress) + "%";
+    }
   }
-
   setCheck("chkCam", true);
   setCheck("chkFace", faceOk);
-
   if(SCAN.progress >= 100 && !SCAN.done){
     SCAN.done = true;
     finishScan();
   }
 }
-
 async function finishScan(){
   SCAN.active = false;
   clearInterval(SCAN.timer);
-  $("scanStatus").textContent = "GENERATING FACE SIGNATURE…";
-  $("scanTag").textContent = "● PROCESSING";
-
-  const v = $("scanVideo");
-  const sigs = [];
-  for(let i=0;i<5;i++){
-    const h = computeFaceHash(v);
+  var st = $("scanStatus"); if(st) st.textContent = "GENERATING FACE SIGNATURE…";
+  var tg = $("scanTag"); if(tg) tg.textContent = "● PROCESSING";
+  var v = $("scanVideo");
+  if(!v){ return; }
+  var sigs = [];
+  for(var i=0;i<5;i++){
+    var h = computeFaceHash(v);
     if(h) sigs.push(h);
     await sleep(110);
   }
   if(!sigs.length){
-    SCAN.done = false; SCAN.progress = 0;
-    SCAN.active = true;
+    SCAN.done = false; SCAN.progress = 0; SCAN.active = true;
     SCAN.timer = setInterval(scanTick, 160);
-    $("scanStatus").textContent = "SIGNATURE FAILED — PLEASE TRY AGAIN";
+    if(st) st.textContent = "SIGNATURE FAILED — PLEASE TRY AGAIN";
     return;
   }
-  let best = sigs[0], bestD = Infinity;
-  for(const s of sigs){
-    let tot = 0;
-    for(const o of sigs) tot += hamming(s,o);
-    if(tot < bestD){ bestD = tot; best = s; }
+  var best = sigs[0], bestD = Infinity;
+  for(var k=0;k<sigs.length;k++){
+    var tot = 0;
+    for(var j=0;j<sigs.length;j++) tot += hamming(sigs[k], sigs[j]);
+    if(tot < bestD){ bestD = tot; best = sigs[k]; }
   }
   REG.faceSig  = best;
   REG.snapshot = captureSnapshot(v);
-
   verifyIdentity();
 }
 
 /* =====================================================================
-   IDENTITY VERIFICATION  —  8 attempts allowed
+   IDENTITY VERIFICATION
    ===================================================================== */
 function verifyIdentity(){
-  const number = REG.details.number.toUpperCase();
-  const rec = getStudentRecord(number);
-  const used = rec.attempts.length;
+  if(deadlinePassed()){
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 22 October 2026 at 20:00.", "DEADLINE-PASSED");
+    return;
+  }
+  var number = REG.details.number.toUpperCase();
+  var rec = getStudentRecord(number);
+  var used = rec.attempts.length;
 
-  /* Check if student already exhausted all 8 attempts */
   if(used >= MAX_ATTEMPTS){
-    blockAccess(
-      "ALL 8 ATTEMPTS USED",
-      "Student number " + number + " has already used all " + MAX_ATTEMPTS + " attempts.\n\n" +
-      "You are no longer allowed to access this assessment.\n" +
-      "Please contact your lecturer if you believe this is an error.",
-      "ATTEMPTS-EXHAUSTED"
-    );
+    blockAccess("ALL 8 ATTEMPTS USED",
+      "Student number " + number + " has already used all " + MAX_ATTEMPTS + " attempts.\n\nYou are no longer allowed to access this assessment.",
+      "ATTEMPTS-EXHAUSTED");
     return;
   }
 
-  /* Face must be the SAME face registered on the very first attempt */
   if(rec.faceSig){
-    const d = hamming(rec.faceSig, REG.faceSig);
+    var d = hamming(rec.faceSig, REG.faceSig);
     if(d > FACE_MATCH_THRESHOLD){
-      blockAccess(
-        "FACE DOES NOT MATCH",
-        "The face detected does not match the face registered to student number " + number + ".\n\n" +
-        "The same student must use the same face for every attempt.\n" +
-        "Access refused.",
-        "FACE-MISMATCH"
-      );
+      blockAccess("FACE DOES NOT MATCH",
+        "The face detected does not match the face registered to student number " + number + ".\n\nThe same student must use the same face for every attempt.",
+        "FACE-MISMATCH");
       return;
     }
   }
 
-  /* First ever attempt — also ensure face isn't already registered elsewhere */
   if(!rec.faceSig){
-    const faces = loadFaceIndex();
-    for(const h in faces){
+    var faces = loadFaceIndex();
+    for(var h in faces){
+      if(!Object.prototype.hasOwnProperty.call(faces, h)) continue;
       if(faces[h].number === number) continue;
-      const d = hamming(h, REG.faceSig);
-      if(d <= FACE_MATCH_THRESHOLD){
-        blockAccess(
-          "FACE ALREADY REGISTERED",
-          "This face is already bound to student number " + faces[h].number + ".\n\n" +
-          "A face may only be linked to a single student number.",
-          "FACE-DUPLICATE"
-        );
+      var dd = hamming(h, REG.faceSig);
+      if(dd <= FACE_MATCH_THRESHOLD){
+        blockAccess("FACE ALREADY REGISTERED",
+          "This face is already bound to student number " + faces[h].number + ".\n\nA face may only be linked to a single student number.",
+          "FACE-DUPLICATE");
         return;
       }
     }
   }
 
-  /* Passed */
   REG.verified = true;
   setCheck("chkMatch", true);
-  $("scanStatus").textContent = "✅ IDENTITY VERIFIED — READY TO BEGIN";
-  $("scanTag").textContent = "● VERIFIED";
-  $("scanOval").className = "scan-oval ok";
-  $("startExamBtn").disabled = false;
+  var st = $("scanStatus"); if(st) st.textContent = "✅ IDENTITY VERIFIED — READY TO BEGIN";
+  var tg = $("scanTag"); if(tg) tg.textContent = "● VERIFIED";
+  var oval = $("scanOval"); if(oval) oval.className = "scan-oval ok";
+  var se = $("startExamBtn"); if(se) se.disabled = false;
 
-  const nextAttempt = used + 1;
+  var nextAttempt = used + 1;
   modal({
     emoji:"✅",
     title:"Identity Verified",
     text:
       "Face verified for student number " + number + ".\n\n" +
-      "• This will be your attempt " + nextAttempt + " of " + MAX_ATTEMPTS + ".\n" +
-      "• You have " + (MAX_ATTEMPTS - used) + " attempt(s) remaining.\n" +
+      "• This will be attempt " + nextAttempt + " of " + MAX_ATTEMPTS + ".\n" +
+      "• Remaining attempts: " + (MAX_ATTEMPTS - used) + ".\n" +
       "• Your camera must stay ON for the whole exam.\n" +
-      "• Up to " + MAX_VIOLATIONS + " violations allowed.\n" +
+      "• You must keep your face visible at all times.\n" +
+      "• Up to " + MAX_VIOLATIONS + " violations allowed this attempt.\n" +
       "• " + fmt(EXAM_SECONDS) + " for " + QUESTIONS.length + " questions.",
     buttons:[{ label:"Continue", cls:"green" }]
   });
@@ -1343,27 +1501,29 @@ function verifyIdentity(){
    ===================================================================== */
 function gotoStep(n){
   REG.step = n;
-  [1,2].forEach(i=>{ $("step"+i).style.display = (i === n ? "block" : "none"); });
-  document.querySelectorAll(".stepdot").forEach(d=>{
-    const s = +d.dataset.step;
+  [1,2].forEach(function(i){
+    var el = $("step"+i);
+    if(el) el.style.display = (i === n ? "block" : "none");
+  });
+  var dots = document.querySelectorAll(".stepdot");
+  for(var k=0;k<dots.length;k++){
+    var d = dots[k];
+    var s = parseInt(d.dataset.step, 10);
     d.classList.toggle("active", s === n);
     d.classList.toggle("done", s < n);
-  });
+  }
 }
 
 /* =====================================================================
-   ANTI-CHEAT / PROCTORING
+   ANTI-CHEAT
    ===================================================================== */
-let examActive = false;
-
-document.addEventListener("contextmenu", e=>{
+document.addEventListener("contextmenu", function(e){
   e.preventDefault();
   if(examActive) toast("🚫 Right-click is disabled during the exam.", 1800, true);
   return false;
 });
-
-["copy","cut","paste"].forEach(evt=>{
-  document.addEventListener(evt, e=>{
+["copy","cut","paste"].forEach(function(evt){
+  document.addEventListener(evt, function(e){
     if(!examActive) return;
     e.preventDefault();
     toast("🚫 Copying is disabled. This attempt has been logged.", 2400, true);
@@ -1371,22 +1531,20 @@ document.addEventListener("contextmenu", e=>{
     return false;
   });
 });
-
-document.addEventListener("selectstart", e=>{
+document.addEventListener("selectstart", function(e){
   if(!examActive) return;
-  const t = e.target;
+  var t = e.target;
   if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
   e.preventDefault();
 });
-document.addEventListener("dragstart", e=>{ if(examActive) e.preventDefault(); });
+document.addEventListener("dragstart", function(e){ if(examActive) e.preventDefault(); });
 
-document.addEventListener("keydown", e=>{
-  const k = e.key.toLowerCase();
-  const blockedCombo = (e.ctrlKey || e.metaKey) && ["c","x","v","a","u","s","p","f"].includes(k);
-  const blockedDev =
+document.addEventListener("keydown", function(e){
+  var k = e.key.toLowerCase();
+  var blockedCombo = (e.ctrlKey || e.metaKey) && ["c","x","v","a","u","s","p","f"].indexOf(k) !== -1;
+  var blockedDev =
     e.key === "F12" ||
-    ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i","j","c"].includes(k));
-
+    ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i","j","c"].indexOf(k) !== -1);
   if(examActive && (blockedCombo || blockedDev)){
     e.preventDefault();
     toast("🚫 Shortcut blocked: " + (e.ctrlKey ? "Ctrl+" : "") + e.key.toUpperCase(), 2000, true);
@@ -1395,40 +1553,38 @@ document.addEventListener("keydown", e=>{
   }
   if(!examActive) return;
   if(document.activeElement && document.activeElement.tagName === "INPUT") return;
-
-  const q = QUESTIONS[S.idx];
-  if(q.type !== "text" && /^[1-5]$/.test(e.key)){
-    const i = parseInt(e.key,10) - 1;
-    const btns = document.querySelectorAll("#card .opt");
+  var q = QUESTIONS[S.idx];
+  if(q && q.type !== "text" && /^[1-5]$/.test(e.key)){
+    var i = parseInt(e.key,10) - 1;
+    var btns = document.querySelectorAll("#card .opt");
     if(btns[i]) btns[i].click();
   }
   if(e.key === "ArrowRight"){
-    const b = document.querySelectorAll("#card .nav .btn");
-    const n = b[b.length-1]; if(n && !n.disabled) n.click();
+    var b = document.querySelectorAll("#card .nav .btn");
+    var n = b[b.length-1]; if(n && !n.disabled) n.click();
   }
   if(e.key === "ArrowLeft"){
-    const b = document.querySelectorAll("#card .nav .btn");
-    if(b[0] && !b[0].disabled) b[0].click();
+    var bb = document.querySelectorAll("#card .nav .btn");
+    if(bb[0] && !bb[0].disabled) bb[0].click();
   }
 });
 
-document.addEventListener("visibilitychange", ()=>{
+document.addEventListener("visibilitychange", function(){
   if(!examActive) return;
   if(document.hidden) registerViolation("Switched away from the exam tab/window");
 });
-window.addEventListener("blur", ()=>{
+window.addEventListener("blur", function(){
   if(!examActive) return;
   registerViolation("Exam window lost focus");
 });
-document.addEventListener("fullscreenchange", ()=>{
+document.addEventListener("fullscreenchange", function(){
   if(!examActive) return;
   if(!document.fullscreenElement) registerViolation("Exited fullscreen mode");
 });
 
 function logViolation(reason){
-  S.violationLog.push({ t: new Date().toLocaleTimeString(), reason });
+  S.violationLog.push({ t: new Date().toLocaleTimeString(), reason: reason });
 }
-
 function registerViolation(reason){
   if(!examActive) return;
   S.violations++;
@@ -1439,17 +1595,15 @@ function registerViolation(reason){
     modal({
       emoji:"🛑",
       title:"ATTEMPT TERMINATED",
-      text:"You have reached " + MAX_VIOLATIONS + " violations in this attempt.\n\n" +
-           "Reason: " + reason + "\n\n" +
-           "This attempt is being submitted immediately. You may start a new attempt if you still have any remaining.",
+      text:"You have reached " + MAX_VIOLATIONS + " violations in this attempt.\n\nReason: " + reason + "\n\nThis attempt is being submitted immediately.",
       danger:true,
-      buttons:[{ label:"Submit Attempt", cls:"red", action:()=>forceFinish("Violation limit reached") }]
+      buttons:[{ label:"Submit Attempt", cls:"red", action:function(){ forceFinish("Violation limit reached"); } }]
     });
     return;
   }
 
-  const left = MAX_VIOLATIONS - S.violations;
-  toast("⚠️ Violation " + S.violations + " / " + MAX_VIOLATIONS + " — " + reason, 3200, true);
+  var left = MAX_VIOLATIONS - S.violations;
+  toast("⚠️ Violation " + S.violations + " / " + MAX_VIOLATIONS + " — " + reason, 3400, true);
 
   if(left <= 2){
     modal({
@@ -1460,74 +1614,102 @@ function registerViolation(reason){
     });
   }
 }
-
 function updateViolationBadge(){
-  const b = $("violationBadge");
+  var b = $("violationBadge");
   if(!b) return;
-  b.textContent = "⚠️ VIOLATIONS: " + S.violations + " / " + MAX_VIOLATIONS;
-  b.style.color = S.violations === 0 ? "#bbf7d0" : "#fca5a5";
+  b.textContent = "⚠️ " + S.violations + " / " + MAX_VIOLATIONS;
+  b.classList.toggle("hot", S.violations > 0);
 }
-
 function updateAttemptBadge(){
-  const b = $("attemptBadge");
+  var b = $("attemptBadge");
   if(!b) return;
-  b.textContent = "📝 ATTEMPT " + S.attemptNumber + " / " + MAX_ATTEMPTS;
-  b.style.color = "#e0f2fe";
+  b.textContent = "📝 " + S.attemptNumber + " / " + MAX_ATTEMPTS;
 }
 
 /* =====================================================================
-   IN-EXAM FACE MONITOR  —  only checks a face is present, no voice
+   FACE MONITOR (STRICT)
    ===================================================================== */
+function showFaceAlert(secondsLeft){
+  var el = $("faceAlert");
+  if(!el) return;
+  if(!el.classList.contains("show")) el.classList.add("show");
+  var cnt = $("faceAlertCount");
+  if(cnt) cnt.textContent = Math.max(0, Math.ceil(secondsLeft));
+}
+function hideFaceAlert(){
+  var el = $("faceAlert");
+  if(el) el.classList.remove("show");
+}
 function startFaceMonitor(){
   clearInterval(S.faceMonitorId);
   S.faceMissStreak = 0;
-  S.faceMonitorId = setInterval(()=>{
+  S.faceMonitorId = setInterval(function(){
     if(!examActive || S.finished) return;
-    const v = $("camVideo");
+    if(deadlinePassed()){
+      forceFinish("Assessment deadline reached (22 Oct 2026 20:00)");
+      return;
+    }
+    var v = $("camVideo");
     if(!v || v.readyState < 2 || !v.videoWidth) return;
 
-    const a = analyseFace(v);
-    const faceOk = a.skin > 0.04 && a.bright > 0.06;
+    var a = analyseFace(v);
+    var faceOk = a.skin > 0.05 && a.bright > 0.07;
+    var totalWindow = (FACE_MISS_LIMIT * FACE_CHECK_INTERVAL) / 1000;
 
     if(!faceOk){
       S.faceMissStreak++;
-      $("faceBadge").textContent = "⚠️ FACE NOT VISIBLE";
-      $("faceBadge").className = "proctor-item amber";
+      var fb = $("faceBadge");
+      if(fb){ fb.textContent = "⚠️ FACE NOT VISIBLE"; fb.className = "seg face-bad"; }
+      var elapsed = (S.faceMissStreak * FACE_CHECK_INTERVAL) / 1000;
+      var remaining = Math.max(0, totalWindow - elapsed);
+      showFaceAlert(remaining);
       if(S.faceMissStreak >= FACE_MISS_LIMIT){
         S.faceMissStreak = 0;
+        hideFaceAlert();
         registerViolation("Face not visible to the camera");
       }
       return;
     }
 
-    const h = computeFaceHash(v);
+    var h = computeFaceHash(v);
     if(h && S.faceSig){
-      const d = hamming(h, S.faceSig);
+      var d = hamming(h, S.faceSig);
       if(d > FACE_LIVE_THRESHOLD){
         S.faceMissStreak++;
-        $("faceBadge").textContent = "⚠️ FACE MISMATCH";
-        $("faceBadge").className = "proctor-item amber";
-        if(S.faceMissStreak >= 4){
+        var fb2 = $("faceBadge");
+        if(fb2){ fb2.textContent = "⚠️ FACE MISMATCH"; fb2.className = "seg face-bad"; }
+        var elapsed2 = (S.faceMissStreak * FACE_CHECK_INTERVAL) / 1000;
+        var remaining2 = Math.max(0, totalWindow - elapsed2);
+        showFaceAlert(remaining2);
+        if(S.faceMissStreak >= FACE_MISS_LIMIT){
           S.faceMissStreak = 0;
+          hideFaceAlert();
           registerViolation("A different person is at the camera");
         }
         return;
       }
     }
+
     S.faceMissStreak = 0;
-    $("faceBadge").textContent = "👁️ FACE VERIFIED";
-    $("faceBadge").className = "proctor-item green";
+    hideFaceAlert();
+    var fb3 = $("faceBadge");
+    if(fb3){ fb3.textContent = "👁️ FACE VERIFIED"; fb3.className = "seg face-ok"; }
   }, FACE_CHECK_INTERVAL);
 }
 
 /* =====================================================================
-   TIMER — 1h30m
+   TIMER
    ===================================================================== */
 function startTimer(){
   S.remaining = EXAM_SECONDS;
   renderTimer();
   clearInterval(S.timerId);
-  S.timerId = setInterval(()=>{
+  S.timerId = setInterval(function(){
+    if(deadlinePassed()){
+      clearInterval(S.timerId);
+      forceFinish("Assessment deadline reached (22 Oct 2026 20:00)");
+      return;
+    }
     S.remaining--;
     renderTimer();
     if(S.remaining === 1800) toast("⏳ 30 minutes remaining!", 4000);
@@ -1541,9 +1723,9 @@ function startTimer(){
     }
   }, 1000);
 }
-
 function renderTimer(){
-  const el = $("timer");
+  var el = $("timer");
+  if(!el) return;
   el.textContent = fmt(S.remaining);
   el.classList.remove("warn","danger");
   if(S.remaining <= 60) el.classList.add("danger");
@@ -1551,168 +1733,147 @@ function renderTimer(){
 }
 
 /* =====================================================================
-   RENDER EXAM
+   RENDER
    ===================================================================== */
 function renderPalette(){
-  const p = $("palette");
+  var p = $("palette");
+  if(!p) return;
   p.innerHTML = "";
-  QUESTIONS.forEach((_, i)=>{
-    const b = document.createElement("button");
+  QUESTIONS.forEach(function(_, i){
+    var b = document.createElement("button");
     b.type = "button";
     b.className = "pal";
     b.textContent = i+1;
     if(S.answers[i] !== null && S.answers[i] !== "") b.classList.add("done");
     if(S.flags[i]) b.classList.add("flagged");
     if(i === S.idx) b.classList.add("current");
-    b.addEventListener("click", ()=>{ S.idx = i; renderQuestion("next"); });
+    b.addEventListener("click", function(){ S.idx = i; renderQuestion("next"); });
     p.appendChild(b);
   });
 }
-
 function renderQuestion(dir){
-  const q = QUESTIONS[S.idx];
-  const card = $("card");
+  var q = QUESTIONS[S.idx];
+  if(!q) return;
+  var card = $("card");
+  if(!card) return;
   card.className = "card " + (dir === "back" ? "anim-left" : "anim-right");
   card.innerHTML = "";
 
-  const head = document.createElement("div");
+  var head = document.createElement("div");
   head.className = "qhead";
-  const p1 = document.createElement("span");
+  var p1 = document.createElement("span");
   p1.className = "pill";
   p1.textContent = "Question " + (S.idx+1) + " / " + QUESTIONS.length;
-  const p2 = document.createElement("span");
+  var p2 = document.createElement("span");
   p2.className = "pill ghost";
-  p2.textContent = q.type === "tf" ? "True / False"
-                : q.type === "text" ? "Fill in the Blank"
-                : q.opts.some(o=>String(o).includes("\n")) ? "Code"
-                : "Multiple Choice";
-  head.append(p1, p2);
+  p2.textContent = q.type === "tf" ? "True / False" : "Multiple Choice";
+  head.appendChild(p1);
+  head.appendChild(p2);
   card.appendChild(head);
 
-  const h = document.createElement("h2");
+  var h = document.createElement("h2");
   h.className = "qtext";
   h.innerHTML = q.q;
   card.appendChild(h);
 
-  if(q.type === "text"){
-    const row = document.createElement("div");
-    row.className = "textrow";
-    const inp = document.createElement("input");
-    inp.type = "text";
-    inp.id = "textAnswer";
-    inp.placeholder = "Type your answer here…";
-    inp.autocomplete = "off";
-    inp.value = S.answers[S.idx] || "";
-    inp.addEventListener("input", ()=>{
-      S.answers[S.idx] = inp.value;
-      updateSavedNote();
+  var wrap = document.createElement("div");
+  wrap.className = "opts";
+  q.opts.forEach(function(text, i){
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "opt";
+    if(S.answers[S.idx] === i) btn.classList.add("picked");
+
+    var badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = letter(i);
+
+    var body = document.createElement("span");
+    body.className = "opt-body";
+    if(String(text).indexOf("\n") !== -1){
+      var pre = document.createElement("pre");
+      pre.textContent = text;
+      body.appendChild(pre);
+    } else {
+      body.textContent = text;
+    }
+    btn.appendChild(badge);
+    btn.appendChild(body);
+    btn.addEventListener("click", function(){
+      S.answers[S.idx] = i;
+      var opts = wrap.querySelectorAll(".opt");
+      for(var k=0;k<opts.length;k++) opts[k].classList.remove("picked");
+      btn.classList.add("picked");
       renderPalette();
       updateProgress();
+      updateSavedNote();
     });
-    row.appendChild(inp);
-    card.appendChild(row);
-  } else {
-    const wrap = document.createElement("div");
-    wrap.className = "opts";
-    q.opts.forEach((text, i)=>{
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "opt";
-      if(S.answers[S.idx] === i) btn.classList.add("picked");
+    wrap.appendChild(btn);
+  });
+  card.appendChild(wrap);
 
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = letter(i);
-
-      const body = document.createElement("span");
-      body.className = "opt-body";
-      if(String(text).includes("\n")){
-        const pre = document.createElement("pre");
-        pre.textContent = text;
-        body.appendChild(pre);
-      } else {
-        body.textContent = text;
-      }
-      btn.append(badge, body);
-      btn.addEventListener("click", ()=>{
-        S.answers[S.idx] = i;
-        wrap.querySelectorAll(".opt").forEach(o=>o.classList.remove("picked"));
-        btn.classList.add("picked");
-        renderPalette();
-        updateProgress();
-        updateSavedNote();
-      });
-      wrap.appendChild(btn);
-    });
-    card.appendChild(wrap);
-  }
-
-  const note = document.createElement("div");
+  var note = document.createElement("div");
   note.className = "savedNote";
   note.id = "savedNote";
   card.appendChild(note);
   updateSavedNote();
 
-  const nav = document.createElement("div");
+  var nav = document.createElement("div");
   nav.className = "nav";
 
-  const prev = document.createElement("button");
+  var prev = document.createElement("button");
   prev.className = "btn ghost";
   prev.type = "button";
   prev.textContent = "← Previous";
   prev.disabled = S.idx === 0;
-  prev.addEventListener("click", ()=>{ if(S.idx > 0){ S.idx--; renderQuestion("back"); } });
+  prev.addEventListener("click", function(){ if(S.idx > 0){ S.idx--; renderQuestion("back"); } });
 
-  const flag = document.createElement("button");
+  var flag = document.createElement("button");
   flag.className = "btn ghost";
   flag.type = "button";
-  flag.textContent = S.flags[S.idx] ? "🚩 Unflag" : "🚩 Flag for review";
-  flag.addEventListener("click", ()=>{
-    S.flags[S.idx] = !S.flags[S.idx];
-    renderQuestion("next");
-  });
+  flag.textContent = S.flags[S.idx] ? "🚩 Unflag" : "🚩 Flag";
+  flag.addEventListener("click", function(){ S.flags[S.idx] = !S.flags[S.idx]; renderQuestion("next"); });
 
-  const next = document.createElement("button");
+  var next = document.createElement("button");
   next.className = "btn primary";
   next.type = "button";
-  const isLast = S.idx === QUESTIONS.length - 1;
+  var isLast = S.idx === QUESTIONS.length - 1;
   next.textContent = isLast ? "✅ Review & Submit" : "Next →";
-  next.addEventListener("click", ()=>{
+  next.addEventListener("click", function(){
     if(isLast) confirmSubmit();
     else { S.idx++; renderQuestion("next"); }
   });
 
-  const mid = document.createElement("div");
-  mid.style.display = "flex";
-  mid.style.gap = "10px";
-  mid.append(flag);
+  var mid = document.createElement("div");
+  mid.style.display = "flex"; mid.style.gap = "10px"; mid.appendChild(flag);
 
-  nav.append(prev, mid, next);
+  nav.appendChild(prev);
+  nav.appendChild(mid);
+  nav.appendChild(next);
   card.appendChild(nav);
 
   renderPalette();
   updateProgress();
 }
-
 function updateSavedNote(){
-  const n = $("savedNote");
+  var n = $("savedNote");
   if(!n) return;
   n.textContent = (S.answers[S.idx] !== null && S.answers[S.idx] !== "")
     ? "✔ Answer saved. Correct answers (memo) are hidden until submission."
     : "";
 }
-
 function updateProgress(){
-  const done = S.answers.filter(a => a !== null && a !== "").length;
-  $("progressFill").style.width = (done / QUESTIONS.length * 100) + "%";
+  var done = S.answers.filter(function(a){ return a !== null && a !== ""; }).length;
+  var pf = $("progressFill");
+  if(pf) pf.style.width = (done / QUESTIONS.length * 100) + "%";
 }
 
 /* =====================================================================
    SUBMIT
    ===================================================================== */
 function confirmSubmit(){
-  const done = S.answers.filter(a => a !== null && a !== "").length;
-  const left = QUESTIONS.length - done;
+  var done = S.answers.filter(function(a){ return a !== null && a !== ""; }).length;
+  var left = QUESTIONS.length - done;
   modal({
     emoji: left ? "⚠️" : "📤",
     title: "Submit your paper?",
@@ -1721,56 +1882,47 @@ function confirmSubmit(){
       : "All " + QUESTIONS.length + " questions answered.\nOnce submitted, you cannot change your answers.",
     buttons:[
       { label:"Keep Working", cls:"ghost" },
-      { label:"Submit Now", cls:"green", action:()=>forceFinish("Student submitted") }
+      { label:"Submit Now", cls:"green", action:function(){ forceFinish("Student submitted"); } }
     ]
   });
 }
-
 function isCorrect(q, a){
   if(a === null || a === undefined || a === "") return false;
   if(q.type === "text") return norm(a) === q.answer;
   return a === q.correct;
 }
-
 function forceFinish(reason){
   if(S.finished) return;
   S.finished = true;
   examActive = false;
   clearInterval(S.timerId);
   clearInterval(S.faceMonitorId);
+  hideFaceAlert();
   S.endedAt = Date.now();
 
   if(document.fullscreenElement && document.exitFullscreen){
-    document.exitFullscreen().catch(()=>{});
+    document.exitFullscreen().catch(function(){});
   }
 
   S.score = 0;
-  QUESTIONS.forEach((q,i)=>{
-    const ok = isCorrect(q, S.answers[i]);
+  QUESTIONS.forEach(function(q,i){
+    var ok = isCorrect(q, S.answers[i]);
     S.flags[i] = ok;
     if(ok) S.score++;
   });
 
-  /* ---- Save the attempt into the student record ---- */
-  const number = S.student.number.toUpperCase();
-  const registry = loadRegistry();
-  const rec = registry[number] || {
-    name: S.student.name,
-    course: S.student.course,
-    year: S.student.year,
-    faceSig: S.faceSig,
-    attempts: [],
-    createdAt: Date.now(),
-    locked: false
+  var number = S.student.number.toUpperCase();
+  var registry = loadRegistry();
+  var rec = registry[number] || {
+    name:S.student.name, course:S.student.course, year:S.student.year,
+    faceSig:S.faceSig, attempts:[], createdAt:Date.now(), locked:false
   };
-  rec.name = S.student.name;
+  rec.name   = S.student.name;
   rec.course = S.student.course;
-  rec.year = S.student.year;
+  rec.year   = S.student.year;
   if(!rec.faceSig) rec.faceSig = S.faceSig;
 
-  const attemptsUsedBefore = rec.attempts.length;
-  const attemptNo = attemptsUsedBefore + 1;
-
+  var attemptNo = rec.attempts.length + 1;
   rec.attempts.push({
     n: attemptNo,
     score: S.score,
@@ -1782,22 +1934,19 @@ function forceFinish(reason){
     snapshot: S.snapshot ? S.snapshot.slice(0, 150000) : null,
     violationLog: S.violationLog.slice()
   });
-
   if(rec.attempts.length >= MAX_ATTEMPTS) rec.locked = true;
-
   registry[number] = rec;
   saveRegistry(registry);
 
-  /* Only register face on first ever attempt */
   if(attemptNo === 1 && S.faceSig){
-    const faces = loadFaceIndex();
+    var faces = loadFaceIndex();
     faces[S.faceSig] = { number: number, name: S.student.name };
     saveFaceIndex(faces);
   }
 
   stopAllCameras();
-  $("camPanel").style.display = "none";
-  $("proctorBar").style.display = "none";
+  var cp = $("camPanel"); if(cp) cp.style.display = "none";
+  var pb = $("proctorBar"); if(pb) pb.style.display = "none";
 
   showResults(reason, attemptNo);
 }
@@ -1806,133 +1955,139 @@ function forceFinish(reason){
    RESULTS
    ===================================================================== */
 function showResults(reason, attemptNo){
-  $("examScreen").style.display = "none";
-  $("resultScreen").style.display = "block";
-  $("pdfBtn").style.display = "inline-block";
+  var es = $("examScreen"); if(es) es.style.display = "none";
+  var rs = $("resultScreen"); if(rs) rs.style.display = "block";
+  var pb = $("pdfBtn"); if(pb) pb.style.display = "inline-block";
 
-  const total = QUESTIONS.length;
-  const pct = Math.round(S.score / total * 100);
+  var total = QUESTIONS.length;
+  var pct = Math.round(S.score / total * 100);
 
-  $("resScore").textContent = S.score + "/" + total;
-  const deg = pct/100*360;
-  const color = pct >= 80 ? "#22c55e" : pct >= 50 ? "#fbbf24" : "#ef4444";
-  $("ring").style.background =
-    "conic-gradient(" + color + " " + deg + "deg, rgba(255,255,255,.14) " + deg + "deg)";
+  var resScore = $("resScore"); if(resScore) resScore.textContent = S.score + "/" + total;
+  var deg = pct/100*360;
+  var color = pct >= 80 ? "#10b981" : pct >= 50 ? "#f59e0b" : "#f43f5e";
+  var ring = $("ring");
+  if(ring) ring.style.background = "conic-gradient(" + color + " " + deg + "deg, rgba(148,163,184,.10) " + deg + "deg)";
 
-  let emoji="🏁", title="Attempt " + attemptNo + " Submitted", msg="";
+  var emoji="🏁", title="Attempt " + attemptNo + " Submitted", msg="";
   if(pct === 100){ emoji="👑"; title="PERFECT SCORE!"; msg="Flawless. Outstanding work."; }
-  else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your classes from your objects."; }
+  else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your SQL from your constraints."; }
   else if(pct >= 60){ emoji="👍"; title="Good effort!"; msg="A quick review of the memo and you're unstoppable."; }
   else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the memo below carefully before your next attempt."; }
   else { emoji="🦆"; title="More revision needed"; msg="Even the rubber duck believes in you."; }
 
-  $("resEmoji").textContent = emoji;
-  $("resTitle").textContent = title;
-  $("resMsg").textContent = msg;
+  var re = $("resEmoji"); if(re) re.textContent = emoji;
+  var rt = $("resTitle"); if(rt) rt.textContent = title;
+  var rm = $("resMsg");   if(rm) rm.textContent = msg;
 
-  const used = S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0;
-  $("resMeta").innerHTML =
-    "📄 Reason: <b>" + esc(reason) + "</b> &nbsp;•&nbsp; " +
-    "⏱ Used: <b>" + fmt(used) + "</b> &nbsp;•&nbsp; " +
-    "⚠️ Violations: <b style='color:" + (S.violations ? "#f87171" : "#4ade80") + "'>" +
-    S.violations + "</b>";
-
-  /* Attempts panel */
-  const rec = getStudentRecord(S.student.number);
-  const usedCount = rec.attempts.length;
-  const remaining = Math.max(0, MAX_ATTEMPTS - usedCount);
-
-  const attText = $("attemptsText");
-  let historyHTML = "<b>Attempt " + attemptNo + " of " + MAX_ATTEMPTS + "</b> complete.<br>" +
-                    "<b>" + remaining + "</b> attempt(s) remaining.";
-  if(rec.attempts.length > 1){
-    historyHTML += "<div style='margin-top:8px;font-size:.82rem;color:#cbd5e1'>Previous attempts:<br>" +
-      rec.attempts.slice(0, -1).map(a =>
-        "• Attempt " + a.n + ": " + a.score + "/" + a.total + " (" +
-        Math.round(a.score/a.total*100) + "%)"
-      ).join("<br>") + "</div>";
-  }
-  attText.innerHTML = historyHTML;
-
-  /* Retry button — only if attempts remain */
-  const retry = $("retryBtn");
-  if(remaining > 0){
-    retry.style.display = "inline-block";
-    retry.textContent = "🔄 Start Attempt " + (attemptNo + 1) + " of " + MAX_ATTEMPTS;
-    $("lockMsg").textContent =
-      "✅ You still have " + remaining + " attempt(s) remaining. After attempt " + MAX_ATTEMPTS + ", access ends permanently.";
-    $("lockMsg").style.color = "#86efac";
-  } else {
-    retry.style.display = "none";
-    $("lockMsg").textContent =
-      "⛔ You have used all " + MAX_ATTEMPTS + " attempts. This student number is now permanently closed.";
-    $("lockMsg").style.color = "#fca5a5";
+  var used = S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0;
+  var rmeta = $("resMeta");
+  if(rmeta){
+    rmeta.innerHTML =
+      "📄 Reason: <b>" + esc(reason) + "</b> &nbsp;•&nbsp; " +
+      "⏱ Used: <b>" + fmt(used) + "</b> &nbsp;•&nbsp; " +
+      "⚠️ Violations: <b style='color:" + (S.violations ? "#f87171" : "#6ee7b7") + "'>" +
+      S.violations + "</b>";
   }
 
-  /* Review list */
-  const list = $("reviewList");
-  list.innerHTML = "";
-  QUESTIONS.forEach((q,i)=>{
-    const ok = S.flags[i];
-    const given = S.answers[i];
-    let givenTxt;
-    if(given === null || given === "") givenTxt = "— no answer given —";
-    else if(q.type === "text") givenTxt = given;
-    else givenTxt = letter(given) + ". " + q.opts[given];
+  var rec = getStudentRecord(S.student.number);
+  var usedCount = rec.attempts.length;
+  var remaining = Math.max(0, MAX_ATTEMPTS - usedCount);
 
-    const correctTxt = q.type === "text"
-      ? q.display
-      : letter(q.correct) + ". " + q.opts[q.correct];
+  var attText = $("attemptsText");
+  if(attText){
+    var historyHTML = "<b>Attempt " + attemptNo + " of " + MAX_ATTEMPTS + "</b> complete.<br>" +
+                      "<b>" + remaining + "</b> attempt(s) remaining.";
+    if(rec.attempts.length > 1){
+      historyHTML += "<div style='margin-top:10px;font-size:.82rem;color:#bfdbfe'>Previous attempts:<br>" +
+        rec.attempts.slice(0, -1).map(function(a){
+          return "• Attempt " + a.n + ": " + a.score + "/" + a.total + " (" + Math.round(a.score/a.total*100) + "%)";
+        }).join("<br>") + "</div>";
+    }
+    attText.innerHTML = historyHTML;
+  }
 
-    const row = document.createElement("div");
-    row.className = "rev " + (ok ? "ok" : "no");
+  var retry = $("retryBtn");
+  var lockMsg = $("lockMsg");
+  if(retry){
+    if(remaining > 0 && !deadlinePassed()){
+      retry.style.display = "inline-block";
+      retry.textContent = "🔄 Start Attempt " + (attemptNo + 1) + " of " + MAX_ATTEMPTS;
+      if(lockMsg){
+        lockMsg.textContent = "✅ You still have " + remaining + " attempt(s) remaining. After attempt " + MAX_ATTEMPTS + ", access ends permanently.";
+        lockMsg.style.color = "#6ee7b7";
+      }
+    } else {
+      retry.style.display = "none";
+      if(lockMsg){
+        if(deadlinePassed()){
+          lockMsg.textContent = "⛔ This assessment closed on 22 October 2026 at 20:00. No further attempts are permitted.";
+        } else {
+          lockMsg.textContent = "⛔ You have used all " + MAX_ATTEMPTS + " attempts. This student number is now permanently closed.";
+        }
+        lockMsg.style.color = "#fda4af";
+      }
+    }
+  }
 
-    const mark = document.createElement("span");
-    mark.className = "m";
-    mark.textContent = ok ? "✓" : "✗";
+  var list = $("reviewList");
+  if(list){
+    list.innerHTML = "";
+    QUESTIONS.forEach(function(q,i){
+      var ok = S.flags[i];
+      var given = S.answers[i];
+      var givenTxt;
+      if(given === null || given === "") givenTxt = "— no answer given —";
+      else if(q.type === "text") givenTxt = given;
+      else givenTxt = letter(given) + ". " + q.opts[given];
+      var correctTxt = q.type === "text" ? (q.display || "") : letter(q.correct) + ". " + q.opts[q.correct];
 
-    const body = document.createElement("span");
-    const shortQ = q.q.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
-    const trimmed = shortQ.length > 95 ? shortQ.slice(0,95) + "…" : shortQ;
+      var row = document.createElement("div");
+      row.className = "rev " + (ok ? "ok" : "no");
+      var mark = document.createElement("span");
+      mark.className = "m";
+      mark.textContent = ok ? "✓" : "✗";
+      var body = document.createElement("span");
+      var shortQ = q.q.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
+      var trimmed = shortQ.length > 95 ? shortQ.slice(0,95) + "…" : shortQ;
 
-    body.innerHTML =
-      "<b>Q" + (i+1) + ".</b> " + esc(trimmed) +
-      "<small>Your answer: <b style='color:" + (ok ? "#4ade80" : "#f87171") + "'>" +
-        esc(givenTxt) + "</b></small>" +
-      "<small>Memo (correct answer): <b>" + esc(correctTxt) + "</b></small>" +
-      (q.why ? "<div class='memo'>💡 " + q.why + "</div>" : "");
+      body.innerHTML =
+        "<b>Q" + (i+1) + ".</b> " + esc(trimmed) +
+        "<small>Your answer: <b style='color:" + (ok ? "#6ee7b7" : "#fda4af") + "'>" + esc(givenTxt) + "</b></small>" +
+        "<small>Memo (correct answer): <b>" + esc(correctTxt) + "</b></small>" +
+        (q.why ? "<div class='memo'>💡 " + q.why + "</div>" : "");
 
-    row.append(mark, body);
-    list.appendChild(row);
-  });
+      row.appendChild(mark);
+      row.appendChild(body);
+      list.appendChild(row);
+    });
+  }
 
   if(pct >= 80) rainConfetti();
 
   modal({
-    emoji, title,
+    emoji: emoji, title: title,
     text: msg + "\n\nThe memo (correct answers) is now unlocked below.\n" +
-          (remaining > 0
+          (remaining > 0 && !deadlinePassed()
             ? "You have " + remaining + " attempt(s) remaining."
-            : "All " + MAX_ATTEMPTS + " attempts used. Access is now permanently closed."),
-    buttons: remaining > 0
-      ? [
-          { label:"🔄 Next Attempt", cls:"pink", action: startNextAttempt },
-          { label:"Close", cls:"ghost" }
-        ]
-      : [
-          { label:"⬇️ Download Answer Sheet", cls:"green", action: downloadAnswerSheet },
-          { label:"Close", cls:"ghost" }
-        ]
+            : deadlinePassed()
+              ? "This assessment has closed."
+              : "All " + MAX_ATTEMPTS + " attempts used. Access is now permanently closed."),
+    buttons: (remaining > 0 && !deadlinePassed())
+      ? [{ label:"🔄 Next Attempt", cls:"pink", action: startNextAttempt }, { label:"Close", cls:"ghost" }]
+      : [{ label:"⬇️ Download Answer Sheet", cls:"green", action: downloadAnswerSheet }, { label:"Close", cls:"ghost" }]
   });
 
-  scrollTo({ top:0, behavior:"smooth" });
+  try { window.scrollTo({ top:0, behavior:"smooth" }); } catch(e){}
 }
 
 /* =====================================================================
-   START NEXT ATTEMPT
+   NEXT ATTEMPT
    ===================================================================== */
 function startNextAttempt(){
-  /* Reset per-attempt state but keep student identity */
+  if(deadlinePassed()){
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 22 October 2026 at 20:00.", "DEADLINE-PASSED");
+    return;
+  }
   S.idx = 0;
   S.answers = new Array(QUESTIONS.length).fill(null);
   S.flags = new Array(QUESTIONS.length).fill(false);
@@ -1946,22 +2101,23 @@ function startNextAttempt(){
   S.snapshot = REG.snapshot;
   updateViolationBadge();
 
-  /* Show registration step again so the student verifies their face */
-  $("resultScreen").style.display = "none";
-  $("examScreen").style.display = "none";
-  $("startScreen").style.display = "block";
+  REG.verified = false;
+  REG.faceSig = null;
+
+  var rs = $("resultScreen"); if(rs) rs.style.display = "none";
+  var es = $("examScreen"); if(es) es.style.display = "none";
+  var ss = $("startScreen"); if(ss) ss.style.display = "block";
   document.body.classList.remove("exam");
-  $("pdfBtn").style.display = "inline-block";
+  var pb = $("pdfBtn"); if(pb) pb.style.display = "inline-block";
 
-  /* Pre-fill the details */
-  $("fName").value = S.student.name;
-  $("fNumber").value = S.student.number;
-  $("fCourse").value = S.student.course;
-  $("fYear").value = S.student.year;
+  var fName = $("fName"); if(fName) fName.value = S.student.name;
+  var fNum = $("fNumber"); if(fNum) fNum.value = S.student.number;
+  var fCourse = $("fCourse"); if(fCourse) fCourse.value = S.student.course;
+  var fYear = $("fYear"); if(fYear) fYear.value = S.student.year;
 
-  /* Show attempt hint */
-  const used = attemptsUsed(S.student.number);
-  $("attemptHint").textContent = "Attempts used: " + used + " / " + MAX_ATTEMPTS +
+  var used = attemptsUsed(S.student.number);
+  var ah = $("attemptHint");
+  if(ah) ah.textContent = "Attempts used: " + used + " / " + MAX_ATTEMPTS +
     " — You have " + (MAX_ATTEMPTS - used) + " remaining.";
 
   gotoStep(1);
@@ -1969,329 +2125,327 @@ function startNextAttempt(){
 }
 
 /* =====================================================================
-   ANSWER SHEET BUILDER + DOWNLOAD
+   ANSWER SHEET
    ===================================================================== */
 function buildSheetHTML(){
-  const used = S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0;
-  const pct = Math.round(S.score / QUESTIONS.length * 100);
-  const d = new Date();
-  const rec = getStudentRecord(S.student.number);
-  const usedCount = rec.attempts.length;
-  const remaining = Math.max(0, MAX_ATTEMPTS - usedCount);
+  var used = S.startedAt ? Math.floor((S.endedAt - S.startedAt)/1000) : 0;
+  var pct = Math.round(S.score / QUESTIONS.length * 100);
+  var d = new Date();
+  var rec = getStudentRecord(S.student.number);
+  var usedCount = rec.attempts.length;
+  var remaining = Math.max(0, MAX_ATTEMPTS - usedCount);
 
-  let rows = "";
-  QUESTIONS.forEach((q,i)=>{
-    const ok = S.flags[i];
-    const given = S.answers[i];
-    let givenTxt;
+  var rows = "";
+  QUESTIONS.forEach(function(q,i){
+    var ok = S.flags[i];
+    var given = S.answers[i];
+    var givenTxt;
     if(given === null || given === "") givenTxt = "No answer given";
     else if(q.type === "text") givenTxt = given;
     else givenTxt = letter(given) + ". " + q.opts[given];
+    var correctTxt = q.type === "text" ? (q.display || "") : letter(q.correct) + ". " + q.opts[q.correct];
 
-    const correctTxt = q.type === "text"
-      ? q.display
-      : letter(q.correct) + ". " + q.opts[q.correct];
-
-    rows += `
-      <tr class="${ok ? "ok" : "no"}">
-        <td class="num">${i+1}</td>
-        <td>
-          <div class="qq">${esc(q.q.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim())}</div>
-          <div class="aa"><b>Student answer:</b> ${esc(givenTxt)}</div>
-          <div class="aa"><b>Memo (correct answer):</b> ${esc(correctTxt)}</div>
-          ${q.why ? `<div class="aa memo"><b>Why:</b> ${q.why.replace(/<[^>]*>/g,"")}</div>` : ""}
-        </td>
-        <td class="mk">${ok ? "✓" : "✗"}</td>
-      </tr>`;
+    rows +=
+      '<tr class="' + (ok ? "ok" : "no") + '">' +
+        '<td class="num">' + (i+1) + '</td>' +
+        '<td>' +
+          '<div class="qq">' + esc(q.q.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim()) + '</div>' +
+          '<div class="aa"><b>Student answer:</b> ' + esc(givenTxt) + '</div>' +
+          '<div class="aa"><b>Memo (correct answer):</b> ' + esc(correctTxt) + '</div>' +
+          (q.why ? '<div class="aa memo"><b>Why:</b> ' + q.why.replace(/<[^>]*>/g,"") + '</div>' : "") +
+        '</td>' +
+        '<td class="mk">' + (ok ? "✓" : "✗") + '</td>' +
+      '</tr>';
   });
 
-  const viol = S.violationLog.length
-    ? `<ul>${S.violationLog.map(v=>`<li>${esc(v.t)} — ${esc(v.reason)}</li>`).join("")}</ul>`
+  var viol = S.violationLog.length
+    ? "<ul>" + S.violationLog.map(function(v){ return "<li>" + esc(v.t) + " — " + esc(v.reason) + "</li>"; }).join("") + "</ul>"
     : "<p style='color:#16a34a'><b>No violations recorded.</b></p>";
 
-  const hist = rec.attempts.length
-    ? `<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:6px">
-        <thead><tr><th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">#</th>
-        <th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Score</th>
-        <th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Violations</th>
-        <th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Date</th></tr></thead>
-        <tbody>
-        ${rec.attempts.map(a=>`
-          <tr><td style="padding:4px">${a.n}</td>
-          <td style="padding:4px">${a.score}/${a.total} (${Math.round(a.score/a.total*100)}%)</td>
-          <td style="padding:4px">${a.violations}</td>
-          <td style="padding:4px">${new Date(a.timestamp).toLocaleString()}</td></tr>
-        `).join("")}
-        </tbody></table>`
+  var hist = rec.attempts.length
+    ? '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:6px">' +
+        '<thead><tr>' +
+          '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">#</th>' +
+          '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Score</th>' +
+          '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Violations</th>' +
+          '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Date</th>' +
+        '</tr></thead><tbody>' +
+        rec.attempts.map(function(a){
+          return '<tr>' +
+            '<td style="padding:4px">' + a.n + '</td>' +
+            '<td style="padding:4px">' + a.score + '/' + a.total + ' (' + Math.round(a.score/a.total*100) + '%)</td>' +
+            '<td style="padding:4px">' + a.violations + '</td>' +
+            '<td style="padding:4px">' + new Date(a.timestamp).toLocaleString() + '</td>' +
+          '</tr>';
+        }).join("") +
+      '</tbody></table>'
     : "<p>No attempts recorded yet.</p>";
 
-  return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<title>Answer Sheet — ${esc(S.student.number)}</title>
-<style>
-  body{font-family:Arial,Helvetica,sans-serif;color:#0f172a;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.5}
-  .hdr{border-bottom:3px solid #0f172a;padding-bottom:10px;margin-bottom:16px}
-  .hdr h1{margin:0;font-size:22px;letter-spacing:1px}
-  .hdr p{margin:4px 0 0;font-size:12px;color:#475569;letter-spacing:.5px;text-transform:uppercase}
-  .info{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:13px}
-  .info td{border:1px solid #cbd5e1;padding:8px 10px}
-  .info td.k{background:#f1f5f9;font-weight:bold;width:170px}
-  .score{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-  .box{flex:1;min-width:130px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;text-align:center}
-  .box b{display:block;font-size:22px}
-  .box span{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#64748b}
-  table.q{width:100%;border-collapse:collapse;font-size:13px}
-  table.q th{background:#0f172a;color:#fff;padding:8px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase}
-  table.q td{border:1px solid #cbd5e1;padding:9px;vertical-align:top}
-  table.q tr.ok td.mk{color:#16a34a;font-weight:bold;font-size:18px;text-align:center}
-  table.q tr.no td.mk{color:#dc2626;font-weight:bold;font-size:18px;text-align:center}
-  .num{width:34px;text-align:center;font-weight:bold;background:#f8fafc}
-  .mk{width:40px}
-  .qq{font-weight:600;margin-bottom:5px}
-  .aa{font-size:12px;color:#475569;margin-top:3px}
-  .aa b{color:#0f172a}
-  .aa.memo{background:#eff6ff;border-left:3px solid #38bdf8;padding:5px 8px;border-radius:4px;color:#0c4a6e}
-  .viol{border:1px solid #fca5a5;background:#fef2f2;border-radius:8px;padding:10px 14px;margin:18px 0;font-size:12px}
-  .viol h3{margin:0 0 6px;color:#b91c1c;font-size:13px;letter-spacing:1px;text-transform:uppercase}
-  .viol ul{margin:0;padding-left:18px}
-  .lock{border:2px solid #f59e0b;background:#fffbeb;border-radius:8px;padding:10px 14px;margin:18px 0;font-size:12px;color:#92400e}
-  .sign{margin-top:34px;display:flex;gap:40px;flex-wrap:wrap;font-size:12px}
-  .sign div{flex:1;min-width:200px;border-top:1px solid #0f172a;padding-top:6px}
-  .foot{margin-top:24px;font-size:10px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:10px}
-  @media print{body{margin:0}}
-</style></head><body>
-
-<div class="hdr">
-  <h1>SHIVAMBU EXTRA CLASS — ANSWER SHEET &amp; MEMO</h1>
-  <p>VB.NET Assessment · Arrays, Strings, Classes &amp; Properties</p>
-</div>
-
-<table class="info">
-  <tr><td class="k">Student Name</td><td>${esc(S.student.name)}</td>
-      <td class="k">Student Number</td><td>${esc(S.student.number)}</td></tr>
-  <tr><td class="k">Course</td><td>${esc(S.student.course)}</td>
-      <td class="k">Year of Study</td><td>${esc(S.student.year)}</td></tr>
-  <tr><td class="k">Date &amp; Time</td><td>${esc(d.toLocaleString())}</td>
-      <td class="k">Time Used</td><td>${fmt(used)} of ${fmt(EXAM_SECONDS)}</td></tr>
-  <tr><td class="k">Attempt Number</td><td>${usedCount} of ${MAX_ATTEMPTS}</td>
-      <td class="k">Attempts Remaining</td><td>${remaining}</td></tr>
-</table>
-
-<div class="score">
-  <div class="box"><b>${S.score} / ${QUESTIONS.length}</b><span>Score</span></div>
-  <div class="box"><b>${pct}%</b><span>Percentage</span></div>
-  <div class="box"><b>${S.violations}</b><span>Violations</span></div>
-  <div class="box"><b>${fmt(used)}</b><span>Time Used</span></div>
-</div>
-
-<div class="lock">
-  <b>📝 ATTEMPT TRACKING:</b> ${usedCount} of ${MAX_ATTEMPTS} attempts used.
-  ${remaining > 0
-    ? "You still have <b>" + remaining + "</b> attempt(s) remaining."
-    : "<b>All 8 attempts used — access permanently closed.</b>"}
-  Face signature was bound to this student number on the first attempt.
-</div>
-
-<div class="viol">
-  <h3>Attempt History</h3>
-  ${hist}
-</div>
-
-<div class="viol">
-  <h3>Proctoring Report (this attempt)</h3>
-  <p style="margin:0 0 6px">Session monitored via screen-activity logging and periodic face verification.</p>
-  ${viol}
-</div>
-
-<table class="q">
-  <thead><tr><th>#</th><th>Question · Response · Memo</th><th>Mark</th></tr></thead>
-  <tbody>${rows}</tbody>
-</table>
-
-<div class="sign">
-  <div>Student Signature</div>
-  <div>Lecturer Signature</div>
-  <div>Date</div>
-</div>
-
-<div class="foot">
-  Generated automatically by the Shivambu Extra Class Secure Assessment System ·
-  ${esc(S.student.number)} · ${esc(d.toLocaleString())}
-</div>
-
-</body></html>`;
+  return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">' +
+    '<title>Answer Sheet — ' + esc(S.student.number) + '</title><style>' +
+    'body{font-family:Arial,Helvetica,sans-serif;color:#0f172a;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.5}' +
+    '.hdr{border-bottom:3px solid #0f172a;padding-bottom:10px;margin-bottom:16px}' +
+    '.hdr h1{margin:0;font-size:22px;letter-spacing:1px}' +
+    '.hdr p{margin:4px 0 0;font-size:12px;color:#475569;letter-spacing:.5px;text-transform:uppercase}' +
+    '.info{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:13px}' +
+    '.info td{border:1px solid #cbd5e1;padding:8px 10px}' +
+    '.info td.k{background:#f1f5f9;font-weight:bold;width:170px}' +
+    '.score{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}' +
+    '.box{flex:1;min-width:130px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;text-align:center}' +
+    '.box b{display:block;font-size:22px}' +
+    '.box span{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#64748b}' +
+    'table.q{width:100%;border-collapse:collapse;font-size:13px}' +
+    'table.q th{background:#0f172a;color:#fff;padding:8px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase}' +
+    'table.q td{border:1px solid #cbd5e1;padding:9px;vertical-align:top}' +
+    'table.q tr.ok td.mk{color:#16a34a;font-weight:bold;font-size:18px;text-align:center}' +
+    'table.q tr.no td.mk{color:#dc2626;font-weight:bold;font-size:18px;text-align:center}' +
+    '.num{width:34px;text-align:center;font-weight:bold;background:#f8fafc}' +
+    '.mk{width:40px}' +
+    '.qq{font-weight:600;margin-bottom:5px}' +
+    '.aa{font-size:12px;color:#475569;margin-top:3px}' +
+    '.aa b{color:#0f172a}' +
+    '.aa.memo{background:#fffbeb;border-left:3px solid #f59e0b;padding:5px 8px;border-radius:4px;color:#78350f}' +
+    '.viol{border:1px solid #fca5a5;background:#fef2f2;border-radius:8px;padding:10px 14px;margin:18px 0;font-size:12px}' +
+    '.viol h3{margin:0 0 6px;color:#b91c1c;font-size:13px;letter-spacing:1px;text-transform:uppercase}' +
+    '.viol ul{margin:0;padding-left:18px}' +
+    '.lock{border:2px solid #f59e0b;background:#fffbeb;border-radius:8px;padding:10px 14px;margin:18px 0;font-size:12px;color:#92400e}' +
+    '.sign{margin-top:34px;display:flex;gap:40px;flex-wrap:wrap;font-size:12px}' +
+    '.sign div{flex:1;min-width:200px;border-top:1px solid #0f172a;padding-top:6px}' +
+    '.foot{margin-top:24px;font-size:10px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:10px}' +
+    '@media print{body{margin:0}}' +
+    '</style></head><body>' +
+    '<div class="hdr"><h1>INFOS TEST 2 — ANSWER SHEET &amp; MEMO</h1>' +
+    '<p>Database &amp; SQL Assessment · Oracle 10g · DDL · DML · Constraints · Joins</p></div>' +
+    '<table class="info">' +
+      '<tr><td class="k">Student Name</td><td>' + esc(S.student.name) + '</td>' +
+          '<td class="k">Student Number</td><td>' + esc(S.student.number) + '</td></tr>' +
+      '<tr><td class="k">Course</td><td>' + esc(S.student.course) + '</td>' +
+          '<td class="k">Year of Study</td><td>' + esc(S.student.year) + '</td></tr>' +
+      '<tr><td class="k">Date &amp; Time</td><td>' + esc(d.toLocaleString()) + '</td>' +
+          '<td class="k">Time Used</td><td>' + fmt(used) + ' of ' + fmt(EXAM_SECONDS) + '</td></tr>' +
+      '<tr><td class="k">Attempt Number</td><td>' + usedCount + ' of ' + MAX_ATTEMPTS + '</td>' +
+          '<td class="k">Attempts Remaining</td><td>' + remaining + '</td></tr>' +
+    '</table>' +
+    '<div class="score">' +
+      '<div class="box"><b>' + S.score + ' / ' + QUESTIONS.length + '</b><span>Score</span></div>' +
+      '<div class="box"><b>' + pct + '%</b><span>Percentage</span></div>' +
+      '<div class="box"><b>' + S.violations + '</b><span>Violations</span></div>' +
+      '<div class="box"><b>' + fmt(used) + '</b><span>Time Used</span></div>' +
+    '</div>' +
+    '<div class="lock"><b>📝 ATTEMPT TRACKING:</b> ' + usedCount + ' of ' + MAX_ATTEMPTS + ' attempts used. ' +
+      (remaining > 0 && !deadlinePassed()
+        ? "You still have <b>" + remaining + "</b> attempt(s) remaining."
+        : deadlinePassed()
+          ? "<b>Assessment closed on 22 October 2026 at 20:00.</b>"
+          : "<b>All 8 attempts used — access permanently closed.</b>") +
+    '</div>' +
+    '<div class="viol"><h3>Attempt History</h3>' + hist + '</div>' +
+    '<div class="viol"><h3>Proctoring Report (this attempt)</h3>' +
+      '<p style="margin:0 0 6px">Session monitored via screen-activity logging and continuous face verification.</p>' +
+      viol +
+    '</div>' +
+    '<table class="q"><thead><tr><th>#</th><th>Question · Response · Memo</th><th>Mark</th></tr></thead>' +
+    '<tbody>' + rows + '</tbody></table>' +
+    '<div class="sign"><div>Student Signature</div><div>Lecturer Signature</div><div>Date</div></div>' +
+    '<div class="foot">Generated automatically by INFOS TEST 2 Secure Assessment System · ' +
+    esc(S.student.number) + ' · ' + esc(d.toLocaleString()) + '</div>' +
+    '</body></html>';
 }
 
 function downloadAnswerSheet(){
-  const html = buildSheetHTML();
-  const blob = new Blob([html], { type:"text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const safe = (S.student.number || "student").replace(/[^a-z0-9_-]/gi,"");
-  a.href = url;
-  a.download = "ShivambuExtraClass_AnswerSheet_" + safe + "_attempt" + S.attemptNumber + ".html";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 4000);
-  toast("⬇️ Answer sheet downloaded!", 2600);
+  try {
+    var html = buildSheetHTML();
+    var blob = new Blob([html], { type:"text/html;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    var safe = (S.student.number || "student").replace(/[^a-z0-9_-]/gi,"");
+    a.href = url;
+    a.download = "INFOSTEST2_AnswerSheet_" + safe + "_attempt" + S.attemptNumber + ".html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    toast("⬇️ Answer sheet downloaded!", 2600);
+  } catch(e){
+    console.error("Download failed:", e);
+    toast("Download failed. Please try again.", 3000, true);
+  }
 }
 
 /* =====================================================================
    PRINT / PDF
    ===================================================================== */
-function buildPrintArea(){ $("printArea").innerHTML = buildSheetHTML(); }
+function buildPrintArea(){ var pa = $("printArea"); if(pa) pa.innerHTML = buildSheetHTML(); }
 function doPrint(){
   if(!S.finished){ toast("🖨️ Printing is locked until you submit.", 2600, true); return; }
   buildPrintArea();
-  setTimeout(()=>window.print(), 150);
+  setTimeout(function(){ window.print(); }, 150);
 }
-$("pdfBtn").addEventListener("click", doPrint);
-$("pdfBtn2").addEventListener("click", doPrint);
-$("downloadBtn").addEventListener("click", downloadAnswerSheet);
-$("retryBtn").addEventListener("click", startNextAttempt);
 
 /* =====================================================================
-   REGISTRATION — STEP 1 → STEP 2
+   BUTTON WIRING (with null-safe check)
    ===================================================================== */
-$("toScanBtn").addEventListener("click", async ()=>{
-  const name   = $("fName").value.trim();
-  const number = $("fNumber").value.trim();
-  const course = $("fCourse").value.trim();
-  const year   = $("fYear").value;
+(function wireButtons(){
+  var pdfBtn = $("pdfBtn");
+  if(pdfBtn) pdfBtn.addEventListener("click", doPrint);
+  var pdfBtn2 = $("pdfBtn2");
+  if(pdfBtn2) pdfBtn2.addEventListener("click", doPrint);
+  var downloadBtn = $("downloadBtn");
+  if(downloadBtn) downloadBtn.addEventListener("click", downloadAnswerSheet);
+  var retryBtn = $("retryBtn");
+  if(retryBtn) retryBtn.addEventListener("click", startNextAttempt);
+  var rulesBtn = $("rulesBtn");
+  if(rulesBtn) rulesBtn.addEventListener("click", showRules);
+  var retryCamBtn = $("retryCamBtn");
+  if(retryCamBtn) retryCamBtn.addEventListener("click", function(){ beginScan(); });
+  var toScanBtn = $("toScanBtn");
+  if(toScanBtn) toScanBtn.addEventListener("click", handleToScan);
+  var startExamBtn = $("startExamBtn");
+  if(startExamBtn) startExamBtn.addEventListener("click", handleStartExam);
+})();
+
+function showRules(){
+  modal({
+    emoji:"📋", title:"Exam Rules",
+    text:
+      "1. Duration: " + fmt(EXAM_SECONDS) + " per attempt, auto-submit at 00:00.\n" +
+      "2. You have up to " + MAX_ATTEMPTS + " attempts. After " + MAX_ATTEMPTS + ", access ends permanently.\n" +
+      "3. Camera is compulsory — used only for face verification.\n" +
+      "4. The same face must be used for every attempt.\n" +
+      "5. Your face must remain visible for the whole session.\n" +
+      "6. This session is recorded — screen activity is logged.\n" +
+      "7. Right-click, copy, cut, paste and developer shortcuts are blocked.\n" +
+      "8. Switching tabs/windows or leaving fullscreen is a violation.\n" +
+      "9. Up to " + MAX_VIOLATIONS + " violations per attempt.\n" +
+      "10. The memo is shown after each submission so you can study.\n" +
+      "11. ⏰ This assessment closes permanently on 22 October 2026 at 20:00.",
+    buttons:[{ label:"Got it", cls:"primary" }]
+  });
+}
+
+async function handleToScan(){
+  if(deadlinePassed()){
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 22 October 2026 at 20:00.", "DEADLINE-PASSED");
+    return;
+  }
+  var fName = $("fName"), fNum = $("fNumber"), fCourse = $("fCourse"), fYear = $("fYear");
+  if(!fName || !fNum || !fCourse || !fYear) return;
+
+  var name   = fName.value.trim();
+  var number = fNum.value.trim();
+  var course = fCourse.value.trim();
+  var year   = fYear.value;
 
   if(!name || !number || !course || !year){
-    modal({
-      emoji:"⚠️", title:"Incomplete Details",
+    modal({ emoji:"⚠️", title:"Incomplete Details",
       text:"Please fill in your Full Name, Student Number, Course and Year of Study before continuing.",
-      buttons:[{ label:"OK", cls:"red" }]
-    });
+      buttons:[{ label:"OK", cls:"red" }] });
     return;
   }
   if(!/^[A-Za-z0-9\-]{4,20}$/.test(number)){
-    modal({
-      emoji:"⚠️", title:"Invalid Student Number",
+    modal({ emoji:"⚠️", title:"Invalid Student Number",
       text:"Student numbers must be 4–20 characters and may contain letters, digits and hyphens only.",
-      buttons:[{ label:"OK", cls:"red" }]
-    });
+      buttons:[{ label:"OK", cls:"red" }] });
     return;
   }
 
-  const num = number.toUpperCase();
-  const rec = getStudentRecord(num);
-  const used = rec.attempts.length;
+  var num = number.toUpperCase();
+  var rec = getStudentRecord(num);
+  var used = rec.attempts.length;
 
-  /* Block if all 8 attempts are exhausted */
   if(used >= MAX_ATTEMPTS){
-    blockAccess(
-      "ALL 8 ATTEMPTS USED",
-      "Student number " + num + " has already used all " + MAX_ATTEMPTS + " attempts.\n\n" +
-      "You are no longer allowed to access this assessment.\n" +
-      "Please contact your lecturer if you believe this is an error.",
-      "ATTEMPTS-EXHAUSTED"
-    );
+    blockAccess("ALL 8 ATTEMPTS USED",
+      "Student number " + num + " has already used all " + MAX_ATTEMPTS + " attempts.\n\nYou are no longer allowed to access this assessment.",
+      "ATTEMPTS-EXHAUSTED");
     return;
   }
 
-  /* If the student exists, keep name/course/year consistent */
   if(used > 0){
-    REG.details = {
-      name: rec.name || name,
-      number: num,
-      course: rec.course || course,
-      year: rec.year || year
-    };
-    $("fName").value = REG.details.name;
-    $("fCourse").value = REG.details.course;
-    $("fYear").value = REG.details.year;
+    REG.details = { name: rec.name || name, number: num, course: rec.course || course, year: rec.year || year };
+    fName.value = REG.details.name;
+    fCourse.value = REG.details.course;
+    fYear.value = REG.details.year;
   } else {
-    REG.details = { name, number, course, year };
+    REG.details = { name: name, number: num, course: course, year: year };
   }
 
-  $("scanNum").textContent = REG.details.number;
-  $("attemptHint").textContent =
-    "Attempts used: " + used + " / " + MAX_ATTEMPTS +
+  var sn = $("scanNum"); if(sn) sn.textContent = REG.details.number;
+  var ah = $("attemptHint");
+  if(ah) ah.textContent = "Attempts used: " + used + " / " + MAX_ATTEMPTS +
     " — You have " + (MAX_ATTEMPTS - used) + " remaining.";
 
   gotoStep(2);
   await beginScan();
-});
+}
 
 async function beginScan(){
   SCAN.active = false; SCAN.progress = 0; SCAN.done = false;
   clearInterval(SCAN.timer);
-  $("scanFill").style.width = "0%";
-  $("scanOval").className = "scan-oval";
-  $("startExamBtn").disabled = true;
-  setCheck("chkCam", null); setCheck("chkFace", null);
-  setCheck("chkMatch", null);
-  $("scanTag").textContent = "● SCANNING";
-  $("scanStatus").textContent = "REQUESTING CAMERA ACCESS…";
-  $("camDeniedBox").style.display = "none";
-  $("scanVideo").style.display = "block";
+  var fill = $("scanFill"); if(fill) fill.style.width = "0%";
+  var oval = $("scanOval"); if(oval) oval.className = "scan-oval";
+  var se = $("startExamBtn"); if(se) se.disabled = true;
+  setCheck("chkCam", null); setCheck("chkFace", null); setCheck("chkMatch", null);
+  var tg = $("scanTag"); if(tg) tg.textContent = "● SCANNING";
+  var st = $("scanStatus"); if(st) st.textContent = "REQUESTING CAMERA ACCESS…";
+  var cd = $("camDeniedBox"); if(cd) cd.style.display = "none";
+  var sv = $("scanVideo"); if(sv) sv.style.display = "block";
 
   stopAllCameras();
-
-  try{
+  try {
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      throw new Error("Camera API not available");
+    }
     await requestCamera($("scanVideo"));
-    $("chkCam").className = "chk on";
-    $("scanStatus").textContent = "CAMERA LIVE — CENTRE YOUR FACE IN THE OVAL";
+    var cc = $("chkCam"); if(cc) cc.className = "chk on";
+    if(st) st.textContent = "CAMERA LIVE — CENTRE YOUR FACE IN THE OVAL";
     SCAN.active = true;
     SCAN.timer = setInterval(scanTick, 160);
-  }catch(err){
-    $("camDeniedBox").style.display = "grid";
-    $("scanVideo").style.display = "none";
-    $("scanStatus").textContent = "CAMERA BLOCKED — EXAM CANNOT START";
-    $("chkCam").className = "chk err";
+  } catch(err){
+    if(cd) cd.style.display = "grid";
+    if(sv) sv.style.display = "none";
+    if(st) st.textContent = "CAMERA BLOCKED — EXAM CANNOT START";
+    var cc2 = $("chkCam"); if(cc2) cc2.className = "chk err";
     SCAN.active = false;
+    console.warn("Camera error:", err);
   }
 }
 
-$("retryCamBtn").addEventListener("click", ()=>{ beginScan(); });
-
-/* =====================================================================
-   START EXAM
-   ===================================================================== */
-$("startExamBtn").addEventListener("click", async ()=>{
+async function handleStartExam(){
+  if(deadlinePassed()){
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 22 October 2026 at 20:00.", "DEADLINE-PASSED");
+    return;
+  }
   if(!REG.verified || !REG.faceSig){
-    modal({
-      emoji:"⛔", title:"Verification Incomplete",
+    modal({ emoji:"⛔", title:"Verification Incomplete",
       text:"Face verification must be completed successfully before the exam can begin.",
-      danger:true,
-      buttons:[{ label:"OK", cls:"red" }]
-    });
+      danger:true, buttons:[{ label:"OK", cls:"red" }] });
     return;
   }
   if(!S.stream || !S.stream.getVideoTracks().length ||
      S.stream.getVideoTracks()[0].readyState !== "live"){
-    modal({
-      emoji:"📷", title:"Camera Not Available",
+    modal({ emoji:"📷", title:"Camera Not Available",
       text:"The camera feed is not active. The exam cannot start.\nPlease reconnect your camera and retry.",
-      danger:true,
-      buttons:[{ label:"Retry Camera", cls:"red", action: beginScan }]
-    });
+      danger:true, buttons:[{ label:"Retry Camera", cls:"red", action: beginScan }] });
     return;
   }
 
-  const number = REG.details.number.toUpperCase();
-  const rec = getStudentRecord(number);
+  var number = REG.details.number.toUpperCase();
+  var rec = getStudentRecord(number);
   if(rec.attempts.length >= MAX_ATTEMPTS){
-    blockAccess(
-      "ALL 8 ATTEMPTS USED",
+    blockAccess("ALL 8 ATTEMPTS USED",
       "Student number " + number + " has already used all " + MAX_ATTEMPTS + " attempts.",
-      "ATTEMPTS-EXHAUSTED"
-    );
+      "ATTEMPTS-EXHAUSTED");
     return;
   }
 
-  S.student = { ...REG.details, number: number };
-  S.faceSig = REG.faceSig;
+  S.student = { name: REG.details.name, number: number, course: REG.details.course, year: REG.details.year };
+  S.faceSig  = REG.faceSig;
   S.snapshot = REG.snapshot;
   S.attemptNumber = rec.attempts.length + 1;
 
-  $("chipAvatar").textContent = S.student.name.charAt(0).toUpperCase();
-  $("chipName").textContent = S.student.name;
-  $("chipMeta").textContent = S.student.number + " · " + S.student.course + " · " + S.student.year;
+  var ca = $("chipAvatar"); if(ca) ca.textContent = (S.student.name.charAt(0) || "?").toUpperCase();
+  var cn = $("chipName"); if(cn) cn.textContent = S.student.name;
+  var cm = $("chipMeta"); if(cm) cm.textContent = S.student.number + " · " + S.student.course + " · " + S.student.year;
 
   S.idx = 0;
   S.answers = new Array(QUESTIONS.length).fill(null);
@@ -2308,25 +2462,24 @@ $("startExamBtn").addEventListener("click", async ()=>{
 
   clearInterval(SCAN.timer);
   SCAN.active = false;
-  $("camVideo").srcObject = S.stream;
-  try { await $("camVideo").play(); } catch(e){}
-  $("camPanel").style.display = "block";
-  $("camStatus").textContent = "ACTIVE";
-  $("camFoot").textContent = "PROCTOR SEES THIS FEED";
-  $("camFoot").className = "camFoot ok";
+  var cv = $("camVideo"); if(cv) cv.srcObject = S.stream;
+  try { if(cv) await cv.play(); } catch(e){}
+  var cp = $("camPanel"); if(cp) cp.style.display = "block";
+  var cs = $("camStatus"); if(cs) cs.textContent = "ACTIVE";
+  var cf = $("camFoot"); if(cf){ cf.textContent = "PROCTOR SEES THIS FEED"; cf.className = "camFoot ok"; }
 
-  $("startScreen").style.display = "none";
-  $("resultScreen").style.display = "none";
-  $("examScreen").style.display = "block";
-  $("proctorBar").style.display = "flex";
+  var ss = $("startScreen"); if(ss) ss.style.display = "none";
+  var rs = $("resultScreen"); if(rs) rs.style.display = "none";
+  var es = $("examScreen"); if(es) es.style.display = "block";
+  var pb = $("proctorBar"); if(pb) pb.style.display = "flex";
   document.body.classList.add("exam");
-  $("pdfBtn").style.display = "none";
+  var pbtn = $("pdfBtn"); if(pbtn) pbtn.style.display = "none";
 
-  try{
+  try {
     if(document.documentElement.requestFullscreen){
       await document.documentElement.requestFullscreen();
     }
-  }catch(e){ /* ignore */ }
+  } catch(e){ /* ignore */ }
 
   examActive = true;
   startTimer();
@@ -2338,60 +2491,47 @@ $("startExamBtn").addEventListener("click", async ()=>{
     title:"Attempt " + S.attemptNumber + " of " + MAX_ATTEMPTS + " — Started",
     text:
       "You have " + fmt(EXAM_SECONDS) + " and " + QUESTIONS.length + " questions for this attempt.\n\n" +
-      "• Face verification runs for the entire session.\n" +
+      "• Face verification runs continuously — keep your face visible.\n" +
       "• Copying, tab-switching and DevTools are blocked.\n" +
       "• Up to " + MAX_VIOLATIONS + " violations allowed this attempt.\n" +
       "• The memo is hidden until you submit.",
     buttons:[{ label:"Begin ✍️", cls:"green" }]
   });
-});
-
-/* =====================================================================
-   OTHER BUTTONS
-   ===================================================================== */
-$("rulesBtn").addEventListener("click", ()=>{
-  modal({
-    emoji:"📋", title:"Exam Rules",
-    text:
-      "1. Duration: " + fmt(EXAM_SECONDS) + " per attempt, auto-submit at 00:00.\n" +
-      "2. You have up to " + MAX_ATTEMPTS + " attempts. After " + MAX_ATTEMPTS + ", access ends permanently.\n" +
-      "3. Camera is compulsory — used only for face verification.\n" +
-      "4. The same face must be used for every attempt.\n" +
-      "5. Face must remain visible for the whole session.\n" +
-      "6. This session is recorded — screen activity is logged.\n" +
-      "7. Right-click, copy, cut, paste and developer shortcuts are blocked.\n" +
-      "8. Switching tabs/windows or leaving fullscreen is a violation.\n" +
-      "9. Up to " + MAX_VIOLATIONS + " violations per attempt.\n" +
-      "10. The memo is shown after each submission so you can study.",
-    buttons:[{ label:"Got it", cls:"primary" }]
-  });
-});
+}
 
 /* =====================================================================
    BOOT
    ===================================================================== */
 updateViolationBadge();
 updateAttemptBadge();
+updateDeadlineBadge();
+setInterval(updateDeadlineBadge, 30000);
 
 (function boot(){
-  const hasCam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-  if(!hasCam){
+  if(deadlinePassed()){
     blockAccess(
-      "CAMERA NOT SUPPORTED",
-      "This browser does not expose a camera API. The secure assessment requires a live camera feed and cannot run.",
-      "NO-MEDIA-API"
+      "ASSESSMENT CLOSED",
+      "This assessment closed on 22 October 2026 at 20:00.\n\nNo further access is permitted.",
+      "DEADLINE-2026-10-22T20-00"
     );
+    return;
+  }
+  var hasCam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  if(!hasCam){
+    blockAccess("CAMERA NOT SUPPORTED",
+      "This browser does not expose a camera API. The secure assessment requires a live camera feed and cannot run.",
+      "NO-MEDIA-API");
     return;
   }
   if(!window.isSecureContext){
-    blockAccess(
-      "INSECURE CONTEXT",
+    blockAccess("INSECURE CONTEXT",
       "This page must be opened over HTTPS (or localhost) for camera access to work. The exam cannot start.",
-      "INSECURE-CTX"
-    );
+      "INSECURE-CTX");
     return;
   }
-  setTimeout(()=>toast("Secure session · 8 attempts available · Fill in your details to begin 🎓", 3600), 700);
+  setTimeout(function(){
+    toast("Secure session · 8 attempts · Assessment closes 22 Oct 2026 at 20:00 🎓", 4200);
+  }, 700);
 })();
 </script>
 </body>
