@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QUIZ 3 · VB.NET Programming Assessment</title>
+<title>INFOS TEST 2 — Database &amp; SQL Assessment</title>
 <style>
 :root{
   --bg-0:#0a0e1a;
@@ -289,7 +289,7 @@ header.top{
 .rules li{margin-bottom:5px}
 .rules b{color:var(--warning)}
 
-/* ============ BUTTONS ============ */
+/* ============ BUTTONS (with fallback background) ============ */
 .btn{
   border:none;cursor:pointer;font-family:inherit;font-weight:700;
   padding:13px 24px;border-radius:11px;font-size:.92rem;letter-spacing:.2px;
@@ -677,7 +677,7 @@ header.top{
     <h2 id="blockTitle">ACCESS DENIED</h2>
     <p id="blockMsg">This session has been refused.</p>
     <div class="code" id="blockCode">REF: SEC-LOCK</div>
-    <div class="seal">QUIZ 3 DEV · Secure Assessment Gateway</div>
+    <div class="seal">INFOS TEST 2 · Secure Assessment Gateway</div>
   </div>
 </div>
 
@@ -697,7 +697,7 @@ header.top{
   <span class="seg face-ok" id="faceBadge">👁️ FACE VERIFIED</span>
   <span class="seg attempt" id="attemptBadge">📝 1 / 8</span>
   <span class="seg viol" id="violationBadge">⚠️ 0 / 5</span>
-  <span class="seg deadline" id="deadlineBadge">⏰ 23 OCT 2026 · 18:00</span>
+  <span class="seg deadline" id="deadlineBadge">⏰ 24 OCT 2026 · 08:00</span>
 </div>
 
 <div id="camPanel">
@@ -711,10 +711,10 @@ header.top{
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <div class="logo">💻</div>
+      <div class="logo">🎓</div>
       <div>
-        <h1>QUIZ 3 DEV · VISUAL BASIC PROGRAMMING</h1>
-        <small>Classes · Properties · File I/O · Arrays · Constructors</small>
+        <h1>INFOS TEST 2 · DATABASE &amp; SQL</h1>
+        <small>Oracle 10g · DDL · DML · Constraints · Joins</small>
       </div>
     </div>
     <div class="tools">
@@ -769,13 +769,11 @@ header.top{
         <h4>📋 Assessment Conditions</h4>
         <ul>
           <li><b>8 attempts allowed.</b> After your 8th attempt you will not be able to access this test again.</li>
-          <li><b>Camera is compulsory.</b> If the camera is off, blocked or removed, the exam refuses to run.</li>
+          <li><b>Camera is compulsory for face verification.</b> Once verified, you can write freely — the camera is informational only during the exam.</li>
           <li><b>Face scan is compulsory</b> and is bound to your student number (same face must be used for every attempt).</li>
           <li><b>Time limit:</b> 1 hour 30 minutes per attempt. The paper auto-submits at 00:00.</li>
-          <li><b>Up to 5 violations allowed per attempt</b> — the 5th ends that attempt.</li>
-          <li><b>Your face must remain visible at all times.</b> If the camera loses sight of your face for 8 seconds, you receive a violation.</li>
-          <li>Copying, right-click, DevTools, tab-switching and exiting fullscreen are all violations.</li>
-          <li><b>⏰ This assessment closes permanently on 23 October 2026 at 18:00.</b></li>
+          <li><b>You will not be auto-kicked during writing.</b> Tab-switches, copy attempts and right-clicks are logged for the proctoring report only.</li>
+          <li><b>⏰ This assessment closes permanently on 24 October 2026 at 08:00.</b></li>
           <li>Answers (memo) are shown after each submission so you can study before your next attempt.</li>
         </ul>
       </div>
@@ -853,7 +851,7 @@ header.top{
 
     <div class="ring" id="ring">
       <div>
-        <div class="val" id="resScore">0/15</div>
+        <div class="val" id="resScore">0/45</div>
         <div class="lbl">Correct</div>
       </div>
     </div>
@@ -898,8 +896,9 @@ header.top{
 /* =====================================================================
    CONFIG
    ===================================================================== */
-/* ⬇⬇⬇  DEADLINE — TODAY 18:00  ⬇⬇⬇ */
-var DEADLINE_STR   = "2026-10-23T18:00:00";
+/* ⬇⬇⬇  DEADLINE — 24 OCTOBER 2026 @ 08:00  ⬇⬇⬇ */
+var DEADLINE_STR   = "2026-10-24T08:00:00";
+/* ⬆⬆⬆  Change this one line if you need a different date/time  ⬆⬆⬆ */
 var DEADLINE       = new Date(DEADLINE_STR).getTime();
 var EXAM_MINUTES   = 90;
 var EXAM_SECONDS   = EXAM_MINUTES * 60;
@@ -912,247 +911,130 @@ var FACE_CHECK_INTERVAL  = 1000;
 var FACE_MISS_LIMIT      = 8;
 
 /* =====================================================================
-   QUESTIONS  — QUIZ 3 DEV (VB.NET)
+   QUESTIONS
    ===================================================================== */
 var QUESTIONS = [
-  {
-    type:"mc",
-    q:`If the file to be opened exists, which of the following methods erases the file's contents?`,
-    opts:["OpenText","AppendText","CreateText","None of the Answers","InsertText"],
-    correct:2,
-    why:`<b>CreateText</b> creates a new file or overwrites an existing one — erasing any existing contents.`
-  },
-  {
-    type:"mc",
-    q:`What syntax would you use in the MDI Save Data Tool Strip Menu to declare a StreamWriter variable?`,
-    opts:["Private sw As OI.StreamWriter","Private sr As IO.StreamReader","Private sr As OI.StreamReader","Private sw As IO.StreamWriter","None of the Answers"],
-    correct:3,
-    why:`StreamWriter lives in the <b>System.IO</b> namespace, so you write <code>Private sw As IO.StreamWriter</code>. <code>sr</code> is the conventional name for a StreamReader, and <code>OI</code> is a typo.`
-  },
-  {
-    type:"mc",
-    q:`Objects are represented by ________ variables and ________ properties.`,
-    opts:["Public, Private","None of the Answers","Private, Public","Protected, Private","Protected, Public"],
-    correct:2,
-    why:`Encapsulation: the backing data is <b>Private</b>, and the interface to the outside world is <b>Public</b>.`
-  },
-  {
-    type:"mc",
-    q:`SELECT the statement that can be used to erase the contents of <code>employee.txt</code> if it exists?`,
+  { type:"tf", q:`The <code>CREATE TABLE</code> statement cannot contain a subquery.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> <code>CREATE TABLE new AS SELECT * FROM old</code> (CTAS) contains a subquery.` },
+  { type:"mc", q:`Which of the following types of software programs can be used to reference objects that are composed of individual data elements?`, opts:["RDBMS","ORDBMS","OODBMS","GUIRDBMS"], correct:1,
+    why:`An <b>ORDBMS</b> (Object-Relational DBMS) can store objects built from individual data elements.` },
+  { type:"mc", q:`To see all the fields and records in the <code>employees</code> table you can run the following query:`, opts:["SELECT * FROM employees;","SELECT all FROM employees;","SELECT columns FROM employees;","SELECT # FROM employees;"], correct:0,
+    why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
+  { type:"mc", q:`Foreign key constraints are named using the ____________ of both tables.`, opts:["foreign key name","short table name","UID suffix","full table name"], correct:1,
+    why:`Oracle 10g's default naming convention for foreign keys uses the <b>short table name</b> of both tables.` },
+  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following is a valid SQL statement?`, opts:["SELECT * FROM contact;","SELECT * FROM pubid;","SELECT * FROM publisher;","SELECT * FROM name;"], correct:2,
+    why:`The table is named <b>PUBLISHER</b>, so <code>SELECT * FROM publisher;</code> is the only valid query.` },
+  { type:"mc", q:`Engineering is the process of transforming a Logical Data Model to a Relational Model.`, opts:["Reverse","Top-Down","Target","Forward"], correct:3,
+    why:`Logical → Relational is the <b>Forward</b> engineering direction.` },
+  { type:"mc", q:`Which of the following commands is used to issue a query?`, opts:["FROM","SELECT","QUER","QUESTION"], correct:1,
+    why:`<b>SELECT</b> is the command used to issue a query against the database.` },
+  { type:"tf", q:`The <code>DELETE TABLE</code> command can be used to remove a table from a database.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> There is no <code>DELETE TABLE</code> command. Use <code>DROP TABLE</code>.` },
+  { type:"mc", q:`Which command is used to rename a table you own?`, opts:["RENAME...TO","ALTER TABLE...RENAME","ALTER TABLE...SET NAME","RENAME...AS"], correct:0,
+    why:`The Oracle SQL*Plus command is <code>RENAME old_name TO new_name</code>.` },
+  { type:"tf", q:`You can override the default order by using parentheses around the expressions that you want to calculate.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> Parentheses force a particular evaluation order.` },
+  { type:"tf", q:`A database must be shut down before the <code>ALTER TABLE</code> command can be executed.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> <code>ALTER TABLE</code> runs online while the database is up.` },
+  { type:"mc", q:`The column definition of <code>NUMBER(7,4)</code> indicates a precision of:`, opts:["11","4","7","3"], correct:2,
+    why:`<code>NUMBER(p,s)</code> — p is precision, s is scale. Here precision = 7.` },
+  { type:"mc", q:`Which of the following rules does <b>not</b> apply to column names in Oracle 10g?`, opts:["Column names must begin with a letter.","Column names can contain an ampersand (&).","Column names can be up to 30 characters in length.","Column names can contain numbers."], correct:1,
+    why:`An ampersand is <b>not</b> allowed in an Oracle column name.` },
+  { type:"mc", q:`Which of the following keywords can be used to indicate that a column alias should be included in the results?`, opts:["AS","FROM","ALIAS","SELECT"], correct:0,
+    why:`<code>AS</code> introduces a column alias, e.g. <code>SELECT salary * 12 AS "Annual Salary"</code>.` },
+  { type:"mc", q:`Which of the following is displayed by the <code>DESCRIBE</code> command?`, opts:["column names","all of the above","not null requirements","datatypes"], correct:1,
+    why:`<code>DESCRIBE</code> displays column names, data types and NOT NULL constraints — <b>all of the above</b>.` },
+  { type:"mc", q:`Which of the following statements is an example of a <b>SELF-JOIN</b>?`,
     opts:[
-      'outfile = IO.File.AddText("employee.txt")',
-      'outfile = IO.File.AppendText(filename)',
-      'None of the Answers',
-      'outfile = IO.File.InsertText("employee.txt")',
-      'outfile = IO.File.CreateText("employee.txt")'
-    ],
-    correct:4,
-    why:`<code>IO.File.CreateText</code> creates a new (empty) file, overwriting any existing file of the same name.`
-  },
-  {
-    type:"mc",
-    q:`Select the statement that BEST defines a class in Visual Basic.`,
-    opts:["Form class statement","Class statement","Event class statement","Event statement","None of the Answers"],
-    correct:1,
-    why:`A class is declared with the <b>Class</b> statement: <code>Public Class MyClass ... End Class</code>.`
-  },
-  {
-    type:"mc",
-    q:`What would happen if you open a StreamReader for input using <code>IO.File.OpenText("products.txt")</code> and the file does not exist?`,
+      "SELECT department_id, department_name, location_id, city\nFROM departments NATURAL JOIN locations;",
+      "SELECT e.employee_id, e.last_name, e.department_id, d.department_id, d.location_id\nFROM employees e JOIN departments d ON (e.department_id = d.department_id);",
+      "SELECT worker.last_name emp, manager.last_name mgr\nFROM employees worker JOIN employees manager\nON (worker.manager_id = manager.employee_id);",
+      "SELECT e.employee_id, e.last_name, e.department_id, d.department_id, d.location_id\nFROM employees e JOIN departments d\nON (e.department_id = d.department_id)\nAND e.manager_id = 149;"
+    ], correct:2,
+    why:`A <b>self-join</b> joins a table to <b>itself</b>. Option C joins <code>employees</code> to <code>employees</code>.` },
+  { type:"tf", q:`The <code>MODIFY TABLE</code> command can be used to change the size of a table.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> There is no <code>MODIFY TABLE</code> command. Use <code>ALTER TABLE ... MODIFY ...</code>.` },
+  { type:"mc", q:`Which of the following terms refers to commands that are used to create or modify database tables?`, opts:["data control language (DCL)","data formatting language (DFL)","data manipulation language (DML)","data definition language (DDL)"], correct:3,
+    why:`<b>DDL</b> covers <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>, <code>RENAME</code>.` },
+  { type:"mc", q:`Which of the following commands will drop any columns marked as <code>UNUSED</code> from the table?`, opts:["ALTER TABLE tablea DROP (unused);","DROP COLUMN FROM tablea WHERE column_status = UNUSED;","ALTER TABLE tablea DROP UNUSED COLUMNS;","DROP UNUSED COLUMNS;"], correct:2,
+    why:`The correct syntax is <code>ALTER TABLE tablea DROP UNUSED COLUMNS;</code>.` },
+  { type:"mc", q:`Which of the following commands will display the structure of the <code>CUSTOMERS</code> table?`, opts:["DESCRIBE customers;","SHOW customers;","STRUCT customers;","DISPLAY customers;"], correct:0,
+    why:`The SQL*Plus command is <code>DESCRIBE customers;</code> (or <code>DESC customers;</code>).` },
+  { type:"mc", q:`What is the correct answer for the arithmetic expression <code>9 + 2 + 3 - 2</code> using the order of operations employed by Oracle 10g?`, opts:["12","10","13","31"], correct:0,
+    why:`(9+2) = 11, (11+3) = 14, (14-2) = <b>12</b>.` },
+  { type:"mc", q:`Which of the following rules apply to table names in Oracle 10g?`, opts:["Names can begin with a number.","Names can be up to 225 characters in length.","Names can contain blank spaces.","Names can contain a number sign (#)."], correct:3,
+    why:`Oracle table names may contain <code>_</code>, <code>$</code> and <code>#</code>. No leading digits, no spaces, max 30 chars.` },
+  { type:"mc", q:`A database transaction consists of the following <b>except</b>:`, opts:["DML statements representing one consistent change to data.","One DDL statement","One TCL statement","SELECT queries"], correct:3,
+    why:`Plain <b>SELECT</b> queries are not part of a transaction.` },
+  { type:"mc", q:`Which of the following commands will change the name of the <code>PROMOTION</code> table to <code>GIFT</code>?`, opts:["ALTER TABLE promotion TO gift.","ALTER TABLE promotion NAME TO gift.","RENAME TABLE promotion TO gift.","RENAME promotion TO gift."], correct:3,
+    why:`The SQL*Plus command is <code>RENAME promotion TO gift;</code>.` },
+  { type:"mc", q:`Which of the following SQL*Plus commands will display the structure of a table?`, opts:["DESCRIBE","DISPLAY","DSC","VIEW"], correct:0,
+    why:`<b>DESCRIBE</b> (or <code>DESC</code>) displays column definitions.` },
+  { type:"tf", q:`A database object is a defined, self-contained structure in Oracle 10g.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> Tables, views, indexes, sequences, synonyms and procedures are database objects.` },
+  { type:"mc", q:`A column alias must be contained within double quotation marks ("") if it contains which of the following?`, opts:["blank spaces","all of the above","special symbols","characters that should be displayed in lower or mixed case"], correct:1,
+    why:`Blank spaces, special symbols and case-sensitive characters all require double quotes — <b>all of the above</b>.` },
+  { type:"mc", q:`Based on the structure of the <code>PROMOTION</code> table, which command ensures the value in <code>MINRETAL</code> is less than <code>MAXRETAL</code>?`,
     opts:[
-      "None of the answers",
-      "while you code the program, it will stop with an exception",
-      "previous data in the file will be deleted when the file is opened",
-      "VB allows the program to write new data to the end of the existing file",
-      "during program execution the program will stop with an exception",
-      "a new, empty file will be created for you"
-    ],
-    correct:4,
-    why:`<code>OpenText</code> does <b>not</b> create a file. If the file is missing, a <b>FileNotFoundException</b> is raised at run time.`
-  },
-  {
-    type:"mc",
-    q:`Assume the attribute is defined as follows:<br><code>Private _brand As String</code><br>Select the best property heading for the attribute.`,
-    opts:["Public Brand As String","Private Property Brand As String","Public Property Brand As Decimal","Public Property Brand As String","None of the Answers"],
-    correct:3,
-    why:`The property must be <b>Public</b> (so other code can use it) and match the underlying type (<b>String</b>).`
-  },
-  {
-    type:"mc",
-    q:`Assume there is a <b>Number</b> class with:<br>• Private member variables <code>_num1</code>, <code>_num2</code> of type Double<br>• Public properties Num1, Num2 with validations<br>• Constructors default + overloaded<br><br>Select the BEST code to declare an array that can store <b>100</b> objects of the Number class. The array must be declared in a <b>Module</b> and used by other classes in the same project.`,
-    opts:["Dim arNumber(99) As Integer","Public arNumbers(100) As Number","Public arNumbers(100) As Double","Public arNumber(99) As Number","Public arNumbers(99) As Double"],
-    correct:3,
-    why:`Array of 100 elements → upper bound <b>99</b>. Type must be <b>Number</b>. Must be <b>Public</b> for cross-class access in a Module.`
-  },
-  {
-    type:"mc",
-    q:`Assume there is a <b>Number</b> class... There is a Module in the project with:<br>• an array <code>arNumbers</code> that can store up to MAX Number elements<br>• an array counter <code>arCnt</code><br>• a constant TEXT_FILE<br><br>Select the best code for the application to save the data in the array as specified.`,
+      "ALTER TABLE promotion MODIFY MINRETAL CHECK (< maxretail);",
+      "ALTER TABLE promotion MODIFY CHECK (minretal < maxretail);",
+      "ALTER TABLE promotion ADD CHECK (minretal < maxretail);",
+      "ALTER TABLE promotion ADD CHECK minretal < maxretail;"
+    ], correct:2,
+    why:`The correct syntax is <code>ALTER TABLE promotion ADD CHECK (minretal &lt; maxretail);</code>.` },
+  { type:"tf", q:`The attribute that you assign as a primary UID is automatically set to mandatory.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> A primary key is <code>NOT NULL</code> by definition.` },
+  { type:"mc", q:`A primary key must contain a value and the value must be ________.`, opts:["blank","greater than zero","null","unique"], correct:3,
+    why:`A primary key must be <b>unique</b> and never NULL.` },
+  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which SQL statement will display only <b>two</b> columns in the results?`, opts:["none of the above","SELECT * FROM publisher;","SELECT contact person, name FROM publisher;","SELECT contact, name FROM publisher;"], correct:3,
+    why:`<code>SELECT contact, name FROM publisher;</code> lists exactly two columns.` },
+  { type:"mc", q:`Data manipulation language (DML) includes all of the following <b>except</b>:`, opts:["COMMIT","INSERT","DELETE","UPDATE"], correct:0,
+    why:`<b>COMMIT</b> is a TCL command. DML is INSERT/UPDATE/DELETE/SELECT.` },
+  { type:"mc", q:`Which of the following keywords is used to remove a database table in Oracle 10g?`, opts:["DELETE TABLE","DROP TABLE","ALTER TABLE...DROP","TRUNCATE TABLE"], correct:1,
+    why:`<code>DROP TABLE</code> removes the table and its data.` },
+  { type:"mc", q:`Which of the following statements is correct?`,
     opts:[
-      `Dim num1, num2 As Double
-Try
-  num1 = CDbl(txtNum1.Text)
-  num2 = CDbl(txtNum2.Text)
-  If arCnt > MAX Then
-    MessageBox.Show("Error: Array Full")
-  Else
-    arCnt = arCnt + 1
-    arNumbers(arCnt) = New Number(num1, num2)
-    txtNum1.Clear()
-    txtNum2.Clear()
-    lblMessage.Text = "Data saved"
-  End If
-Catch ex As Exception
-  MessageBox.Show("Error" & ex.Message)
-End Try`,
-      `Dim num1, num2 As Double
-Try
-  num1 = CDbl(txtNum1.Text)
-  num2 = CDbl(txtNum2.Text)
-  If arCnt < MAX Then
-    arNumbers(arCnt) = New Number(num1, num2)
-    arCnt += 1
-    txtNum1.Clear()
-    txtNum2.Clear()
-    lblMessage.Text = "Data saved"
-  Else
-    MessageBox.Show("Error: Array Full")
-  End If
-Catch ex As Exception
-  MessageBox.Show("Error" & ex.Message)
-End Try`,
-      `Dim num1, num2 As Double
-Dim crt As Integer
-Try
-  num1 = CDbl(txtNum1.Text)
-  num2 = CDbl(txtNum2.Text)
-  If arCnt < MAX Then
-    arNumbers(crt) = New Number(num1, num1)
-    crt += 1
-    txtNum1.Clear()
-    txtNum2.Clear()
-    lblMessage.Text = "Data saved"
-  Else
-    MessageBox.Show("Error: Array Full")
-  End If
-Catch ex As Exception
-  MessageBox.Show("Error" & ex.Message)
-End Try`,
-      `Dim num1, num2 As Double
-Try
-  num1 = CDbl(txtNum1.Text)
-  num2 = CDbl(txtNum2.Text)
-  If arCnt < MAX Then
-    arNumbers(crt) = New Number(num1, num2)
-    arCnt += 1
-    txtNum1.Clear()
-    txtNum2.Clear()
-    lblMessage.Text = "Data saved"
-  Else
-    MessageBox.Show("Error: Array Full")
-  End If
-Catch ex As Exception
-  MessageBox.Show("Error" & ex.Message)
-End Try`,
-      `Dim num1, num2 As Double
-Try
-  num1 = CDbl(txtNum1.Text)
-  num2 = CDbl(txtNum2.Text)
-  If arCnt < MAX Then
-    arNumbers(arCnt) = New Number(num1, num2)
-    arCnt += 1
-    txtNum1.Clear()
-    txtNum2.Clear()
-    lblMessage.Text = "Data saved"
-  Else
-    MessageBox.Show("Error: Array Full")
-  End If
-Catch ex As Exception
-  MessageBox.Show("Error" & ex.Message)
-End Try`
-    ],
-    correct:1,
-    why:`The correct pattern is: <b>check</b> the counter is below MAX, <b>store</b> at the current index, then <b>increment</b>. Option B does exactly this. A increments first (skips index 0). C uses a stray <code>crt</code> and passes <code>num1</code> twice. D indexes with an undeclared <code>crt</code>.`
-  },
-  {
-    type:"mc",
-    q:`Which of the following statements uses the Public properties to initialise the Private variables?`,
+      "Character columns are listed first in the output, followed by numeric columns.",
+      "The columns will be listed in the results in the same order they are listed in the SELECT clause of the SELECT statement.",
+      "The columns will be listed in the results in the same order they are stored in the database table.",
+      "Numeric columns are listed first in the output, followed by character columns."
+    ], correct:1,
+    why:`The <b>SELECT clause</b> controls column order in the output.` },
+  { type:"mc", q:`In which format does Oracle 10g display a date value by default?`, opts:["DD-MON-YY","DD-MON-YYYY","DD/MM/YYYY","DAY-MM-YY"], correct:0,
+    why:`The default date display format is <b>DD-MON-YY</b>.` },
+  { type:"mc", q:`In Oracle SQL Developer Data Modeler, which sequence correctly engineers a Logical model to a Relational model?`,
     opts:[
-      `Public Sub New()
-  ItemNumber = ""
-  ItemName = ""
-End Sub`,
-      `Public Sub New(ByVal strItemnum As String, ByVal strItemname As String)
-  ItemNumber = ""
-  ItemName = ""
-End Sub`,
-      `Public Sub New()
-  ItemNumber = strItemnum
-  ItemName = strItemname
-End Sub`,
-      "None of the Answers",
-      `Public Sub New(ByVal strItemnum As String, ByVal strItemname As String)
-  ItemNumber = strItemnum
-  ItemName = strItemname
-End Sub`
-    ],
-    correct:4,
-    why:`The constructor accepts the parameters and assigns them to the <b>Public properties</b> (which in turn set the private backing fields). Option E is the only one doing this.`
-  },
-  {
-    type:"mc",
-    q:`Which of the following keywords indicates that the property's value can be retrieved (read) only by an application?`,
-    opts:["None of the Answers","Set","Get","ReadOnly","WriteOnly"],
-    correct:3,
-    why:`<b>ReadOnly</b> exposes only the <code>Get</code> accessor — the value can be read but not changed.`
-  },
-  {
-    type:"mc",
-    q:`SELECT the statement that can be used to access the position of an item selected from a list box.`,
-    opts:[
-      "None of the Answers",
-      "intPosition = lstDisplay.SelectedIndices",
-      "intPosition = lstDisplay.SelectedInteger",
-      "intPosition = lstDisplay.SelectedIndex",
-      "intPosition = lstDisplay.SelectedValue"
-    ],
-    correct:3,
-    why:`<code>SelectedIndex</code> returns the zero-based position of the selected list item.`
-  },
-  {
-    type:"mc",
-    q:`In VB an instance is created with the statement containing ________ keyword.`,
-    opts:["Class","Object","New","Public","Private"],
-    correct:2,
-    why:`<b>New</b> instantiates an object, e.g. <code>Dim p As New Person()</code>.`
-  },
-  {
-    type:"mc",
-    q:`What is used by the code to display the name of <code>objPerson</code> in this code?<br><code>MessageBox.Show(objPerson.Name)</code>`,
-    opts:[
-      "The get sub of the Name object",
-      "The set sub of the Name object",
-      "The get sub of the Name property",
-      "None of the answers",
-      "The set sub of the Name property",
-      "The show sub of the Name property"
-    ],
-    correct:2,
-    why:`Reading a property invokes its <b>Get</b> accessor.`
-  },
-  {
-    type:"mc",
-    q:`Which of the following BEST describes the statement that will close the output file named <b>report</b>?`,
-    opts:["OutReport.Close()","outreport.Close()","Outreport.Close()","outReportClose()"],
-    correct:1,
-    why:`<code>outreport.Close()</code> matches the typical camelCase variable name <code>outReport</code> and calls the <code>Close()</code> method.`
-  }
+      "Select the Relational model, click the Engineer to Logical model icon, accept defaults, click Engineer.",
+      "Select the Relational model, accept defaults, click the Engineer to Logical Model icon, click Engineer.",
+      "Select the Logical model, click the Engineer to Relational model icon, accept defaults, click Engineer.",
+      "Click the Engineer to Relational model icon, select the Logical model, click Engineer, accept defaults."
+    ], correct:2,
+    why:`You must <b>select the Logical model</b> first, then choose <b>Engineer to Relational Model</b>.` },
+  { type:"mc", q:`Which of the following symbols represents all the columns contained in a table?`, opts:["%","*","#","@"], correct:1,
+    why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
+  { type:"tf", q:`The <code>INTERVAL</code> datatype can be used to identify a specific interval, or amount, of time.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> <code>INTERVAL</code> stores durations of time.` },
+  { type:"tf", q:`You must first select the Logical model you want to work with in order to engineer it to a relational model.`, opts:["True","False"], correct:0,
+    why:`<b>True.</b> The Logical model must be selected before running the engineer step.` },
+  { type:"tf", q:`In the SQL Commands option of Oracle APEX, you can run more than one SQL command at a time.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> APEX SQL Commands executes <b>one</b> statement at a time.` },
+  { type:"mc", q:`If the results of a SELECT statement include more than one column, the column names must be separated in the SELECT clause by which of the following symbols?`, opts:[",",";","space","|"], correct:0,
+    why:`Columns in the <code>SELECT</code> clause are separated by <b>commas</b>.` },
+  { type:"tf", q:`The <code>ALPHANUMERIC</code> datatype can be used to store characters and numbers to a maximum width of 2000.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> There is no <code>ALPHANUMERIC</code> datatype in Oracle.` },
+  { type:"mc", q:`Which of the following types of columns will automatically left-align the column heading when it is displayed?`, opts:["numeric","character","date","both character and date"], correct:1,
+    why:`<b>Character</b> columns are left-aligned by default.` },
+  { type:"mc", q:`A _________ clause creates an equijoin between two tables using one column with the same name, regardless of the data type.`, opts:["EQUI-JOIN","NATURAL JOIN","USING","ON"], correct:2,
+    why:`The <b>USING</b> clause joins on a column that appears with the same name in both tables.` },
+  { type:"tf", q:`You can delete a row that contains a primary key that is used as a foreign key in another table.`, opts:["True","False"], correct:1,
+    why:`<b>False.</b> Oracle blocks deletion while child rows reference it.` }
 ];
 
 /* =====================================================================
    STORAGE
    ===================================================================== */
-var REG_KEY  = "quiz3dev_registry_v1";
-var FACE_KEY = "quiz3dev_faceindex_v1";
+var REG_KEY  = "infos_test2_registry_v4";
+var FACE_KEY = "infos_test2_faceindex_v4";
 
 function loadRegistry(){ try { return JSON.parse(localStorage.getItem(REG_KEY)) || {}; } catch(e){ return {}; } }
 function saveRegistry(r){ try { localStorage.setItem(REG_KEY, JSON.stringify(r)); } catch(e){} }
@@ -1201,7 +1083,7 @@ var examActive = false;
    ===================================================================== */
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function letter(i){ return "ABCDEFGH"[i] || "?"; }
+function letter(i){ return "ABCDE"[i] || "?"; }
 function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 function fmt(sec){
   sec = Math.max(0, Math.floor(sec));
@@ -1295,7 +1177,7 @@ function updateDeadlineBadge(){
     b.style.color = "#f87171";
     return;
   }
-  b.textContent = "⏰ 23 OCT 2026 · 18:00 (" + deadlineCountdown() + ")";
+  b.textContent = "⏰ 24 OCT 2026 · 08:00 (" + deadlineCountdown() + ")";
 }
 
 /* =====================================================================
@@ -1463,14 +1345,10 @@ var camLostCount = 0;
 function onCameraLost(){
   if(S.finished) return;
   if(examActive){
-    camLostCount++;
-    if(camLostCount >= 2){
-      registerViolation("Camera feed lost / disconnected");
-      camLostCount = 0;
-    } else {
-      toast("📷 Camera signal interrupted — check your camera.", 3000, true);
-    }
+    /* LENIENT: during writing, just warn — never punish the student. */
+    toast("📷 Camera signal interrupted — please check your camera.", 3000, true);
   } else {
+    /* During verification the camera is mandatory. */
     var cd = $("camDeniedBox"); if(cd) cd.style.display = "grid";
     var sv = $("scanVideo"); if(sv) sv.style.display = "none";
     var ss = $("scanStatus"); if(ss) ss.textContent = "CAMERA LOST — VERIFICATION IMPOSSIBLE";
@@ -1481,7 +1359,7 @@ function onCameraLost(){
 }
 
 /* =====================================================================
-   FACE SCAN
+   FACE SCAN  (strict only during verification)
    ===================================================================== */
 var SCAN = { active:false, progress:0, faceOk:false, timer:null, done:false };
 function setCheck(id, state){
@@ -1548,11 +1426,11 @@ async function finishScan(){
 }
 
 /* =====================================================================
-   IDENTITY VERIFICATION
+   IDENTITY VERIFICATION  (strict)
    ===================================================================== */
 function verifyIdentity(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 23 October 2026 at 18:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
     return;
   }
   var number = REG.details.number.toUpperCase();
@@ -1606,9 +1484,7 @@ function verifyIdentity(){
       "Face verified for student number " + number + ".\n\n" +
       "• This will be attempt " + nextAttempt + " of " + MAX_ATTEMPTS + ".\n" +
       "• Remaining attempts: " + (MAX_ATTEMPTS - used) + ".\n" +
-      "• Your camera must stay ON for the whole exam.\n" +
-      "• You must keep your face visible at all times.\n" +
-      "• Up to " + MAX_VIOLATIONS + " violations allowed this attempt.\n" +
+      "• Camera is now informational only — you will not be kicked.\n" +
       "• " + fmt(EXAM_SECONDS) + " for " + QUESTIONS.length + " questions.",
     buttons:[{ label:"Continue", cls:"green" }]
   });
@@ -1633,7 +1509,7 @@ function gotoStep(n){
 }
 
 /* =====================================================================
-   ANTI-CHEAT
+   ANTI-CHEAT  (lenient — logs only, never auto-kicks)
    ===================================================================== */
 document.addEventListener("contextmenu", function(e){
   e.preventDefault();
@@ -1672,7 +1548,7 @@ document.addEventListener("keydown", function(e){
   if(!examActive) return;
   if(document.activeElement && document.activeElement.tagName === "INPUT") return;
   var q = QUESTIONS[S.idx];
-  if(q && /^[1-8]$/.test(e.key)){
+  if(q && q.type !== "text" && /^[1-5]$/.test(e.key)){
     var i = parseInt(e.key,10) - 1;
     var btns = document.querySelectorAll("#card .opt");
     if(btns[i]) btns[i].click();
@@ -1689,49 +1565,25 @@ document.addEventListener("keydown", function(e){
 
 document.addEventListener("visibilitychange", function(){
   if(!examActive) return;
-  if(document.hidden) registerViolation("Switched away from the exam tab/window");
+  if(document.hidden) logViolation("Switched away from the exam tab/window");
 });
 window.addEventListener("blur", function(){
   if(!examActive) return;
-  registerViolation("Exam window lost focus");
+  logViolation("Exam window lost focus");
 });
 document.addEventListener("fullscreenchange", function(){
   if(!examActive) return;
-  if(!document.fullscreenElement) registerViolation("Exited fullscreen mode");
+  if(!document.fullscreenElement) logViolation("Exited fullscreen mode");
 });
 
 function logViolation(reason){
   S.violationLog.push({ t: new Date().toLocaleTimeString(), reason: reason });
-}
-function registerViolation(reason){
-  if(!examActive) return;
   S.violations++;
-  logViolation(reason);
   updateViolationBadge();
-
-  if(S.violations >= MAX_VIOLATIONS){
-    modal({
-      emoji:"🛑",
-      title:"ATTEMPT TERMINATED",
-      text:"You have reached " + MAX_VIOLATIONS + " violations in this attempt.\n\nReason: " + reason + "\n\nThis attempt is being submitted immediately.",
-      danger:true,
-      buttons:[{ label:"Submit Attempt", cls:"red", action:function(){ forceFinish("Violation limit reached"); } }]
-    });
-    return;
-  }
-
-  var left = MAX_VIOLATIONS - S.violations;
-  toast("⚠️ Violation " + S.violations + " / " + MAX_VIOLATIONS + " — " + reason, 3400, true);
-
-  if(left <= 2){
-    modal({
-      emoji:"⚠️",
-      title:"Please stay focused",
-      text: reason + "\n\nYou have " + left + " chance(s) left before this attempt ends automatically.",
-      buttons:[{ label:"OK — Continue", cls:"primary" }]
-    });
-  }
+  /* LENIENT: violations are logged for the proctoring report only —
+     the student is NEVER auto-kicked during writing. */
 }
+
 function updateViolationBadge(){
   var b = $("violationBadge");
   if(!b) return;
@@ -1745,7 +1597,7 @@ function updateAttemptBadge(){
 }
 
 /* =====================================================================
-   FACE MONITOR (STRICT)
+   FACE MONITOR — informational only during the exam
    ===================================================================== */
 function showFaceAlert(secondsLeft){
   var el = $("faceAlert");
@@ -1764,54 +1616,27 @@ function startFaceMonitor(){
   S.faceMonitorId = setInterval(function(){
     if(!examActive || S.finished) return;
     if(deadlinePassed()){
-      forceFinish("Assessment deadline reached (23 Oct 2026 18:00)");
+      forceFinish("Assessment deadline reached (24 Oct 2026 08:00)");
       return;
     }
     var v = $("camVideo");
     if(!v || v.readyState < 2 || !v.videoWidth) return;
 
+    /* Informational only — no violations, no overlay, no kick. */
     var a = analyseFace(v);
     var faceOk = a.skin > 0.05 && a.bright > 0.07;
-    var totalWindow = (FACE_MISS_LIMIT * FACE_CHECK_INTERVAL) / 1000;
+    var fb = $("faceBadge");
 
     if(!faceOk){
-      S.faceMissStreak++;
-      var fb = $("faceBadge");
-      if(fb){ fb.textContent = "⚠️ FACE NOT VISIBLE"; fb.className = "seg face-bad"; }
-      var elapsed = (S.faceMissStreak * FACE_CHECK_INTERVAL) / 1000;
-      var remaining = Math.max(0, totalWindow - elapsed);
-      showFaceAlert(remaining);
-      if(S.faceMissStreak >= FACE_MISS_LIMIT){
-        S.faceMissStreak = 0;
-        hideFaceAlert();
-        registerViolation("Face not visible to the camera");
-      }
+      if(fb){ fb.textContent = "👁️ CAMERA ACTIVE"; fb.className = "seg face-ok"; }
       return;
     }
-
     var h = computeFaceHash(v);
-    if(h && S.faceSig){
-      var d = hamming(h, S.faceSig);
-      if(d > FACE_LIVE_THRESHOLD){
-        S.faceMissStreak++;
-        var fb2 = $("faceBadge");
-        if(fb2){ fb2.textContent = "⚠️ FACE MISMATCH"; fb2.className = "seg face-bad"; }
-        var elapsed2 = (S.faceMissStreak * FACE_CHECK_INTERVAL) / 1000;
-        var remaining2 = Math.max(0, totalWindow - elapsed2);
-        showFaceAlert(remaining2);
-        if(S.faceMissStreak >= FACE_MISS_LIMIT){
-          S.faceMissStreak = 0;
-          hideFaceAlert();
-          registerViolation("A different person is at the camera");
-        }
-        return;
-      }
+    if(h && S.faceSig && hamming(h, S.faceSig) > FACE_LIVE_THRESHOLD){
+      if(fb){ fb.textContent = "👁️ CAMERA ACTIVE"; fb.className = "seg face-ok"; }
+      return;
     }
-
-    S.faceMissStreak = 0;
-    hideFaceAlert();
-    var fb3 = $("faceBadge");
-    if(fb3){ fb3.textContent = "👁️ FACE VERIFIED"; fb3.className = "seg face-ok"; }
+    if(fb){ fb.textContent = "👁️ FACE VERIFIED"; fb.className = "seg face-ok"; }
   }, FACE_CHECK_INTERVAL);
 }
 
@@ -1825,7 +1650,7 @@ function startTimer(){
   S.timerId = setInterval(function(){
     if(deadlinePassed()){
       clearInterval(S.timerId);
-      forceFinish("Assessment deadline reached (23 Oct 2026 18:00)");
+      forceFinish("Assessment deadline reached (24 Oct 2026 08:00)");
       return;
     }
     S.remaining--;
@@ -2088,7 +1913,7 @@ function showResults(reason, attemptNo){
 
   var emoji="🏁", title="Attempt " + attemptNo + " Submitted", msg="";
   if(pct === 100){ emoji="👑"; title="PERFECT SCORE!"; msg="Flawless. Outstanding work."; }
-  else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your VB.NET inside out."; }
+  else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your SQL from your constraints."; }
   else if(pct >= 60){ emoji="👍"; title="Good effort!"; msg="A quick review of the memo and you're unstoppable."; }
   else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the memo below carefully before your next attempt."; }
   else { emoji="🦆"; title="More revision needed"; msg="Even the rubber duck believes in you."; }
@@ -2103,7 +1928,7 @@ function showResults(reason, attemptNo){
     rmeta.innerHTML =
       "📄 Reason: <b>" + esc(reason) + "</b> &nbsp;•&nbsp; " +
       "⏱ Used: <b>" + fmt(used) + "</b> &nbsp;•&nbsp; " +
-      "⚠️ Violations: <b style='color:" + (S.violations ? "#f87171" : "#6ee7b7") + "'>" +
+      "⚠️ Logged events: <b style='color:" + (S.violations ? "#f87171" : "#6ee7b7") + "'>" +
       S.violations + "</b>";
   }
 
@@ -2138,7 +1963,7 @@ function showResults(reason, attemptNo){
       retry.style.display = "none";
       if(lockMsg){
         if(deadlinePassed()){
-          lockMsg.textContent = "⛔ This assessment closed on 23 October 2026 at 18:00. No further attempts are permitted.";
+          lockMsg.textContent = "⛔ This assessment closed on 24 October 2026 at 08:00. No further attempts are permitted.";
         } else {
           lockMsg.textContent = "⛔ You have used all " + MAX_ATTEMPTS + " attempts. This student number is now permanently closed.";
         }
@@ -2203,7 +2028,7 @@ function showResults(reason, attemptNo){
    ===================================================================== */
 function startNextAttempt(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 23 October 2026 at 18:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
     return;
   }
   S.idx = 0;
@@ -2278,14 +2103,14 @@ function buildSheetHTML(){
 
   var viol = S.violationLog.length
     ? "<ul>" + S.violationLog.map(function(v){ return "<li>" + esc(v.t) + " — " + esc(v.reason) + "</li>"; }).join("") + "</ul>"
-    : "<p style='color:#16a34a'><b>No violations recorded.</b></p>";
+    : "<p style='color:#16a34a'><b>No events recorded.</b></p>";
 
   var hist = rec.attempts.length
     ? '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:6px">' +
         '<thead><tr>' +
           '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">#</th>' +
           '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Score</th>' +
-          '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Violations</th>' +
+          '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Events</th>' +
           '<th style="text-align:left;border-bottom:1px solid #cbd5e1;padding:4px">Date</th>' +
         '</tr></thead><tbody>' +
         rec.attempts.map(function(a){
@@ -2332,8 +2157,8 @@ function buildSheetHTML(){
     '.foot{margin-top:24px;font-size:10px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:10px}' +
     '@media print{body{margin:0}}' +
     '</style></head><body>' +
-    '<div class="hdr"><h1>QUIZ 3 DEV — ANSWER SHEET &amp; MEMO</h1>' +
-    '<p>Visual Basic Programming Assessment · Classes · Properties · File I/O · Arrays</p></div>' +
+    '<div class="hdr"><h1>INFOS TEST 2 — ANSWER SHEET &amp; MEMO</h1>' +
+    '<p>Database &amp; SQL Assessment · Oracle 10g · DDL · DML · Constraints · Joins</p></div>' +
     '<table class="info">' +
       '<tr><td class="k">Student Name</td><td>' + esc(S.student.name) + '</td>' +
           '<td class="k">Student Number</td><td>' + esc(S.student.number) + '</td></tr>' +
@@ -2347,25 +2172,25 @@ function buildSheetHTML(){
     '<div class="score">' +
       '<div class="box"><b>' + S.score + ' / ' + QUESTIONS.length + '</b><span>Score</span></div>' +
       '<div class="box"><b>' + pct + '%</b><span>Percentage</span></div>' +
-      '<div class="box"><b>' + S.violations + '</b><span>Violations</span></div>' +
+      '<div class="box"><b>' + S.violations + '</b><span>Logged Events</span></div>' +
       '<div class="box"><b>' + fmt(used) + '</b><span>Time Used</span></div>' +
     '</div>' +
     '<div class="lock"><b>📝 ATTEMPT TRACKING:</b> ' + usedCount + ' of ' + MAX_ATTEMPTS + ' attempts used. ' +
       (remaining > 0 && !deadlinePassed()
         ? "You still have <b>" + remaining + "</b> attempt(s) remaining."
         : deadlinePassed()
-          ? "<b>Assessment closed on 23 October 2026 at 18:00.</b>"
+          ? "<b>Assessment closed on 24 October 2026 at 08:00.</b>"
           : "<b>All 8 attempts used — access permanently closed.</b>") +
     '</div>' +
     '<div class="viol"><h3>Attempt History</h3>' + hist + '</div>' +
     '<div class="viol"><h3>Proctoring Report (this attempt)</h3>' +
-      '<p style="margin:0 0 6px">Session monitored via screen-activity logging and continuous face verification.</p>' +
+      '<p style="margin:0 0 6px">Session monitored via screen-activity logging. Face verification was enforced only at identity check-in — no auto-kicks during writing.</p>' +
       viol +
     '</div>' +
     '<table class="q"><thead><tr><th>#</th><th>Question · Response · Memo</th><th>Mark</th></tr></thead>' +
     '<tbody>' + rows + '</tbody></table>' +
     '<div class="sign"><div>Student Signature</div><div>Lecturer Signature</div><div>Date</div></div>' +
-    '<div class="foot">Generated automatically by QUIZ 3 DEV Secure Assessment System · ' +
+    '<div class="foot">Generated automatically by INFOS TEST 2 Secure Assessment System · ' +
     esc(S.student.number) + ' · ' + esc(d.toLocaleString()) + '</div>' +
     '</body></html>';
 }
@@ -2378,7 +2203,7 @@ function downloadAnswerSheet(){
     var a = document.createElement("a");
     var safe = (S.student.number || "student").replace(/[^a-z0-9_-]/gi,"");
     a.href = url;
-    a.download = "QUIZ3DEV_AnswerSheet_" + safe + "_attempt" + S.attemptNumber + ".html";
+    a.download = "INFOSTEST2_AnswerSheet_" + safe + "_attempt" + S.attemptNumber + ".html";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -2401,7 +2226,7 @@ function doPrint(){
 }
 
 /* =====================================================================
-   BUTTON WIRING
+   BUTTON WIRING (with null-safe check)
    ===================================================================== */
 (function wireButtons(){
   var pdfBtn = $("pdfBtn");
@@ -2428,22 +2253,22 @@ function showRules(){
     text:
       "1. Duration: " + fmt(EXAM_SECONDS) + " per attempt, auto-submit at 00:00.\n" +
       "2. You have up to " + MAX_ATTEMPTS + " attempts. After " + MAX_ATTEMPTS + ", access ends permanently.\n" +
-      "3. Camera is compulsory — used only for face verification.\n" +
+      "3. Camera is compulsory at verification (face scan is mandatory).\n" +
       "4. The same face must be used for every attempt.\n" +
-      "5. Your face must remain visible for the whole session.\n" +
-      "6. This session is recorded — screen activity is logged.\n" +
-      "7. Right-click, copy, cut, paste and developer shortcuts are blocked.\n" +
-      "8. Switching tabs/windows or leaving fullscreen is a violation.\n" +
-      "9. Up to " + MAX_VIOLATIONS + " violations per attempt.\n" +
+      "5. During writing, camera is informational only — you will NOT be kicked.\n" +
+      "6. Face loss or camera disconnect will NOT end your attempt.\n" +
+      "7. Right-click, copy, cut, paste and developer shortcuts are blocked and logged.\n" +
+      "8. Tab-switching and leaving fullscreen are logged (for the report only).\n" +
+      "9. You will NEVER be auto-kicked due to violations — only your submission or time expiry ends the attempt.\n" +
       "10. The memo is shown after each submission so you can study.\n" +
-      "11. ⏰ This assessment closes permanently on 23 October 2026 at 18:00.",
+      "11. ⏰ This assessment closes permanently on 24 October 2026 at 08:00.",
     buttons:[{ label:"Got it", cls:"primary" }]
   });
 }
 
 async function handleToScan(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 23 October 2026 at 18:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
     return;
   }
   var fName = $("fName"), fNum = $("fNumber"), fCourse = $("fCourse"), fYear = $("fYear");
@@ -2530,7 +2355,7 @@ async function beginScan(){
 
 async function handleStartExam(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 23 October 2026 at 18:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
     return;
   }
   if(!REG.verified || !REG.faceSig){
@@ -2609,9 +2434,9 @@ async function handleStartExam(){
     title:"Attempt " + S.attemptNumber + " of " + MAX_ATTEMPTS + " — Started",
     text:
       "You have " + fmt(EXAM_SECONDS) + " and " + QUESTIONS.length + " questions for this attempt.\n\n" +
-      "• Face verification runs continuously — keep your face visible.\n" +
-      "• Copying, tab-switching and DevTools are blocked.\n" +
-      "• Up to " + MAX_VIOLATIONS + " violations allowed this attempt.\n" +
+      "• Camera is informational only during writing — you will NOT be kicked.\n" +
+      "• Face loss / camera disconnect will not end your attempt.\n" +
+      "• You will only leave the exam when you submit or time runs out.\n" +
       "• The memo is hidden until you submit.",
     buttons:[{ label:"Begin ✍️", cls:"green" }]
   });
@@ -2629,8 +2454,8 @@ setInterval(updateDeadlineBadge, 30000);
   if(deadlinePassed()){
     blockAccess(
       "ASSESSMENT CLOSED",
-      "This assessment closed on 23 October 2026 at 18:00.\n\nNo further access is permitted.",
-      "DEADLINE-2026-10-23T18-00"
+      "This assessment closed on 24 October 2026 at 08:00.\n\nNo further access is permitted.",
+      "DEADLINE-2026-10-24T08-00"
     );
     return;
   }
@@ -2648,7 +2473,7 @@ setInterval(updateDeadlineBadge, 30000);
     return;
   }
   setTimeout(function(){
-    toast("Secure session · 8 attempts · Assessment closes 23 Oct 2026 at 18:00 🎓", 4200);
+    toast("Secure session · 8 attempts · Assessment closes 24 Oct 2026 at 08:00 🎓", 4200);
   }, 700);
 })();
 </script>
