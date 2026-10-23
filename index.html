@@ -714,7 +714,7 @@ header.top{
       <div class="logo">🎓</div>
       <div>
         <h1>INFOS TEST 2 · DATABASE &amp; SQL</h1>
-        <small>Oracle 10g · DDL · DML · Constraints · Joins</small>
+        <small>Oracle 10g · DDL · DML · Constraints · Joins · 60 Questions</small>
       </div>
     </div>
     <div class="tools">
@@ -851,7 +851,7 @@ header.top{
 
     <div class="ring" id="ring">
       <div>
-        <div class="val" id="resScore">0/45</div>
+        <div class="val" id="resScore">0/60</div>
         <div class="lbl">Correct</div>
       </div>
     </div>
@@ -898,7 +898,6 @@ header.top{
    ===================================================================== */
 /* ⬇⬇⬇  DEADLINE — 24 OCTOBER 2026 @ 08:00  ⬇⬇⬇ */
 var DEADLINE_STR   = "2026-10-24T08:00:00";
-/* ⬆⬆⬆  Change this one line if you need a different date/time  ⬆⬆⬆ */
 var DEADLINE       = new Date(DEADLINE_STR).getTime();
 var EXAM_MINUTES   = 90;
 var EXAM_SECONDS   = EXAM_MINUTES * 60;
@@ -911,38 +910,52 @@ var FACE_CHECK_INTERVAL  = 1000;
 var FACE_MISS_LIMIT      = 8;
 
 /* =====================================================================
-   QUESTIONS
+   QUESTIONS — 60 questions from INFOS TEST 2 ORIGINAL.pdf
    ===================================================================== */
 var QUESTIONS = [
-  { type:"tf", q:`The <code>CREATE TABLE</code> statement cannot contain a subquery.`, opts:["True","False"], correct:1,
+  { type:"tf", q:`The <code>CREATE TABLE</code> cannot contain a subquery.`, opts:["True","False"], correct:1,
     why:`<b>False.</b> <code>CREATE TABLE new AS SELECT * FROM old</code> (CTAS) contains a subquery.` },
-  { type:"mc", q:`Which of the following types of software programs can be used to reference objects that are composed of individual data elements?`, opts:["RDBMS","ORDBMS","OODBMS","GUIRDBMS"], correct:1,
+  { type:"mc", q:`Which of the following types of software programs can be used to reference objects that are composed of individual data elements?`,
+    opts:["RDBMS","ORDBMS","OODBMS","GUIRDBMS"], correct:1,
     why:`An <b>ORDBMS</b> (Object-Relational DBMS) can store objects built from individual data elements.` },
-  { type:"mc", q:`To see all the fields and records in the <code>employees</code> table you can run the following query:`, opts:["SELECT * FROM employees;","SELECT all FROM employees;","SELECT columns FROM employees;","SELECT # FROM employees;"], correct:0,
+  { type:"mc", q:`To see all the fields and records in the employees table you can run the following query:`,
+    opts:["SELECT * FROM employees;","SELECT all FROM employees;","SELECT columns FROM employees;","SELECT # FROM employees;"], correct:0,
     why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
-  { type:"mc", q:`Foreign key constraints are named using the ____________ of both tables.`, opts:["foreign key name","short table name","UID suffix","full table name"], correct:1,
+  { type:"mc", q:`Foreign key constraints are named using the ____________ of both tables.`,
+    opts:["foreign key name","short table name","UID suffix","full table name"], correct:1,
     why:`Oracle 10g's default naming convention for foreign keys uses the <b>short table name</b> of both tables.` },
-  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following is a valid SQL statement?`, opts:["SELECT * FROM contact;","SELECT * FROM pubid;","SELECT * FROM publisher;","SELECT * FROM name;"], correct:2,
+  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following is a valid SQL statement?`,
+    opts:["SELECT * FROM contact;","SELECT * FROM pubid;","SELECT * FROM publisher;","SELECT * FROM name;"], correct:2,
     why:`The table is named <b>PUBLISHER</b>, so <code>SELECT * FROM publisher;</code> is the only valid query.` },
-  { type:"mc", q:`Engineering is the process of transforming a Logical Data Model to a Relational Model.`, opts:["Reverse","Top-Down","Target","Forward"], correct:3,
+  { type:"mc", q:`Engineering is the process of transforming a Logical Data Model to a Relational Model.`,
+    opts:["Reverse","Top-Down","Target","Forward"], correct:3,
     why:`Logical → Relational is the <b>Forward</b> engineering direction.` },
-  { type:"mc", q:`Which of the following commands is used to issue a query?`, opts:["FROM","SELECT","QUER","QUESTION"], correct:1,
+  { type:"mc", q:`Which of the following commands is used to issue a query?`,
+    opts:["FROM","SELECT","QUER","QUESTION"], correct:1,
     why:`<b>SELECT</b> is the command used to issue a query against the database.` },
-  { type:"tf", q:`The <code>DELETE TABLE</code> command can be used to remove a table from a database.`, opts:["True","False"], correct:1,
+  { type:"tf", q:`The <code>DELETE TABLE</code> command can be used to remove a table from a database.`,
+    opts:["True","False"], correct:1,
     why:`<b>False.</b> There is no <code>DELETE TABLE</code> command. Use <code>DROP TABLE</code>.` },
-  { type:"mc", q:`Which command is used to rename a table you own?`, opts:["RENAME...TO","ALTER TABLE...RENAME","ALTER TABLE...SET NAME","RENAME...AS"], correct:0,
+  { type:"mc", q:`Which command is used to rename a table you own?`,
+    opts:["RENAME...TO","ALTER TABLE...RENAME","ALTER TABLE...SET NAME","RENAME...AS"], correct:0,
     why:`The Oracle SQL*Plus command is <code>RENAME old_name TO new_name</code>.` },
-  { type:"tf", q:`You can override the default order by using parentheses around the expressions that you want to calculate.`, opts:["True","False"], correct:0,
+  { type:"tf", q:`You can override the default order by using parentheses around the expressions that you want to calculate.`,
+    opts:["True","False"], correct:0,
     why:`<b>True.</b> Parentheses force a particular evaluation order.` },
-  { type:"tf", q:`A database must be shut down before the <code>ALTER TABLE</code> command can be executed.`, opts:["True","False"], correct:1,
+  { type:"mc", q:`Foreign key constraints are named using the ____________ of both tables.`,
+    opts:["UID suffix","foreign key name","short table name","full table name"], correct:2,
+    why:`Oracle 10g's default naming convention for foreign keys uses the <b>short table name</b> of both tables.` },
+  { type:"tf", q:`A database must be shut down before the <code>ALTER TABLE</code> command can be executed.`,
+    opts:["True","False"], correct:1,
     why:`<b>False.</b> <code>ALTER TABLE</code> runs online while the database is up.` },
-  { type:"mc", q:`The column definition of <code>NUMBER(7,4)</code> indicates a precision of:`, opts:["11","4","7","3"], correct:2,
-    why:`<code>NUMBER(p,s)</code> — p is precision, s is scale. Here precision = 7.` },
-  { type:"mc", q:`Which of the following rules does <b>not</b> apply to column names in Oracle 10g?`, opts:["Column names must begin with a letter.","Column names can contain an ampersand (&).","Column names can be up to 30 characters in length.","Column names can contain numbers."], correct:1,
+  { type:"mc", q:`Which of the following rules does <b>not</b> apply to column names in Oracle 10g?`,
+    opts:["Column names must begin with a letter.","Column names can contain an ampersand (&).","Column names can be up to 30 characters in length.","Column names can contain numbers."], correct:1,
     why:`An ampersand is <b>not</b> allowed in an Oracle column name.` },
-  { type:"mc", q:`Which of the following keywords can be used to indicate that a column alias should be included in the results?`, opts:["AS","FROM","ALIAS","SELECT"], correct:0,
+  { type:"mc", q:`Which of the following keywords can be used to indicate that a column alias should be included in the results?`,
+    opts:["AS","FROM","ALIAS","SELECT"], correct:0,
     why:`<code>AS</code> introduces a column alias, e.g. <code>SELECT salary * 12 AS "Annual Salary"</code>.` },
-  { type:"mc", q:`Which of the following is displayed by the <code>DESCRIBE</code> command?`, opts:["column names","all of the above","not null requirements","datatypes"], correct:1,
+  { type:"mc", q:`Which of the following is displayed by the <code>DESCRIBE</code> command?`,
+    opts:["column names","all of the above","not null requirements","datatypes"], correct:1,
     why:`<code>DESCRIBE</code> displays column names, data types and NOT NULL constraints — <b>all of the above</b>.` },
   { type:"mc", q:`Which of the following statements is an example of a <b>SELF-JOIN</b>?`,
     opts:[
@@ -952,29 +965,70 @@ var QUESTIONS = [
       "SELECT e.employee_id, e.last_name, e.department_id, d.department_id, d.location_id\nFROM employees e JOIN departments d\nON (e.department_id = d.department_id)\nAND e.manager_id = 149;"
     ], correct:2,
     why:`A <b>self-join</b> joins a table to <b>itself</b>. Option C joins <code>employees</code> to <code>employees</code>.` },
-  { type:"tf", q:`The <code>MODIFY TABLE</code> command can be used to change the size of a table.`, opts:["True","False"], correct:1,
+  { type:"tf", q:`The <code>MODIFY TABLE</code> command can be used to change the size of a table.`,
+    opts:["True","False"], correct:1,
     why:`<b>False.</b> There is no <code>MODIFY TABLE</code> command. Use <code>ALTER TABLE ... MODIFY ...</code>.` },
-  { type:"mc", q:`Which of the following terms refers to commands that are used to create or modify database tables?`, opts:["data control language (DCL)","data formatting language (DFL)","data manipulation language (DML)","data definition language (DDL)"], correct:3,
+  { type:"tf", q:`A table name can consist of numbers, letters, and blank spaces.`,
+    opts:["True","False"], correct:1,
+    why:`<b>False.</b> Table names cannot contain blank spaces.` },
+  { type:"mc", q:`Selecting specific columns from a table to be displayed in a query is called:`,
+    opts:["sorting","elimination","projection","selection"], correct:2,
+    why:`<b>Projection</b> selects specific columns; <i>selection</i> selects specific rows.` },
+  { type:"mc", q:`If you are creating a new table containing four columns from an existing table and want to change the name of one of the columns when it is created in the new table, add a column list containing ____________ names in the <code>CREATE TABLE</code> clause.`,
+    opts:["zero","five","one","Four"], correct:3,
+    why:`You list <b>four</b> column names in the new table's column list.` },
+  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
+    opts:["Zero","alphanumeric","Incorrect","date"], correct:1,
+    why:`<b>Alphanumeric</b> (character) columns display their full heading regardless of assigned width.` },
+  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
+    opts:["Numeric","alphanumeric","Incorrect","date"], correct:0,
+    why:`<b>Numeric</b> columns display their full heading regardless of assigned width.` },
+  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
+    opts:["Mixed Case","There is no default","Lower Case","Upper Case"], correct:3,
+    why:`<b>Upper Case</b> headings are always displayed in full.` },
+  { type:"tf", q:`The scale of a <code>NUMBER</code> column indicates the number of digits that can be displayed to the right of the decimal point.`,
+    opts:["True","False"], correct:0,
+    why:`<b>True.</b> Scale = number of digits to the right of the decimal point.` },
+  { type:"mc", q:`Which of the following is the wildcard used for any number of characters in SQL?`,
+    opts:["%","_","*","#"], correct:0,
+    why:`<code>%</code> matches any number of characters.` },
+  { type:"mc", q:`Which of the following terms refers to commands that are used to create or modify database tables?`,
+    opts:["data control language (DCL)","data formatting language (DFL)","data manipulation language (DML)","data definition language (DDL)"], correct:3,
     why:`<b>DDL</b> covers <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>, <code>RENAME</code>.` },
-  { type:"mc", q:`Which of the following commands will drop any columns marked as <code>UNUSED</code> from the table?`, opts:["ALTER TABLE tablea DROP (unused);","DROP COLUMN FROM tablea WHERE column_status = UNUSED;","ALTER TABLE tablea DROP UNUSED COLUMNS;","DROP UNUSED COLUMNS;"], correct:2,
-    why:`The correct syntax is <code>ALTER TABLE tablea DROP UNUSED COLUMNS;</code>.` },
-  { type:"mc", q:`Which of the following commands will display the structure of the <code>CUSTOMERS</code> table?`, opts:["DESCRIBE customers;","SHOW customers;","STRUCT customers;","DISPLAY customers;"], correct:0,
+  { type:"mc", q:`Which of the following commands will drop any columns marked as unused from the TABLE table?`,
+    opts:["ALTER TABLE table DROP (unused);","DROP COLUMN FROM table WHERE column_status = UNUSED;","ALTER TABLE table DROP UNUSED COLUMNS;","DROP UNUSED COLUMNS;"], correct:2,
+    why:`The correct syntax is <code>ALTER TABLE table DROP UNUSED COLUMNS;</code>.` },
+  { type:"mc", q:`Which of the following commands will display the structure of the CUSTOMERS table?`,
+    opts:["DESCRIBE customers;","SHOW customers;","STRUCT customers;","DISPLAY customers;"], correct:0,
     why:`The SQL*Plus command is <code>DESCRIBE customers;</code> (or <code>DESC customers;</code>).` },
-  { type:"mc", q:`What is the correct answer for the arithmetic expression <code>9 + 2 + 3 - 2</code> using the order of operations employed by Oracle 10g?`, opts:["12","10","13","31"], correct:0,
+  { type:"mc", q:`The column definition of <code>NUMBER(7,4)</code> indicates a precision of:`,
+    opts:["11","4","7","3"], correct:2,
+    why:`<code>NUMBER(p,s)</code> — p is precision, s is scale. Here precision = 7.` },
+  { type:"mc", q:`What is the correct answer for the arithmetic expression <code>9 + 2 + 3 - 2</code> using the order of operations employed by Oracle 10g?`,
+    opts:["12","10","13","31"], correct:0,
     why:`(9+2) = 11, (11+3) = 14, (14-2) = <b>12</b>.` },
-  { type:"mc", q:`Which of the following rules apply to table names in Oracle 10g?`, opts:["Names can begin with a number.","Names can be up to 225 characters in length.","Names can contain blank spaces.","Names can contain a number sign (#)."], correct:3,
+  { type:"mc", q:`Which of the following rules apply to table names in Oracle 10g?`,
+    opts:["Names can begin with a number.","Names can be up to 225 characters in length.","Names can contain blank spaces.","Names can contain a number sign (#)."], correct:3,
     why:`Oracle table names may contain <code>_</code>, <code>$</code> and <code>#</code>. No leading digits, no spaces, max 30 chars.` },
-  { type:"mc", q:`A database transaction consists of the following <b>except</b>:`, opts:["DML statements representing one consistent change to data.","One DDL statement","One TCL statement","SELECT queries"], correct:3,
+  { type:"mc", q:`A database transaction consists of the following <b>except</b>:`,
+    opts:["DML statements representing one consistent change to data.","One DDL statement","One TCL statement","SELECT queries"], correct:3,
     why:`Plain <b>SELECT</b> queries are not part of a transaction.` },
-  { type:"mc", q:`Which of the following commands will change the name of the <code>PROMOTION</code> table to <code>GIFT</code>?`, opts:["ALTER TABLE promotion TO gift.","ALTER TABLE promotion NAME TO gift.","RENAME TABLE promotion TO gift.","RENAME promotion TO gift."], correct:3,
+  { type:"mc", q:`Which of the following commands will change the name of the <code>PROMOTION</code> table to <code>GIFT</code>?`,
+    opts:["ALTER TABLE promotion TO gift;","ALTER TABLE promotion NAME TO gift;","RENAME TABLE promotion TO gift;","RENAME promotion TO gift;"], correct:3,
     why:`The SQL*Plus command is <code>RENAME promotion TO gift;</code>.` },
-  { type:"mc", q:`Which of the following SQL*Plus commands will display the structure of a table?`, opts:["DESCRIBE","DISPLAY","DSC","VIEW"], correct:0,
-    why:`<b>DESCRIBE</b> (or <code>DESC</code>) displays column definitions.` },
-  { type:"tf", q:`A database object is a defined, self-contained structure in Oracle 10g.`, opts:["True","False"], correct:0,
+  { type:"mc", q:`Which of the following SQL*Plus commands will display the structure of a table?`,
+    opts:["DESC","DISPLAY","DSC","VIEW"], correct:0,
+    why:`<b>DESC</b> (or <code>DESCRIBE</code>) displays column definitions.` },
+  { type:"tf", q:`A database object is a defined, self-contained structure in Oracle 10g.`,
+    opts:["True","False"], correct:0,
     why:`<b>True.</b> Tables, views, indexes, sequences, synonyms and procedures are database objects.` },
-  { type:"mc", q:`A column alias must be contained within double quotation marks ("") if it contains which of the following?`, opts:["blank spaces","all of the above","special symbols","characters that should be displayed in lower or mixed case"], correct:1,
+  { type:"tf", q:`The <code>DELETE TABLE</code> command can be used to remove a table from a database.`,
+    opts:["True","False"], correct:1,
+    why:`<b>False.</b> There is no <code>DELETE TABLE</code> command. Use <code>DROP TABLE</code>.` },
+  { type:"mc", q:`A column alias must be contained within double quotation marks ("") if it contains which of the following?`,
+    opts:["blank spaces","all of the above","special symbols","characters that should be displayed in lower or mixed case"], correct:1,
     why:`Blank spaces, special symbols and case-sensitive characters all require double quotes — <b>all of the above</b>.` },
-  { type:"mc", q:`Based on the structure of the <code>PROMOTION</code> table, which command ensures the value in <code>MINRETAL</code> is less than <code>MAXRETAL</code>?`,
+  { type:"mc", q:`Based on the structure of the PROMOTION table, which of the following commands ensures that the value entered for the MINRETAL column is less than the value entered for the MAXRETAL column?`,
     opts:[
       "ALTER TABLE promotion MODIFY MINRETAL CHECK (< maxretail);",
       "ALTER TABLE promotion MODIFY CHECK (minretal < maxretail);",
@@ -982,15 +1036,23 @@ var QUESTIONS = [
       "ALTER TABLE promotion ADD CHECK minretal < maxretail;"
     ], correct:2,
     why:`The correct syntax is <code>ALTER TABLE promotion ADD CHECK (minretal &lt; maxretail);</code>.` },
-  { type:"tf", q:`The attribute that you assign as a primary UID is automatically set to mandatory.`, opts:["True","False"], correct:0,
+  { type:"tf", q:`The attribute that you assign as a primary UID is automatically set to mandatory.`,
+    opts:["True","False"], correct:0,
     why:`<b>True.</b> A primary key is <code>NOT NULL</code> by definition.` },
-  { type:"mc", q:`A primary key must contain a value and the value must be ________.`, opts:["blank","greater than zero","null","unique"], correct:3,
+  { type:"mc", q:`A primary key must contain a value and the value must be ____________.`,
+    opts:["blank","greater than zero","null","unique"], correct:3,
     why:`A primary key must be <b>unique</b> and never NULL.` },
-  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which SQL statement will display only <b>two</b> columns in the results?`, opts:["none of the above","SELECT * FROM publisher;","SELECT contact person, name FROM publisher;","SELECT contact, name FROM publisher;"], correct:3,
+  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following SQL statements will display only <b>two</b> columns in the results?`,
+    opts:["none of the above","SELECT * FROM publisher;","SELECT contact person, name FROM publisher;","SELECT contact, name FROM publisher;"], correct:3,
     why:`<code>SELECT contact, name FROM publisher;</code> lists exactly two columns.` },
-  { type:"mc", q:`Data manipulation language (DML) includes all of the following <b>except</b>:`, opts:["COMMIT","INSERT","DELETE","UPDATE"], correct:0,
+  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following is a valid SQL statement?`,
+    opts:["SELECT name FROM publishers;","SELECT contact Contact's Name FROM publisher;","SELECT contact, name FROM publisher;","SELECT publisherID FROM publisher;"], correct:2,
+    why:`<code>SELECT contact, name FROM publisher;</code> is the correct SQL statement.` },
+  { type:"mc", q:`Data manipulation language includes all of the following <b>except</b>:`,
+    opts:["COMMIT","INSERT","DELETE","UPDATE"], correct:0,
     why:`<b>COMMIT</b> is a TCL command. DML is INSERT/UPDATE/DELETE/SELECT.` },
-  { type:"mc", q:`Which of the following keywords is used to remove a database table in Oracle 10g?`, opts:["DELETE TABLE","DROP TABLE","ALTER TABLE...DROP","TRUNCATE TABLE"], correct:1,
+  { type:"mc", q:`Which of the following keywords is used to remove a database table in Oracle 10g?`,
+    opts:["DELETE TABLE","DROP TABLE","ALTER TABLE...DROP","TRUNCATE TABLE"], correct:1,
     why:`<code>DROP TABLE</code> removes the table and its data.` },
   { type:"mc", q:`Which of the following statements is correct?`,
     opts:[
@@ -1000,34 +1062,51 @@ var QUESTIONS = [
       "Numeric columns are listed first in the output, followed by character columns."
     ], correct:1,
     why:`The <b>SELECT clause</b> controls column order in the output.` },
-  { type:"mc", q:`In which format does Oracle 10g display a date value by default?`, opts:["DD-MON-YY","DD-MON-YYYY","DD/MM/YYYY","DAY-MM-YY"], correct:0,
+  { type:"mc", q:`In which format does Oracle 10g display a date value?`,
+    opts:["DDM-MY","DD-MON-Y","DD-MON-YEAR","DD-MON-YY"], correct:3,
     why:`The default date display format is <b>DD-MON-YY</b>.` },
-  { type:"mc", q:`In Oracle SQL Developer Data Modeler, which sequence correctly engineers a Logical model to a Relational model?`,
-    opts:[
-      "Select the Relational model, click the Engineer to Logical model icon, accept defaults, click Engineer.",
-      "Select the Relational model, accept defaults, click the Engineer to Logical Model icon, click Engineer.",
-      "Select the Logical model, click the Engineer to Relational model icon, accept defaults, click Engineer.",
-      "Click the Engineer to Relational model icon, select the Logical model, click Engineer, accept defaults."
-    ], correct:2,
-    why:`You must <b>select the Logical model</b> first, then choose <b>Engineer to Relational Model</b>.` },
-  { type:"mc", q:`Which of the following symbols represents all the columns contained in a table?`, opts:["%","*","#","@"], correct:1,
+  { type:"mc", q:`Which of the following symbols represents all the columns contained in a table?`,
+    opts:["%","*","#","@"], correct:1,
     why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
-  { type:"tf", q:`The <code>INTERVAL</code> datatype can be used to identify a specific interval, or amount, of time.`, opts:["True","False"], correct:0,
-    why:`<b>True.</b> <code>INTERVAL</code> stores durations of time.` },
-  { type:"tf", q:`You must first select the Logical model you want to work with in order to engineer it to a relational model.`, opts:["True","False"], correct:0,
+  { type:"tf", q:`You must first select the Logical model you want to work with in order to engineer it to a relational model.`,
+    opts:["True","False"], correct:0,
     why:`<b>True.</b> The Logical model must be selected before running the engineer step.` },
-  { type:"tf", q:`In the SQL Commands option of Oracle APEX, you can run more than one SQL command at a time.`, opts:["True","False"], correct:1,
+  { type:"tf", q:`In the SQL Commands option of APEX, you can run more than one SQL command at a time.`,
+    opts:["True","False"], correct:1,
     why:`<b>False.</b> APEX SQL Commands executes <b>one</b> statement at a time.` },
-  { type:"mc", q:`If the results of a SELECT statement include more than one column, the column names must be separated in the SELECT clause by which of the following symbols?`, opts:[",",";","space","|"], correct:0,
+  { type:"mc", q:`If the results of a SELECT statement include more than one column of data, the column names must be separated in the SELECT clause by which of the following symbols?`,
+    opts:[",",";","space","|"], correct:0,
     why:`Columns in the <code>SELECT</code> clause are separated by <b>commas</b>.` },
-  { type:"tf", q:`The <code>ALPHANUMERIC</code> datatype can be used to store characters and numbers to a maximum width of 2000.`, opts:["True","False"], correct:1,
+  { type:"tf", q:`The <code>ALPHANUMERIC</code> datatype can be used to store characters and numbers to a maximum width of 2000.`,
+    opts:["True","False"], correct:1,
     why:`<b>False.</b> There is no <code>ALPHANUMERIC</code> datatype in Oracle.` },
-  { type:"mc", q:`Which of the following types of columns will automatically left-align the column heading when it is displayed?`, opts:["numeric","character","date","both character and date"], correct:1,
+  { type:"mc", q:`Which of the following types of columns will automatically left-align the column heading when it is displayed?`,
+    opts:["numeric","character","date","both character and date"], correct:1,
     why:`<b>Character</b> columns are left-aligned by default.` },
-  { type:"mc", q:`A _________ clause creates an equijoin between two tables using one column with the same name, regardless of the data type.`, opts:["EQUI-JOIN","NATURAL JOIN","USING","ON"], correct:2,
+  { type:"mc", q:`A ____________ clause creates an equijoin between two tables using one column with the same name, regardless of the data type.`,
+    opts:["EQUI-JOIN","NATURAL JOIN","USING","ON"], correct:2,
     why:`The <b>USING</b> clause joins on a column that appears with the same name in both tables.` },
-  { type:"tf", q:`You can delete a row that contains a primary key that is used as a foreign key in another table.`, opts:["True","False"], correct:1,
-    why:`<b>False.</b> Oracle blocks deletion while child rows reference it.` }
+  { type:"mc", q:`Which keywords are used to complete the deletion of a column previously marked with SET UNUSED?`,
+    opts:["DELETE UNUSED COLUMNS","DROP UNUSED COLUMNS","DROP SET COLUMNS","UNSET UNUSED COLUMNS"], correct:1,
+    why:`<code>ALTER TABLE ... DROP UNUSED COLUMNS;</code> completes the deletion.` },
+  { type:"tf", q:`You can delete a row that contains a primary key that is used as a foreign key in another table.`,
+    opts:["True","False"], correct:1,
+    why:`<b>False.</b> Oracle blocks deletion while child rows reference it.` },
+  { type:"mc", q:`Which of the following rules does <b>not</b> apply to column names in Oracle 10g?`,
+    opts:["Column names must begin with a letter.","Column names can contain an ampersand (&).","Column names can be up to 30 characters in length.","Column names can contain numbers."], correct:1,
+    why:`An ampersand is <b>not</b> allowed in an Oracle column name.` },
+  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
+    opts:["Mixed Case","There is no default","Lower Case","Upper Case"], correct:3,
+    why:`<b>Upper Case</b> headings are always displayed in full.` },
+  { type:"mc", q:`Which of the following commands will display the structure of the CUSTOMERS table?`,
+    opts:["DESCRIBE customers;","SHOW customers;","STRUCT customers;","DISPLAY customers;"], correct:0,
+    why:`The SQL*Plus command is <code>DESCRIBE customers;</code> (or <code>DESC customers;</code>).` },
+  { type:"mc", q:`Which of the following keywords is used to remove a database table in Oracle 10g?`,
+    opts:["DELETE TABLE","DROP TABLE","ALTER TABLE...DROP","TRUNCATE TABLE"], correct:1,
+    why:`<code>DROP TABLE</code> removes the table and its data.` },
+  { type:"mc", q:`In which format does Oracle 10g display a date value?`,
+    opts:["DDM-MY","DD-MON-Y","DD-MON-YEAR","DD-MON-YY"], correct:3,
+    why:`The default date display format is <b>DD-MON-YY</b>.` }
 ];
 
 /* =====================================================================
@@ -1345,10 +1424,8 @@ var camLostCount = 0;
 function onCameraLost(){
   if(S.finished) return;
   if(examActive){
-    /* LENIENT: during writing, just warn — never punish the student. */
     toast("📷 Camera signal interrupted — please check your camera.", 3000, true);
   } else {
-    /* During verification the camera is mandatory. */
     var cd = $("camDeniedBox"); if(cd) cd.style.display = "grid";
     var sv = $("scanVideo"); if(sv) sv.style.display = "none";
     var ss = $("scanStatus"); if(ss) ss.textContent = "CAMERA LOST — VERIFICATION IMPOSSIBLE";
@@ -1580,8 +1657,6 @@ function logViolation(reason){
   S.violationLog.push({ t: new Date().toLocaleTimeString(), reason: reason });
   S.violations++;
   updateViolationBadge();
-  /* LENIENT: violations are logged for the proctoring report only —
-     the student is NEVER auto-kicked during writing. */
 }
 
 function updateViolationBadge(){
@@ -1622,7 +1697,6 @@ function startFaceMonitor(){
     var v = $("camVideo");
     if(!v || v.readyState < 2 || !v.videoWidth) return;
 
-    /* Informational only — no violations, no overlay, no kick. */
     var a = analyseFace(v);
     var faceOk = a.skin > 0.05 && a.bright > 0.07;
     var fb = $("faceBadge");
@@ -2158,7 +2232,7 @@ function buildSheetHTML(){
     '@media print{body{margin:0}}' +
     '</style></head><body>' +
     '<div class="hdr"><h1>INFOS TEST 2 — ANSWER SHEET &amp; MEMO</h1>' +
-    '<p>Database &amp; SQL Assessment · Oracle 10g · DDL · DML · Constraints · Joins</p></div>' +
+    '<p>Database &amp; SQL Assessment · Oracle 10g · DDL · DML · Constraints · Joins · 60 Questions</p></div>' +
     '<table class="info">' +
       '<tr><td class="k">Student Name</td><td>' + esc(S.student.name) + '</td>' +
           '<td class="k">Student Number</td><td>' + esc(S.student.number) + '</td></tr>' +
@@ -2226,7 +2300,7 @@ function doPrint(){
 }
 
 /* =====================================================================
-   BUTTON WIRING (with null-safe check)
+   BUTTON WIRING
    ===================================================================== */
 (function wireButtons(){
   var pdfBtn = $("pdfBtn");
@@ -2473,7 +2547,7 @@ setInterval(updateDeadlineBadge, 30000);
     return;
   }
   setTimeout(function(){
-    toast("Secure session · 8 attempts · Assessment closes 24 Oct 2026 at 08:00 🎓", 4200);
+    toast("Secure session · 8 attempts · 60 questions · Closes 24 Oct 2026 at 08:00 🎓", 4200);
   }, 700);
 })();
 </script>
