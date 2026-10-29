@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>INFOS TEST 2 — Database &amp; SQL Assessment</title>
+<title>DEV TEST 3 — Visual Basic &amp; Programming Assessment</title>
 <style>
 :root{
   --bg-0:#0a0e1a;
@@ -289,7 +289,7 @@ header.top{
 .rules li{margin-bottom:5px}
 .rules b{color:var(--warning)}
 
-/* ============ BUTTONS (with fallback background) ============ */
+/* ============ BUTTONS ============ */
 .btn{
   border:none;cursor:pointer;font-family:inherit;font-weight:700;
   padding:13px 24px;border-radius:11px;font-size:.92rem;letter-spacing:.2px;
@@ -677,7 +677,7 @@ header.top{
     <h2 id="blockTitle">ACCESS DENIED</h2>
     <p id="blockMsg">This session has been refused.</p>
     <div class="code" id="blockCode">REF: SEC-LOCK</div>
-    <div class="seal">INFOS TEST 2 · Secure Assessment Gateway</div>
+    <div class="seal">DEV TEST 3 · Secure Assessment Gateway</div>
   </div>
 </div>
 
@@ -697,7 +697,7 @@ header.top{
   <span class="seg face-ok" id="faceBadge">👁️ FACE VERIFIED</span>
   <span class="seg attempt" id="attemptBadge">📝 1 / 8</span>
   <span class="seg viol" id="violationBadge">⚠️ 0 / 5</span>
-  <span class="seg deadline" id="deadlineBadge">⏰ 24 OCT 2026 · 08:00</span>
+  <span class="seg deadline" id="deadlineBadge">⏰ —</span>
 </div>
 
 <div id="camPanel">
@@ -713,8 +713,8 @@ header.top{
     <div class="brand">
       <div class="logo">🎓</div>
       <div>
-        <h1>INFOS TEST 2 · DATABASE &amp; SQL</h1>
-        <small>Oracle 10g · DDL · DML · Constraints · Joins · 60 Questions</small>
+        <h1>DEV TEST 3 · PROGRAMMING (VB.NET)</h1>
+        <small>Arrays · Strings · Sequential Files · Classes · Properties · 28 Questions</small>
       </div>
     </div>
     <div class="tools">
@@ -773,7 +773,7 @@ header.top{
           <li><b>Face scan is compulsory</b> and is bound to your student number (same face must be used for every attempt).</li>
           <li><b>Time limit:</b> 1 hour 30 minutes per attempt. The paper auto-submits at 00:00.</li>
           <li><b>You will not be auto-kicked during writing.</b> Tab-switches, copy attempts and right-clicks are logged for the proctoring report only.</li>
-          <li><b>⏰ This assessment closes permanently on 24 October 2026 at 08:00.</b></li>
+          <li><b>⏰ This assessment closes permanently today at 14:00.</b></li>
           <li>Answers (memo) are shown after each submission so you can study before your next attempt.</li>
         </ul>
       </div>
@@ -851,7 +851,7 @@ header.top{
 
     <div class="ring" id="ring">
       <div>
-        <div class="val" id="resScore">0/60</div>
+        <div class="val" id="resScore">0/28</div>
         <div class="lbl">Correct</div>
       </div>
     </div>
@@ -896,9 +896,16 @@ header.top{
 /* =====================================================================
    CONFIG
    ===================================================================== */
-/* ⬇⬇⬇  DEADLINE — 24 OCTOBER 2026 @ 08:00  ⬇⬇⬇ */
-var DEADLINE_STR   = "2026-10-24T08:00:00";
-var DEADLINE       = new Date(DEADLINE_STR).getTime();
+/* ⬇⬇⬇  DEADLINE — TODAY AT 14:00 (auto-rolls to tomorrow if already past)  ⬇⬇⬇ */
+var DEADLINE = (function(){
+  var d = new Date();
+  d.setHours(14, 0, 0, 0);
+  if(d.getTime() <= Date.now()) d.setDate(d.getDate() + 1);
+  return d.getTime();
+})();
+/* ⬆⬆⬆ If you want a FIXED date instead, replace the block above with:
+   var DEADLINE = new Date("2026-10-24T14:00:00").getTime();               */
+
 var EXAM_MINUTES   = 90;
 var EXAM_SECONDS   = EXAM_MINUTES * 60;
 var MAX_VIOLATIONS = 5;
@@ -910,210 +917,230 @@ var FACE_CHECK_INTERVAL  = 1000;
 var FACE_MISS_LIMIT      = 8;
 
 /* =====================================================================
-   QUESTIONS — 60 questions from INFOS TEST 2 ORIGINAL.pdf
+   QUESTIONS — 28 questions from DEV TEST 3
    ===================================================================== */
 var QUESTIONS = [
-  { type:"tf", q:`The <code>CREATE TABLE</code> cannot contain a subquery.`, opts:["True","False"], correct:1,
-    why:`<b>False.</b> <code>CREATE TABLE new AS SELECT * FROM old</code> (CTAS) contains a subquery.` },
-  { type:"mc", q:`Which of the following types of software programs can be used to reference objects that are composed of individual data elements?`,
-    opts:["RDBMS","ORDBMS","OODBMS","GUIRDBMS"], correct:1,
-    why:`An <b>ORDBMS</b> (Object-Relational DBMS) can store objects built from individual data elements.` },
-  { type:"mc", q:`To see all the fields and records in the employees table you can run the following query:`,
-    opts:["SELECT * FROM employees;","SELECT all FROM employees;","SELECT columns FROM employees;","SELECT # FROM employees;"], correct:0,
-    why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
-  { type:"mc", q:`Foreign key constraints are named using the ____________ of both tables.`,
-    opts:["foreign key name","short table name","UID suffix","full table name"], correct:1,
-    why:`Oracle 10g's default naming convention for foreign keys uses the <b>short table name</b> of both tables.` },
-  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following is a valid SQL statement?`,
-    opts:["SELECT * FROM contact;","SELECT * FROM pubid;","SELECT * FROM publisher;","SELECT * FROM name;"], correct:2,
-    why:`The table is named <b>PUBLISHER</b>, so <code>SELECT * FROM publisher;</code> is the only valid query.` },
-  { type:"mc", q:`Engineering is the process of transforming a Logical Data Model to a Relational Model.`,
-    opts:["Reverse","Top-Down","Target","Forward"], correct:3,
-    why:`Logical → Relational is the <b>Forward</b> engineering direction.` },
-  { type:"mc", q:`Which of the following commands is used to issue a query?`,
-    opts:["FROM","SELECT","QUER","QUESTION"], correct:1,
-    why:`<b>SELECT</b> is the command used to issue a query against the database.` },
-  { type:"tf", q:`The <code>DELETE TABLE</code> command can be used to remove a table from a database.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> There is no <code>DELETE TABLE</code> command. Use <code>DROP TABLE</code>.` },
-  { type:"mc", q:`Which command is used to rename a table you own?`,
-    opts:["RENAME...TO","ALTER TABLE...RENAME","ALTER TABLE...SET NAME","RENAME...AS"], correct:0,
-    why:`The Oracle SQL*Plus command is <code>RENAME old_name TO new_name</code>.` },
-  { type:"tf", q:`You can override the default order by using parentheses around the expressions that you want to calculate.`,
-    opts:["True","False"], correct:0,
-    why:`<b>True.</b> Parentheses force a particular evaluation order.` },
-  { type:"mc", q:`Foreign key constraints are named using the ____________ of both tables.`,
-    opts:["UID suffix","foreign key name","short table name","full table name"], correct:2,
-    why:`Oracle 10g's default naming convention for foreign keys uses the <b>short table name</b> of both tables.` },
-  { type:"tf", q:`A database must be shut down before the <code>ALTER TABLE</code> command can be executed.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> <code>ALTER TABLE</code> runs online while the database is up.` },
-  { type:"mc", q:`Which of the following rules does <b>not</b> apply to column names in Oracle 10g?`,
-    opts:["Column names must begin with a letter.","Column names can contain an ampersand (&).","Column names can be up to 30 characters in length.","Column names can contain numbers."], correct:1,
-    why:`An ampersand is <b>not</b> allowed in an Oracle column name.` },
-  { type:"mc", q:`Which of the following keywords can be used to indicate that a column alias should be included in the results?`,
-    opts:["AS","FROM","ALIAS","SELECT"], correct:0,
-    why:`<code>AS</code> introduces a column alias, e.g. <code>SELECT salary * 12 AS "Annual Salary"</code>.` },
-  { type:"mc", q:`Which of the following is displayed by the <code>DESCRIBE</code> command?`,
-    opts:["column names","all of the above","not null requirements","datatypes"], correct:1,
-    why:`<code>DESCRIBE</code> displays column names, data types and NOT NULL constraints — <b>all of the above</b>.` },
-  { type:"mc", q:`Which of the following statements is an example of a <b>SELF-JOIN</b>?`,
+  { type:"mc", q:`If the <code>strAddress</code> variable contains the string <code>"Glover Road"</code>, what would <code>strAddress.Contains("road")</code> return?`,
+    opts:["False","True","None of the Answers","8","7"], correct:0,
+    why:`<b>False.</b> <code>Contains</code> is <b>case-sensitive</b>: <code>"road"</code> is not the same as <code>"Road"</code>.` },
+
+  { type:"mc", q:`Assume a <code>Number</code> class with private <code>Double</code> member variables (<code>num1</code>, <code>num2</code>), public <code>Num1</code>/<code>Num2</code> properties with validation, a default constructor and an overloaded constructor. Select the <b>BEST</b> code to declare an array that can store <b>100 objects</b> of the <code>Number</code> class. The array must be declared in a Module and used by other classes in the same project.`,
     opts:[
-      "SELECT department_id, department_name, location_id, city\nFROM departments NATURAL JOIN locations;",
-      "SELECT e.employee_id, e.last_name, e.department_id, d.department_id, d.location_id\nFROM employees e JOIN departments d ON (e.department_id = d.department_id);",
-      "SELECT worker.last_name emp, manager.last_name mgr\nFROM employees worker JOIN employees manager\nON (worker.manager_id = manager.employee_id);",
-      "SELECT e.employee_id, e.last_name, e.department_id, d.department_id, d.location_id\nFROM employees e JOIN departments d\nON (e.department_id = d.department_id)\nAND e.manager_id = 149;"
+      "Public arrNumbers(100) As Number",
+      "None of the Answers",
+      "Public arrNumbers(99) As Number",
+      "Public arrNumbers(99) As Double",
+      "Public arrNumbers(100) As Double"
     ], correct:2,
-    why:`A <b>self-join</b> joins a table to <b>itself</b>. Option C joins <code>employees</code> to <code>employees</code>.` },
-  { type:"tf", q:`The <code>MODIFY TABLE</code> command can be used to change the size of a table.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> There is no <code>MODIFY TABLE</code> command. Use <code>ALTER TABLE ... MODIFY ...</code>.` },
-  { type:"tf", q:`A table name can consist of numbers, letters, and blank spaces.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> Table names cannot contain blank spaces.` },
-  { type:"mc", q:`Selecting specific columns from a table to be displayed in a query is called:`,
-    opts:["sorting","elimination","projection","selection"], correct:2,
-    why:`<b>Projection</b> selects specific columns; <i>selection</i> selects specific rows.` },
-  { type:"mc", q:`If you are creating a new table containing four columns from an existing table and want to change the name of one of the columns when it is created in the new table, add a column list containing ____________ names in the <code>CREATE TABLE</code> clause.`,
-    opts:["zero","five","one","Four"], correct:3,
-    why:`You list <b>four</b> column names in the new table's column list.` },
-  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
-    opts:["Zero","alphanumeric","Incorrect","date"], correct:1,
-    why:`<b>Alphanumeric</b> (character) columns display their full heading regardless of assigned width.` },
-  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
-    opts:["Numeric","alphanumeric","Incorrect","date"], correct:0,
-    why:`<b>Numeric</b> columns display their full heading regardless of assigned width.` },
-  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
-    opts:["Mixed Case","There is no default","Lower Case","Upper Case"], correct:3,
-    why:`<b>Upper Case</b> headings are always displayed in full.` },
-  { type:"tf", q:`The scale of a <code>NUMBER</code> column indicates the number of digits that can be displayed to the right of the decimal point.`,
-    opts:["True","False"], correct:0,
-    why:`<b>True.</b> Scale = number of digits to the right of the decimal point.` },
-  { type:"mc", q:`Which of the following is the wildcard used for any number of characters in SQL?`,
-    opts:["%","_","*","#"], correct:0,
-    why:`<code>%</code> matches any number of characters.` },
-  { type:"mc", q:`Which of the following terms refers to commands that are used to create or modify database tables?`,
-    opts:["data control language (DCL)","data formatting language (DFL)","data manipulation language (DML)","data definition language (DDL)"], correct:3,
-    why:`<b>DDL</b> covers <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>, <code>RENAME</code>.` },
-  { type:"mc", q:`Which of the following commands will drop any columns marked as unused from the TABLE table?`,
-    opts:["ALTER TABLE table DROP (unused);","DROP COLUMN FROM table WHERE column_status = UNUSED;","ALTER TABLE table DROP UNUSED COLUMNS;","DROP UNUSED COLUMNS;"], correct:2,
-    why:`The correct syntax is <code>ALTER TABLE table DROP UNUSED COLUMNS;</code>.` },
-  { type:"mc", q:`Which of the following commands will display the structure of the CUSTOMERS table?`,
-    opts:["DESCRIBE customers;","SHOW customers;","STRUCT customers;","DISPLAY customers;"], correct:0,
-    why:`The SQL*Plus command is <code>DESCRIBE customers;</code> (or <code>DESC customers;</code>).` },
-  { type:"mc", q:`The column definition of <code>NUMBER(7,4)</code> indicates a precision of:`,
-    opts:["11","4","7","3"], correct:2,
-    why:`<code>NUMBER(p,s)</code> — p is precision, s is scale. Here precision = 7.` },
-  { type:"mc", q:`What is the correct answer for the arithmetic expression <code>9 + 2 + 3 - 2</code> using the order of operations employed by Oracle 10g?`,
-    opts:["12","10","13","31"], correct:0,
-    why:`(9+2) = 11, (11+3) = 14, (14-2) = <b>12</b>.` },
-  { type:"mc", q:`Which of the following rules apply to table names in Oracle 10g?`,
-    opts:["Names can begin with a number.","Names can be up to 225 characters in length.","Names can contain blank spaces.","Names can contain a number sign (#)."], correct:3,
-    why:`Oracle table names may contain <code>_</code>, <code>$</code> and <code>#</code>. No leading digits, no spaces, max 30 chars.` },
-  { type:"mc", q:`A database transaction consists of the following <b>except</b>:`,
-    opts:["DML statements representing one consistent change to data.","One DDL statement","One TCL statement","SELECT queries"], correct:3,
-    why:`Plain <b>SELECT</b> queries are not part of a transaction.` },
-  { type:"mc", q:`Which of the following commands will change the name of the <code>PROMOTION</code> table to <code>GIFT</code>?`,
-    opts:["ALTER TABLE promotion TO gift;","ALTER TABLE promotion NAME TO gift;","RENAME TABLE promotion TO gift;","RENAME promotion TO gift;"], correct:3,
-    why:`The SQL*Plus command is <code>RENAME promotion TO gift;</code>.` },
-  { type:"mc", q:`Which of the following SQL*Plus commands will display the structure of a table?`,
-    opts:["DESC","DISPLAY","DSC","VIEW"], correct:0,
-    why:`<b>DESC</b> (or <code>DESCRIBE</code>) displays column definitions.` },
-  { type:"tf", q:`A database object is a defined, self-contained structure in Oracle 10g.`,
-    opts:["True","False"], correct:0,
-    why:`<b>True.</b> Tables, views, indexes, sequences, synonyms and procedures are database objects.` },
-  { type:"tf", q:`The <code>DELETE TABLE</code> command can be used to remove a table from a database.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> There is no <code>DELETE TABLE</code> command. Use <code>DROP TABLE</code>.` },
-  { type:"mc", q:`A column alias must be contained within double quotation marks ("") if it contains which of the following?`,
-    opts:["blank spaces","all of the above","special symbols","characters that should be displayed in lower or mixed case"], correct:1,
-    why:`Blank spaces, special symbols and case-sensitive characters all require double quotes — <b>all of the above</b>.` },
-  { type:"mc", q:`Based on the structure of the PROMOTION table, which of the following commands ensures that the value entered for the MINRETAL column is less than the value entered for the MAXRETAL column?`,
+    why:`To store <b>100</b> elements the upper bound must be <b>99</b> (indexes 0–99), the element type is <b>Number</b>, and <code>Public</code> makes it visible project-wide from a Module.` },
+
+  { type:"mc", q:`<code>outFile = IO.File.AppendText("province.txt")</code><br><br>The statement above indicates that if the computer locates the <code>province.txt</code> file in the default folder, it opens it for append; otherwise:`,
     opts:[
-      "ALTER TABLE promotion MODIFY MINRETAL CHECK (< maxretail);",
-      "ALTER TABLE promotion MODIFY CHECK (minretal < maxretail);",
-      "ALTER TABLE promotion ADD CHECK (minretal < maxretail);",
-      "ALTER TABLE promotion ADD CHECK minretal < maxretail;"
+      "None of the Answers",
+      "It appends a new, empty file and then erases the file for it to be created",
+      "It creates a new, empty file and then erases the file for append",
+      "It creates a new, empty file and then opens the file for append",
+      "It appends a new, empty file and then opens the file"
+    ], correct:3,
+    why:`<code>AppendText</code> opens an existing file for appending, or <b>creates a new empty file</b> and opens it for appending when the file does not exist.` },
+
+  { type:"mc", q:`Which of the following will open the <code>stock.txt</code> file for <b>input</b> for a variable named <code>inStock</code>?`,
+    opts:[
+      "inStock = File.IO(\"stock.txt\")",
+      "None of the Answers",
+      "inStock = IO.File(\"stock.txt\")",
+      "inStock = File.IO.OpenText(\"stock.txt\")",
+      "inStock = IO.File.OpenText(\"stock.txt\")"
+    ], correct:4,
+    why:`<code>IO.File.OpenText</code> returns a <code>StreamReader</code> for reading a sequential text file.` },
+
+  { type:"mc", q:`Which is the <b>BEST</b> code for the <code>IncreaseNumber</code> sub procedure? It receives two parameters: the position to change (1 = <code>Num1</code>, 2 = <code>Num2</code>) and the value to increase the data with.`,
+    opts:[
+      "Public Sub IncreaseNumber(ByVal position As Integer, ByVal increaseValue As Double)\n    If position = 1 Then\n        Num1 += increaseValue\n    ElseIf position = 2 Then\n        Num2 += increaseValue\n    End If\nEnd Sub",
+      "Public Sub IncreaseNumber(ByVal position As Integer, ByVal increaseValue As Double)\n    If position = 1 Then\n        Num2 += increaseValue\n    ElseIf position = 2 Then\n        Num2 += increaseValue\n    End If\nEnd Sub",
+      "Public Sub IncreaseNumber(ByVal position As Integer, ByVal increaseValue As Double)\n    If position = 1 Then\n        Num1 += increaseValue\n    ElseIf position = 2 Then\n        Num1 += increaseValue\n    End If\nEnd Sub",
+      "Public Function IncreaseNumber(ByVal position As Integer, ByVal increaseValue As Double)\n    If position = 1 Then\n        Num2 += increaseValue\n    ElseIf position = 2 Then\n        Num1 += increaseValue\n    End If\nEnd Function"
+    ], correct:0,
+    why:`Position <b>1</b> must increase <code>Num1</code> and position <b>2</b> must increase <code>Num2</code> — only the first option maps both correctly.` },
+
+  { type:"mc", q:`Select the statement that writes the contents of the <code>strId</code> variable on a <b>separate line</b> in the file, using a procedure-level variable named <code>outInventory</code>.`,
+    opts:[
+      "None of the Answers",
+      "inInventory.ReadLine(strId)",
+      "outInventory.ReadLine(strId)",
+      "outInventory.WriteLine(strId)",
+      "inInventory.WriteLine(strId)"
+    ], correct:3,
+    why:`<code>WriteLine</code> writes the value and appends a newline; it must be called on the <b>output</b> (write) variable.` },
+
+  { type:"mc", q:`Select the <b>TWO</b> statements that can be used to declare a <b>four-element</b> one-dimensional array.`,
+    opts:[
+      "Dim intItem(3) As Integer      and      Dim intItem(3) As Integer = {7, 8, 9, 3}",
+      "Dim intItem(4) As Integer      and      Dim intItem(5) As Integer",
+      "Dim intItem(3) As Integer = {7, 8, 9, 3, 4}      and      Dim intItem(3) As Integer",
+      "Dim intItem(4) As Integer = {7, 8, 9, 3}      and      Dim intItem(4) As Integer"
+    ], correct:0,
+    why:`An upper bound of <b>3</b> gives four elements (0,1,2,3), and the initialiser must contain exactly four values.` },
+
+  { type:"mc", q:`What is used by the code to change the name of <code>objPerson</code> in this code?<br><br><code>objPerson.Name = "Mercy"</code>`,
+    opts:[
+      "The set sub of the Name property",
+      "The get sub of the Name object",
+      "The set sub of the Name object",
+      "None of the Answers",
+      "The get sub of the Name property"
+    ], correct:0,
+    why:`Assigning a value to a property invokes its <b>Set</b> accessor.` },
+
+  { type:"mc", q:`Add Car button (FrmAddCar). Which option correctly completes the statement that saves the fuel type from the combo box to the variable?<br><br><code>fuelType = cmbFuelType.____</code>`,
+    opts:["Text","SelectedIndex","Value","Items"], correct:0,
+    why:`A ComboBox's displayed / selected value is its <code>.Text</code> property.` },
+
+  { type:"mc", q:`ClassCar property code. Which option correctly completes the <code>Get</code> and <code>Set</code> blocks of the <code>CarNo</code> property?`,
+    opts:[
+      "Get\n    Return _carNo\nEnd Get\nSet(value As String)\n    _carNo = value\nEnd Set",
+      "Get\n    Return carNo\nEnd Get\nSet(value As String)\n    carNo = value\nEnd Set",
+      "Get\n    Return value\nEnd Get\nSet(value As String)\n    _carNo = _carNo\nEnd Set",
+      "Get\n    Return _carNo\nEnd Get\nSet(value As String)\n    value = _carNo\nEnd Set"
+    ], correct:0,
+    why:`The <b>Get</b> accessor returns the private backing field (<code>_carNo</code>) and the <b>Set</b> accessor assigns the incoming <code>value</code> to it.` },
+
+  { type:"mc", q:`Select the statement that reads a line of text from the sequential access file associated with the <code>inFile</code> variable and assigns the line, excluding the newline character, to the <code>strCaption</code> variable.`,
+    opts:[
+      "Dim strMessage As String : strMessage = inFile.WriteLine",
+      "None of the Answers",
+      "Dim strMessage As String : strMessage = outFile.ReadLine",
+      "Dim strMessage As String : strMessage = inFile.ReadLine",
+      "Dim strMessage As String : strMessage = outFile.WriteLine"
+    ], correct:3,
+    why:`<code>ReadLine</code> reads one line from an <b>input</b> stream and strips the newline character.` },
+
+  { type:"mc", q:`Which statement indicates that the computer will search for the <code>inventory.txt</code> file in the project's <b>bin\\Debug</b> folder?`,
+    opts:[
+      "outFile = IO.File.Create(\"inventory.txt\")",
+      "outFile = IO.File.AppendText(\"inventory.txt\")",
+      "outFile = IO.File.CreateText(\"inventory.txt\")",
+      "outFile = IO.File.CreateText(\"Inventory.txt\")",
+      "None of the Answers"
     ], correct:2,
-    why:`The correct syntax is <code>ALTER TABLE promotion ADD CHECK (minretal &lt; maxretail);</code>.` },
-  { type:"tf", q:`The attribute that you assign as a primary UID is automatically set to mandatory.`,
+    why:`A relative filename is resolved against the application's working folder (<b>bin\\Debug</b>), and <code>CreateText</code> creates/overwrites the file there.` },
+
+  { type:"tf", q:`You can use both the <code>Peek</code> and <code>ReadLine</code> methods with a loop to read a file line by line.`,
     opts:["True","False"], correct:0,
-    why:`<b>True.</b> A primary key is <code>NOT NULL</code> by definition.` },
-  { type:"mc", q:`A primary key must contain a value and the value must be ____________.`,
-    opts:["blank","greater than zero","null","unique"], correct:3,
-    why:`A primary key must be <b>unique</b> and never NULL.` },
-  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following SQL statements will display only <b>two</b> columns in the results?`,
-    opts:["none of the above","SELECT * FROM publisher;","SELECT contact person, name FROM publisher;","SELECT contact, name FROM publisher;"], correct:3,
-    why:`<code>SELECT contact, name FROM publisher;</code> lists exactly two columns.` },
-  { type:"mc", q:`Based upon the contents of the PUBLISHER table, which of the following is a valid SQL statement?`,
-    opts:["SELECT name FROM publishers;","SELECT contact Contact's Name FROM publisher;","SELECT contact, name FROM publisher;","SELECT publisherID FROM publisher;"], correct:2,
-    why:`<code>SELECT contact, name FROM publisher;</code> is the correct SQL statement.` },
-  { type:"mc", q:`Data manipulation language includes all of the following <b>except</b>:`,
-    opts:["COMMIT","INSERT","DELETE","UPDATE"], correct:0,
-    why:`<b>COMMIT</b> is a TCL command. DML is INSERT/UPDATE/DELETE/SELECT.` },
-  { type:"mc", q:`Which of the following keywords is used to remove a database table in Oracle 10g?`,
-    opts:["DELETE TABLE","DROP TABLE","ALTER TABLE...DROP","TRUNCATE TABLE"], correct:1,
-    why:`<code>DROP TABLE</code> removes the table and its data.` },
-  { type:"mc", q:`Which of the following statements is correct?`,
+    why:`<b>True.</b> <code>Peek</code> checks whether more data exists (<code>-1</code> = end of file) and <code>ReadLine</code> reads each line.` },
+
+  { type:"mc", q:`Which of the following statements <b>erases</b> the content of <code>student.txt</code> if the file exists?`,
     opts:[
-      "Character columns are listed first in the output, followed by numeric columns.",
-      "The columns will be listed in the results in the same order they are listed in the SELECT clause of the SELECT statement.",
-      "The columns will be listed in the results in the same order they are stored in the database table.",
-      "Numeric columns are listed first in the output, followed by character columns."
+      "outFile = IO.File.CreateText(\"student.txt\")",
+      "outFile = IO.File.InsertText(\"student.txt\")",
+      "outFile = IO.File.AddText(\"student.txt\")",
+      "None of the Answers",
+      "outFile = IO.File.AppendText(\"student.txt\")"
+    ], correct:0,
+    why:`<code>CreateText</code> creates a new file, <b>overwriting</b> any existing file with the same name.` },
+
+  { type:"mc", q:`Which object is created by the <code>OpenText</code> method?`,
+    opts:["SequenceWriter","StreamReader","SequenceReader","StreamWriter","None of the Answers"], correct:1,
+    why:`<code>IO.File.OpenText</code> returns a <b>StreamReader</b>.` },
+
+  { type:"mc", q:`What value would the <code>Peek</code> method return if a file does not contain characters to read?`,
+    opts:["-1","The last character","The first character","1","0"], correct:0,
+    why:`<code>Peek</code> returns <b>-1</b> when the end of the file has been reached.` },
+
+  { type:"mc", q:`Which of the following statements uses the <code>Contains</code> method to determine whether the <code>strName</code> variable contains the string "Nelson Mandela" (in uppercase, lowercase or a combination) and assigns the return value to the <code>binContained</code> variable?`,
+    opts:[
+      "binContained = strName.ToUpper.Contains(\"NELSON MANDELA\")",
+      "binContained = strName.Contains(\"NELSON MANDELA\")",
+      "binContained = strName.ToLower.Contains(\"NELSON MANDELA\")",
+      "binContained = strName.ToString(\"NELSON MANDELA\")",
+      "None of the Answers"
+    ], correct:0,
+    why:`Converting the string to a common case (<code>ToUpper</code>) before calling the case-sensitive <code>Contains</code> makes the test <b>case-insensitive</b>.` },
+
+  { type:"tf", q:`The index of an array starts from 1.`,
+    opts:["True","False"], correct:1,
+    why:`<b>False.</b> VB.NET arrays are <b>zero-based</b> — the first element is index <b>0</b>.` },
+
+  { type:"mc", q:`What control visually groups related items on a menu or submenu together?`,
+    opts:["StatusStrip","MenuStrip","Menu bar","Task bar","Separator bar"], correct:4,
+    why:`A <b>separator bar</b> divides groups of related menu items.` },
+
+  { type:"mc", q:`Which of the following statements represents a statement to open a sequential access file named <code>result.txt</code> for <b>input</b> for a procedure-level variable named <code>inResult</code>?`,
+    opts:[
+      "None of the Answers",
+      "inResult = IO.File.CreateText(\"Result.txt\")",
+      "inResult = IO.File.OpenText(\"Result.txt\")",
+      "inResult = IO.File.AppendText(\"Result.txt\")"
+    ], correct:2,
+    why:`<code>OpenText</code> opens a file for <b>input</b>; <code>CreateText</code> and <code>AppendText</code> open it for output.` },
+
+  { type:"mc", q:`Add Car button. Which statement correctly saves the engine capacity number from the text box to the <code>Double</code> variable?`,
+    opts:[
+      "engine = CDbl(txtEngineCapacity.Text)",
+      "engine = CStr(txtEngineCapacity.Text)",
+      "engine = CInt(txtEngineCapacity.Text)",
+      "engine = CBool(txtEngineCapacity.Text)"
+    ], correct:0,
+    why:`<code>CDbl</code> converts text to a <code>Double</code>; <code>CStr</code> returns a string.` },
+
+  /* ─────────── NEW QUESTIONS TO REACH 28 ─────────── */
+
+  { type:"mc", q:`What does the statement <code>strDepartment = strDepartment.Remove(5, 18)</code> do?`,
+    opts:[
+      "Removes 18 characters starting at index 5 from strDepartment",
+      "Removes 5 characters starting at index 18 from strDepartment",
+      "Removes the first 5 characters and the last 18 characters from strDepartment",
+      "Removes characters from index 5 to 18 inclusive",
+      "None of the Answers"
+    ], correct:0,
+    why:`The <code>Remove</code> method takes a start index and a count. <code>Remove(5, 18)</code> removes <b>18 characters starting at index 5</b> (the 6th character, since indexing is zero-based).` },
+
+  { type:"mc", q:`Which statement writes the value of <code>strName</code> to a sequential access file <b>without</b> adding a newline character?`,
+    opts:[
+      "outFile.WriteLine(strName)",
+      "outFile.Write(strName)",
+      "outFile.Append(strName)",
+      "outFile.WriteLine(strName, False)",
+      "None of the Answers"
     ], correct:1,
-    why:`The <b>SELECT clause</b> controls column order in the output.` },
-  { type:"mc", q:`In which format does Oracle 10g display a date value?`,
-    opts:["DDM-MY","DD-MON-Y","DD-MON-YEAR","DD-MON-YY"], correct:3,
-    why:`The default date display format is <b>DD-MON-YY</b>.` },
-  { type:"mc", q:`Which of the following symbols represents all the columns contained in a table?`,
-    opts:["%","*","#","@"], correct:1,
-    why:`The asterisk (<code>*</code>) is the wildcard that means "all columns".` },
-  { type:"tf", q:`You must first select the Logical model you want to work with in order to engineer it to a relational model.`,
-    opts:["True","False"], correct:0,
-    why:`<b>True.</b> The Logical model must be selected before running the engineer step.` },
-  { type:"tf", q:`In the SQL Commands option of APEX, you can run more than one SQL command at a time.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> APEX SQL Commands executes <b>one</b> statement at a time.` },
-  { type:"mc", q:`If the results of a SELECT statement include more than one column of data, the column names must be separated in the SELECT clause by which of the following symbols?`,
-    opts:[",",";","space","|"], correct:0,
-    why:`Columns in the <code>SELECT</code> clause are separated by <b>commas</b>.` },
-  { type:"tf", q:`The <code>ALPHANUMERIC</code> datatype can be used to store characters and numbers to a maximum width of 2000.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> There is no <code>ALPHANUMERIC</code> datatype in Oracle.` },
-  { type:"mc", q:`Which of the following types of columns will automatically left-align the column heading when it is displayed?`,
-    opts:["numeric","character","date","both character and date"], correct:1,
-    why:`<b>Character</b> columns are left-aligned by default.` },
-  { type:"mc", q:`A ____________ clause creates an equijoin between two tables using one column with the same name, regardless of the data type.`,
-    opts:["EQUI-JOIN","NATURAL JOIN","USING","ON"], correct:2,
-    why:`The <b>USING</b> clause joins on a column that appears with the same name in both tables.` },
-  { type:"mc", q:`Which keywords are used to complete the deletion of a column previously marked with SET UNUSED?`,
-    opts:["DELETE UNUSED COLUMNS","DROP UNUSED COLUMNS","DROP SET COLUMNS","UNSET UNUSED COLUMNS"], correct:1,
-    why:`<code>ALTER TABLE ... DROP UNUSED COLUMNS;</code> completes the deletion.` },
-  { type:"tf", q:`You can delete a row that contains a primary key that is used as a foreign key in another table.`,
-    opts:["True","False"], correct:1,
-    why:`<b>False.</b> Oracle blocks deletion while child rows reference it.` },
-  { type:"mc", q:`Which of the following rules does <b>not</b> apply to column names in Oracle 10g?`,
-    opts:["Column names must begin with a letter.","Column names can contain an ampersand (&).","Column names can be up to 30 characters in length.","Column names can contain numbers."], correct:1,
-    why:`An ampersand is <b>not</b> allowed in an Oracle column name.` },
-  { type:"mc", q:`The entire column heading for a column will be displayed, regardless of the assigned width of the column, if the column is defined as an ____________ column.`,
-    opts:["Mixed Case","There is no default","Lower Case","Upper Case"], correct:3,
-    why:`<b>Upper Case</b> headings are always displayed in full.` },
-  { type:"mc", q:`Which of the following commands will display the structure of the CUSTOMERS table?`,
-    opts:["DESCRIBE customers;","SHOW customers;","STRUCT customers;","DISPLAY customers;"], correct:0,
-    why:`The SQL*Plus command is <code>DESCRIBE customers;</code> (or <code>DESC customers;</code>).` },
-  { type:"mc", q:`Which of the following keywords is used to remove a database table in Oracle 10g?`,
-    opts:["DELETE TABLE","DROP TABLE","ALTER TABLE...DROP","TRUNCATE TABLE"], correct:1,
-    why:`<code>DROP TABLE</code> removes the table and its data.` },
-  { type:"mc", q:`In which format does Oracle 10g display a date value?`,
-    opts:["DDM-MY","DD-MON-Y","DD-MON-YEAR","DD-MON-YY"], correct:3,
-    why:`The default date display format is <b>DD-MON-YY</b>.` }
+    why:`<code>Write</code> writes the value without appending a newline; <code>WriteLine</code> adds a newline after the value.` },
+
+  { type:"mc", q:`If an array is declared as <code>Dim arrNumbers(9) As Integer</code>, what does <code>arrNumbers.Length</code> return?`,
+    opts:["9","10","8","0","None of the Answers"], correct:1,
+    why:`The <code>Length</code> property returns the total number of elements. An array declared with upper bound <b>9</b> has <b>10</b> elements (indexes 0–9).` },
+
+  { type:"mc", q:`In a class with both a default constructor and an overloaded constructor, which statement is true?`,
+    opts:[
+      "The default constructor must be explicitly defined if an overloaded constructor exists",
+      "Only one constructor can exist in a class",
+      "The default constructor is automatically called when an object is created with parameters",
+      "Overloaded constructors must have the same parameter list",
+      "None of the Answers"
+    ], correct:0,
+    why:`If you define any constructor (including an overloaded one), the compiler no longer provides a default constructor automatically. You must explicitly define a parameterless constructor if you need one.` },
+
+  { type:"mc", q:`Which loop condition correctly reads a file line by line until the end of the file using a <code>StreamReader</code> named <code>inFile</code>?`,
+    opts:[
+      "Do While inFile.Peek() <> -1",
+      "Do While inFile.ReadLine() <> -1",
+      "Do While inFile.Peek() <> 0",
+      "Do While inFile.EndOfStream = False",
+      "Both A and D"
+    ], correct:4,
+    why:`Both <code>Peek() <> -1</code> and <code>EndOfStream = False</code> are valid ways to check for end of file. <code>Peek</code> returns -1 at EOF, and <code>EndOfStream</code> is a property that becomes True at EOF.` },
+
+  /* ─────────── QUESTION 28 (insSales) ─────────── */
+
+  { type:"mc", q:`The <code>insSales</code> array is declared as follows:<br><code>Dim insSales() As Integer = {10000, 12000, 900, 500, 20000}</code><br><br>What will the statement <code>insSales(3) = insSales(3) + 10</code> do?`,
+    opts:["None of the Answers","Replace the 900 amount with 10","Replace the 500 amount with 10","Replace the 500 amount with 510","Replace the 900 amount with 910"], correct:3,
+    why:`Index <b>3</b> holds <b>500</b>; adding 10 stores <b>510</b> back into that element.` }
 ];
 
 /* =====================================================================
    STORAGE
    ===================================================================== */
-var REG_KEY  = "infos_test2_registry_v4";
-var FACE_KEY = "infos_test2_faceindex_v4";
+var REG_KEY  = "dev_test3_registry_v1";
+var FACE_KEY = "dev_test3_faceindex_v1";
 
 function loadRegistry(){ try { return JSON.parse(localStorage.getItem(REG_KEY)) || {}; } catch(e){ return {}; } }
 function saveRegistry(r){ try { localStorage.setItem(REG_KEY, JSON.stringify(r)); } catch(e){} }
@@ -1178,6 +1205,12 @@ function norm(s){
     .replace(/[\u201C\u201D]/g,'"')
     .replace(/\s+/g,"")
     .replace(/\.$/,"");
+}
+var MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+function fmtDeadline(){
+  var d = new Date(DEADLINE);
+  return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear() +
+         " · " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
 }
 
 function toast(msg, ms, bad){
@@ -1256,7 +1289,7 @@ function updateDeadlineBadge(){
     b.style.color = "#f87171";
     return;
   }
-  b.textContent = "⏰ 24 OCT 2026 · 08:00 (" + deadlineCountdown() + ")";
+  b.textContent = "⏰ " + fmtDeadline() + " (" + deadlineCountdown() + ")";
 }
 
 /* =====================================================================
@@ -1507,7 +1540,7 @@ async function finishScan(){
    ===================================================================== */
 function verifyIdentity(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on " + fmtDeadline() + ".", "DEADLINE-PASSED");
     return;
   }
   var number = REG.details.number.toUpperCase();
@@ -1691,7 +1724,7 @@ function startFaceMonitor(){
   S.faceMonitorId = setInterval(function(){
     if(!examActive || S.finished) return;
     if(deadlinePassed()){
-      forceFinish("Assessment deadline reached (24 Oct 2026 08:00)");
+      forceFinish("Assessment deadline reached (" + fmtDeadline() + ")");
       return;
     }
     var v = $("camVideo");
@@ -1724,7 +1757,7 @@ function startTimer(){
   S.timerId = setInterval(function(){
     if(deadlinePassed()){
       clearInterval(S.timerId);
-      forceFinish("Assessment deadline reached (24 Oct 2026 08:00)");
+      forceFinish("Assessment deadline reached (" + fmtDeadline() + ")");
       return;
     }
     S.remaining--;
@@ -1987,7 +2020,7 @@ function showResults(reason, attemptNo){
 
   var emoji="🏁", title="Attempt " + attemptNo + " Submitted", msg="";
   if(pct === 100){ emoji="👑"; title="PERFECT SCORE!"; msg="Flawless. Outstanding work."; }
-  else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your SQL from your constraints."; }
+  else if(pct >= 80){ emoji="🎉"; title="Excellent!"; msg="You clearly know your VB.NET inside out."; }
   else if(pct >= 60){ emoji="👍"; title="Good effort!"; msg="A quick review of the memo and you're unstoppable."; }
   else if(pct >= 40){ emoji="🤔"; title="Keep going!"; msg="Study the memo below carefully before your next attempt."; }
   else { emoji="🦆"; title="More revision needed"; msg="Even the rubber duck believes in you."; }
@@ -2037,7 +2070,7 @@ function showResults(reason, attemptNo){
       retry.style.display = "none";
       if(lockMsg){
         if(deadlinePassed()){
-          lockMsg.textContent = "⛔ This assessment closed on 24 October 2026 at 08:00. No further attempts are permitted.";
+          lockMsg.textContent = "⛔ This assessment closed on " + fmtDeadline() + ". No further attempts are permitted.";
         } else {
           lockMsg.textContent = "⛔ You have used all " + MAX_ATTEMPTS + " attempts. This student number is now permanently closed.";
         }
@@ -2102,7 +2135,7 @@ function showResults(reason, attemptNo){
    ===================================================================== */
 function startNextAttempt(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on " + fmtDeadline() + ".", "DEADLINE-PASSED");
     return;
   }
   S.idx = 0;
@@ -2231,8 +2264,8 @@ function buildSheetHTML(){
     '.foot{margin-top:24px;font-size:10px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:10px}' +
     '@media print{body{margin:0}}' +
     '</style></head><body>' +
-    '<div class="hdr"><h1>INFOS TEST 2 — ANSWER SHEET &amp; MEMO</h1>' +
-    '<p>Database &amp; SQL Assessment · Oracle 10g · DDL · DML · Constraints · Joins · 60 Questions</p></div>' +
+    '<div class="hdr"><h1>DEV TEST 3 — ANSWER SHEET &amp; MEMO</h1>' +
+    '<p>Programming (VB.NET) · Arrays · Strings · Sequential Files · Classes · Properties · ' + QUESTIONS.length + ' Questions</p></div>' +
     '<table class="info">' +
       '<tr><td class="k">Student Name</td><td>' + esc(S.student.name) + '</td>' +
           '<td class="k">Student Number</td><td>' + esc(S.student.number) + '</td></tr>' +
@@ -2253,7 +2286,7 @@ function buildSheetHTML(){
       (remaining > 0 && !deadlinePassed()
         ? "You still have <b>" + remaining + "</b> attempt(s) remaining."
         : deadlinePassed()
-          ? "<b>Assessment closed on 24 October 2026 at 08:00.</b>"
+          ? "<b>Assessment closed on " + esc(fmtDeadline()) + ".</b>"
           : "<b>All 8 attempts used — access permanently closed.</b>") +
     '</div>' +
     '<div class="viol"><h3>Attempt History</h3>' + hist + '</div>' +
@@ -2264,7 +2297,7 @@ function buildSheetHTML(){
     '<table class="q"><thead><tr><th>#</th><th>Question · Response · Memo</th><th>Mark</th></tr></thead>' +
     '<tbody>' + rows + '</tbody></table>' +
     '<div class="sign"><div>Student Signature</div><div>Lecturer Signature</div><div>Date</div></div>' +
-    '<div class="foot">Generated automatically by INFOS TEST 2 Secure Assessment System · ' +
+    '<div class="foot">Generated automatically by DEV TEST 3 Secure Assessment System · ' +
     esc(S.student.number) + ' · ' + esc(d.toLocaleString()) + '</div>' +
     '</body></html>';
 }
@@ -2277,7 +2310,7 @@ function downloadAnswerSheet(){
     var a = document.createElement("a");
     var safe = (S.student.number || "student").replace(/[^a-z0-9_-]/gi,"");
     a.href = url;
-    a.download = "INFOSTEST2_AnswerSheet_" + safe + "_attempt" + S.attemptNumber + ".html";
+    a.download = "DEVTEST3_AnswerSheet_" + safe + "_attempt" + S.attemptNumber + ".html";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -2335,14 +2368,14 @@ function showRules(){
       "8. Tab-switching and leaving fullscreen are logged (for the report only).\n" +
       "9. You will NEVER be auto-kicked due to violations — only your submission or time expiry ends the attempt.\n" +
       "10. The memo is shown after each submission so you can study.\n" +
-      "11. ⏰ This assessment closes permanently on 24 October 2026 at 08:00.",
+      "11. ⏰ This assessment closes permanently on " + fmtDeadline() + ".",
     buttons:[{ label:"Got it", cls:"primary" }]
   });
 }
 
 async function handleToScan(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on " + fmtDeadline() + ".", "DEADLINE-PASSED");
     return;
   }
   var fName = $("fName"), fNum = $("fNumber"), fCourse = $("fCourse"), fYear = $("fYear");
@@ -2429,7 +2462,7 @@ async function beginScan(){
 
 async function handleStartExam(){
   if(deadlinePassed()){
-    blockAccess("ASSESSMENT CLOSED", "This assessment closed on 24 October 2026 at 08:00.", "DEADLINE-PASSED");
+    blockAccess("ASSESSMENT CLOSED", "This assessment closed on " + fmtDeadline() + ".", "DEADLINE-PASSED");
     return;
   }
   if(!REG.verified || !REG.faceSig){
@@ -2528,8 +2561,8 @@ setInterval(updateDeadlineBadge, 30000);
   if(deadlinePassed()){
     blockAccess(
       "ASSESSMENT CLOSED",
-      "This assessment closed on 24 October 2026 at 08:00.\n\nNo further access is permitted.",
-      "DEADLINE-2026-10-24T08-00"
+      "This assessment closed on " + fmtDeadline() + ".\n\nNo further access is permitted.",
+      "DEADLINE-PASSED"
     );
     return;
   }
@@ -2547,7 +2580,7 @@ setInterval(updateDeadlineBadge, 30000);
     return;
   }
   setTimeout(function(){
-    toast("Secure session · 8 attempts · 60 questions · Closes 24 Oct 2026 at 08:00 🎓", 4200);
+    toast("Secure session · 8 attempts · " + QUESTIONS.length + " questions · Closes " + fmtDeadline() + " 🎓", 4200);
   }, 700);
 })();
 </script>
